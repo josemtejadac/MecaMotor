@@ -147,7 +147,10 @@
 
   /* ---- login ---- */
   #login{position:relative;overflow-x:hidden;overflow-y:auto;min-height:100vh;display:flex;align-items:center;justify-content:center;background:
-     radial-gradient(1200px 500px at 50% -10%,rgba(224,26,34,.12),transparent),var(--tinta);padding:60px 20px 84px}
+     radial-gradient(1200px 500px at 50% -10%,rgba(224,26,34,.12),transparent),
+     linear-gradient(rgba(15,16,20,.78),rgba(15,16,20,.9)),
+     url('./fotos/moto_bg.jpg') center 30%/cover no-repeat,
+     var(--tinta);padding:60px 20px 84px}
   .marquee{overflow:hidden;white-space:nowrap;background:var(--rojo);color:#fff;padding:11px 0}
   .marquee.bene{position:absolute;left:14px;right:14px;bottom:22px;border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.28)}
   .marquee.brands{position:absolute;left:0;right:0;top:0;background:var(--panel);color:var(--gris9);border-bottom:1px solid var(--gris2)}
@@ -644,9 +647,14 @@
   .wfoot-cred a{color:var(--rojo);font-weight:700;text-decoration:none}
   .lbtn-web:hover{border-color:#0ea5e9;background:#eff9ff}
   /* CTA lavado en la landing */
-  .wlavado-cta{display:flex;align-items:center;gap:18px;background:linear-gradient(120deg,#0a0a0c,#1a1a20);border:1px solid #2a2a30;border-radius:18px;padding:24px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.3);transition:transform .15s}
+  .wlavado-cta{display:flex;align-items:center;gap:18px;background:linear-gradient(120deg,#0a0a0c,#1a1a20);border:1px solid #2a2a30;border-radius:18px;padding:24px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.3);transition:transform .15s;overflow:hidden}
   .wlavado-cta:hover{transform:translateY(-2px)}
-  .wlavado-txt{flex:1}
+  .wlavado-txt{flex:1;min-width:0}
+  .wlavado-txt h2{overflow-wrap:break-word}
+  @media(max-width:560px){
+    .wlavado-cta{flex-direction:column;align-items:stretch;gap:14px}
+    .wlavado-go{width:100%;text-align:center}
+  }
   .wlavado-badge{display:inline-block;background:linear-gradient(90deg,#d4af37,#f4d97b);color:#1a1a1a;font-size:11px;font-weight:800;padding:5px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px}
   .wlavado-txt h2{font-family:Oswald;font-size:28px;text-transform:uppercase;color:#fff;margin:10px 0 4px}
   .wlavado-txt p{color:#c9c9cf;font-size:14px;margin:0}
@@ -1427,8 +1435,7 @@
           <li>Cambio de válvula</li>
           <li>Revisión de presión y balanceo</li>
         </ul>
-        <p class="vctxt">El valor depende del tamaño del neumático y el tipo de daño. Escríbenos por WhatsApp con una foto y te cotizamos al toque.</p>
-        <a class="lvbtn2 lvbtn2-red" href="https://wa.me/56959278450?text=Hola!%20Necesito%20vulcanizaci%C3%B3n%2C%20les%20env%C3%ADo%20una%20foto%20del%20da%C3%B1o" target="_blank" rel="noopener">Cotizar mi vulcanización</a>
+        <a class="lvbtn2 lvbtn2-red" href="https://wa.me/56959278450?text=Hola!%20Necesito%20vulcanizaci%C3%B3n%2C%20les%20env%C3%ADo%20una%20foto%20del%20da%C3%B1o" target="_blank" rel="noopener" style="margin-top:18px">Cotizar mi vulcanización</a>
       </div>
     </div>
   </section>
