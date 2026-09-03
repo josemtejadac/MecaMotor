@@ -1241,9 +1241,12 @@
           <div><label>Patente</label><input id="agPatente" placeholder="Ej: ABCD12" /></div>
           <div><label>Fecha</label><input id="agFecha" type="date" /></div>
         </div>
-        <div style="margin-top:12px">
-          <label>Hora</label>
-          <select id="agHora"><option value="">Elige una fecha primero…</option></select>
+        <div class="row c2" style="margin-top:12px">
+          <div><label>Correo (opcional)</label><input id="agEmail" type="email" placeholder="Para avisarte antes de tu hora" /></div>
+          <div>
+            <label>Hora</label>
+            <select id="agHora"><option value="">Elige una fecha primero…</option></select>
+          </div>
         </div>
         <p class="chint" id="agHint"></p>
         <button class="btn-save" id="agConfirmar" style="width:100%;margin-top:16px;padding:14px">Confirmar hora</button>
@@ -3538,11 +3541,12 @@ $('#agConfirmar').onclick = async ()=>{
   const marca = cot.marca || $('#cMarcaManual').value.trim() || null;
   const modelo = cot.modelo || $('#cModeloManual').value.trim() || null;
   const pr = cot.plan ? ((CONFIG.precios[cot.categoria]||{})[cot.plan]||0) : null;
+  const email = $('#agEmail').value.trim();
   const { data, error } = await db.rpc('mm_crear_cita', {
     p_fecha: fecha, p_hora: hora, p_nombre: nombre, p_telefono: telefono, p_patente: patente||null,
     p_marca: marca, p_modelo: modelo, p_categoria: cot.categoria||null,
     p_plan_key: cot.plan||null, p_plan_nombre: cot.plan? PLAN_META[cot.plan].nombre : null,
-    p_plan_precio: pr, p_notas: resumenTextoCita()
+    p_plan_precio: pr, p_notas: resumenTextoCita(), p_email: email||null
   });
   btn.disabled=false; btn.textContent='Confirmar hora';
   if (error){ err.textContent = error.message || 'No se pudo agendar, intenta de nuevo.'; err.classList.remove('hidden'); return; }
@@ -3550,7 +3554,8 @@ $('#agConfirmar').onclick = async ()=>{
   $('#cP5Form').classList.add('hidden');
   $('#cP5Ok').classList.remove('hidden');
   const fd = new Date(citaActual.fecha+'T00:00:00').toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'});
-  $('#agOkTxt').innerHTML = `Te esperamos el <b>${fd}</b> a las <b>${citaActual.hora} hrs</b>.<br>Folio: <b>${citaActual.folio}</b>`;
+  $('#agOkTxt').innerHTML = `Te esperamos el <b>${fd}</b> a las <b>${citaActual.hora} hrs</b>.<br>Folio: <b>${citaActual.folio}</b>`
+    + (citaActual.cliente_email ? `<br><span style="font-size:12px;color:var(--gris5)">Te mandaremos un recordatorio por correo 4h antes.</span>` : '');
   limpiarCotGuardada();
 };
 
