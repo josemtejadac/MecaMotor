@@ -210,6 +210,16 @@
   .welcome b{color:var(--rojo)}
   .btnprecios{padding:7px 13px;border-radius:999px;border:1px solid var(--rojo);background:var(--panel);color:var(--rojo);font-size:13px;font-weight:700}
   .btnprecios:hover{background:#fff5f5}
+  .badge-count{display:inline-block;background:var(--rojo);color:#fff;font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:999px;margin-left:3px;vertical-align:middle}
+  .citacard{background:var(--panel);border:1px solid var(--gris2);border-radius:12px;padding:14px;margin-bottom:10px}
+  .citacard .cc-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .citacard .cc-fh{font-family:Oswald;font-size:15px;color:var(--tinta)}
+  .citacard .cc-folio{font-size:11px;color:var(--gris5);letter-spacing:.5px}
+  .citacard .cc-body{margin-top:8px;font-size:13.5px;color:var(--gris9);line-height:1.55}
+  .citacard .cc-body b{color:var(--tinta)}
+  .citacard .cc-notas{margin-top:6px;font-size:12.5px;color:var(--gris5);font-style:italic}
+  .citacard .cc-tomada{margin-top:10px;padding:9px 11px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;font-size:13px;color:#15803d;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .citacard .cc-tomar{margin-top:10px;background:var(--morado);color:#fff;padding:10px 16px;font-size:13.5px;width:100%}
   .modalov{position:fixed;inset:0;background:rgba(16,18,22,.55);z-index:150;display:none;align-items:center;justify-content:center;padding:18px;overflow-y:auto}
   .modalov.open{display:flex}
   .modalbox{background:var(--panel);border-radius:16px;padding:22px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.35);max-height:calc(100vh - 36px);overflow-y:auto;overscroll-behavior:contain}
@@ -742,7 +752,7 @@
     <!-- elección -->
     <div id="loginChoice">
       <button class="lbtn lbtn-cotiza" id="chooseCotiza">
-        <span class="lbi">🧮</span><span class="lbt">Cotiza tu mantención<small>Calcula el precio de tu servicio</small></span><span class="lba">›</span>
+        <span class="lbi">🧮</span><span class="lbt">Cotiza tu mantención<small>Calcula el precio y agenda tu hora</small></span><span class="lba">›</span>
       </button>
       <button class="lbtn lbtn-taller" id="chooseTaller">
         <span class="lbi">🔧</span><span class="lbt">Login MecaMotor<small>Trabajadores del taller</small></span><span class="lba">›</span>
@@ -825,6 +835,7 @@
         <button class="chip" data-f="lista_retiro">Lista para retiro</button>
         <button class="chip" data-f="entregado">Entregados</button>
       </div>
+      <button class="btnprecios" id="agendaBtn">📅 Agenda <span class="badge-count hidden" id="agendaBadge">0</span></button>
       <button class="btnprecios" id="preciosBtn">💲 Editar precios</button>
     </div>
     <div class="grid" id="list"></div>
@@ -1140,6 +1151,7 @@
       <div class="paso" data-p="2"><b>2</b> Plan</div>
       <div class="paso" data-p="3"><b>3</b> Insumos</div>
       <div class="paso" data-p="4"><b>4</b> Total</div>
+      <div class="paso" data-p="5"><b>5</b> Agenda</div>
     </div>
   </header>
 
@@ -1210,7 +1222,41 @@
       <p class="cref">⚠️ Valor referencial. El precio final puede variar si la moto requiere trabajos o repuestos adicionales, lo que se te informará antes de realizarlos.</p>
       <button class="btn-wa" id="cEnviar" style="width:100%;padding:15px;font-size:15px">🟢 Enviar cotización por WhatsApp</button>
       <button class="btn-pdf" id="cPdf" style="width:100%;margin-top:10px;padding:13px">📄 Descargar cotización en PDF</button>
+      <button class="btn-save" id="cIrAgendar" style="width:100%;margin-top:10px;padding:13px;background:var(--morado)">📅 Agendar mi hora</button>
       <button class="btn-ghost" id="cReiniciar" style="width:100%;margin-top:10px;padding:12px">Cotizar otra moto</button>
+    </section>
+
+    <!-- paso 5: agenda -->
+    <section class="cpaso hidden" id="cP5">
+      <div id="cP5Form">
+        <h3 class="ctit">Agenda tu hora</h3>
+        <p class="csub">Déjanos tus datos y elige cuándo traer tu moto.</p>
+        <div class="row c2">
+          <div><label>Nombre</label><input id="agNombre" placeholder="Tu nombre" /></div>
+          <div><label>Teléfono</label>
+            <div class="telinput"><span class="telpre">+56</span><input id="agTelefono" type="tel" inputmode="numeric" placeholder="9 1234 5678" /></div>
+          </div>
+        </div>
+        <div class="row c2" style="margin-top:12px">
+          <div><label>Patente</label><input id="agPatente" placeholder="Ej: ABCD12" /></div>
+          <div><label>Fecha</label><input id="agFecha" type="date" /></div>
+        </div>
+        <div style="margin-top:12px">
+          <label>Hora</label>
+          <select id="agHora"><option value="">Elige una fecha primero…</option></select>
+        </div>
+        <p class="chint" id="agHint"></p>
+        <button class="btn-save" id="agConfirmar" style="width:100%;margin-top:16px;padding:14px">Confirmar hora</button>
+        <p class="err hidden" id="agErr"></p>
+      </div>
+      <div id="cP5Ok" class="hidden" style="text-align:center;padding-top:10px">
+        <div style="font-size:52px">✅</div>
+        <h3 class="ctit" style="margin-top:10px">¡Hora agendada!</h3>
+        <p class="csub" id="agOkTxt"></p>
+        <button class="btn-pdf" id="agPdf" style="width:100%;padding:13px">📄 Descargar PDF de mi hora</button>
+        <button class="btn-wa" id="agWa" style="width:100%;margin-top:10px;padding:15px;font-size:15px">🟢 Enviar por WhatsApp</button>
+        <button class="btn-ghost" id="agOtraCita" style="width:100%;margin-top:10px;padding:12px">Cotizar otra moto</button>
+      </div>
     </section>
   </div>
 
@@ -1453,6 +1499,17 @@
   <button class="ino" id="installNo">×</button>
 </div>
 
+<div id="agendaModal" class="modalov">
+  <div class="modalbox" style="max-width:560px">
+    <h3>Agenda de horas</h3>
+    <p class="modalsub">Citas agendadas por clientes desde el cotizador. Cualquiera puede tomar una.</p>
+    <div id="agendaLista"></div>
+    <div class="modalact">
+      <button class="btn-ghost" id="agendaCerrar" style="flex:1">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <div id="preciosModal" class="modalov">
   <div class="modalbox">
     <h3>Editar precios de planes</h3>
@@ -1591,17 +1648,17 @@ $('#brandSub').textContent = CONFIG.taller.subtitulo;
 let current = null;          // servicio en edición
 
 /* ---------- COMPRESIÓN DE FOTOS AL SUBIR ---------- */
-const IMG_MAX = 1000;
-const IMG_QUAL = 0.55;
+const IMG_MAX = 900;
+const IMG_QUAL = 0.45;
 function comprimirImagen(file){
   return new Promise((resolve)=>{
-    if (!file.type.startsWith('image/') || file.size < 80000){ resolve(file); return; }
+    if (!file.type.startsWith('image/') || file.size < 40000){ resolve(file); return; }
     const img = new Image();
     const url = URL.createObjectURL(file);
     img.onload = ()=>{
       URL.revokeObjectURL(url);
       let w=img.width, h=img.height;
-      if (w<=IMG_MAX && h<=IMG_MAX && file.size<300000){ resolve(file); return; }
+      if (w<=IMG_MAX && h<=IMG_MAX && file.size<120000){ resolve(file); return; }
       const scale = Math.min(IMG_MAX/w, IMG_MAX/h, 1);
       w = Math.round(w*scale); h = Math.round(h*scale);
       const c = document.createElement('canvas'); c.width=w; c.height=h;
@@ -1741,6 +1798,7 @@ async function loadServicios(){
   if (error){ toast('Error al cargar: '+error.message,'bad'); return; }
   servicios = data||[];
   renderList();
+  refreshAgendaBadge();
 }
 function renderList(){
   const q = ($('#search').value||'').toLowerCase().trim();
@@ -2242,6 +2300,89 @@ $('#nuevoIngresoBtn').onclick=()=>{
   });
   toast('Nuevo ingreso — el servicio anterior queda en el historial','ok');
 };
+
+/* ============================================================
+   AGENDA (panel trabajador/admin)
+   ============================================================ */
+let citas = [];
+async function loadCitas(){
+  const { data, error } = await db.from('mecamotor_citas').select('*')
+    .order('fecha',{ascending:true}).order('hora',{ascending:true});
+  if (error){ toast('Error al cargar la agenda: '+error.message,'bad'); return; }
+  citas = data||[];
+}
+async function refreshAgendaBadge(){
+  try{
+    const hoy = new Date().toISOString().slice(0,10);
+    const { count } = await db.from('mecamotor_citas').select('id',{count:'exact',head:true})
+      .eq('estado','pendiente').gte('fecha',hoy);
+    const b=$('#agendaBadge');
+    if (count>0){ b.textContent=count; b.classList.remove('hidden'); }
+    else b.classList.add('hidden');
+  }catch(e){}
+}
+function fmtFechaCita(f){
+  return new Date(f+'T00:00:00').toLocaleDateString('es-CL',{weekday:'short',day:'numeric',month:'short'});
+}
+function renderAgenda(){
+  const L=$('#agendaLista');
+  if (!citas.length){ L.innerHTML='<p class="csub" style="text-align:center;padding:20px 0">No hay citas agendadas todavía.</p>'; return; }
+  L.innerHTML = citas.map(c=>{
+    const moto = [c.moto_marca,c.moto_modelo].filter(Boolean).join(' ');
+    const tomada = c.estado==='tomada';
+    return `<div class="citacard" data-id="${c.id}">
+      <div class="cc-top"><span class="cc-fh">${fmtFechaCita(c.fecha)} · ${esc(c.hora)} hrs</span><span class="cc-folio">${esc(c.folio)}</span></div>
+      <div class="cc-body">
+        <div><b>${esc(c.cliente_nombre)}</b> · ${esc(c.cliente_telefono)}</div>
+        ${c.moto_patente || moto ? `<div>${esc(moto||'—')}${c.moto_patente?' · '+esc(c.moto_patente):''}</div>`:''}
+        ${c.plan_nombre ? `<div>Plan: <b>${esc(c.plan_nombre)}</b></div>`:''}
+      </div>
+      ${c.notas ? `<div class="cc-notas">${esc(c.notas)}</div>`:''}
+      ${tomada
+        ? `<div class="cc-tomada"><span>✅ Tomada por <b>${esc(c.tomado_por||'')}</b></span>${c.folio_servicio?`<button class="btn-ghost cc-abrir" data-fol="${esc(c.folio_servicio)}" style="padding:6px 12px;font-size:12.5px">Abrir hoja ${esc(c.folio_servicio)}</button>`:''}</div>`
+        : `<button class="cc-tomar" data-id="${c.id}">Tomar esta cita</button>`}
+    </div>`;
+  }).join('');
+  L.querySelectorAll('.cc-tomar').forEach(b=> b.onclick = ()=> tomarCita(b.dataset.id));
+  L.querySelectorAll('.cc-abrir').forEach(b=> b.onclick = ()=>{
+    const s = servicios.find(x=>x.folio===b.dataset.fol);
+    $('#agendaModal').classList.remove('open');
+    if (s) openEditor(s); else toast('No encontré esa hoja de servicio','bad');
+  });
+}
+async function tomarCita(id){
+  const cita = citas.find(c=>c.id===id); if (!cita) return;
+  const nuevoFol = nuevoFolio();
+  const { data:upd, error:e1 } = await db.from('mecamotor_citas')
+    .update({ estado:'tomada', tomado_por:trabajadorNombre, tomado_por_email:trabajadorEmail, tomado_at:new Date().toISOString(), folio_servicio:nuevoFol })
+    .eq('id', id).eq('estado','pendiente').select().single();
+  if (e1 || !upd){ toast('Esa cita ya fue tomada por otro trabajador','bad'); await loadCitas(); renderAgenda(); return; }
+
+  const items = cita.plan_nombre ? [{ tipo:'plan', descripcion:`${cita.plan_nombre} · ${CAT_LABEL[cita.categoria]||''}`, cantidad:1, precio:cita.plan_precio||0 }] : [];
+  const payload = {
+    folio: nuevoFol, estado:'recibido', categoria: cita.categoria||'100_300',
+    plan_key: cita.plan_key, plan_nombre: cita.plan_nombre,
+    cliente_nombre: cita.cliente_nombre, cliente_telefono: cita.cliente_telefono,
+    moto_patente: cita.moto_patente, moto_marca: cita.moto_marca, moto_modelo: cita.moto_modelo,
+    items, checklist:[], total: cita.plan_precio||0, descuento:0,
+    observaciones: cita.notas ? ('Agendado por el cliente: '+cita.notas) : `Hora agendada para ${fmtFechaCita(cita.fecha)} ${cita.hora} hrs`,
+    fotos_ingreso:[], fotos_salida:[], mostrar_nota_insumos:true,
+    creado_por: trabajadorNombre, creado_por_email: trabajadorEmail
+  };
+  const { data:serv, error:e2 } = await db.from('mecamotor_servicios').insert(payload).select().single();
+  if (e2){ toast('La cita quedó tomada, pero no pude crear la hoja: '+e2.message,'bad'); return; }
+
+  toast('Cita tomada — hoja de servicio creada','ok');
+  $('#agendaModal').classList.remove('open');
+  await loadServicios();
+  openEditor(serv);
+}
+$('#agendaBtn').onclick = async ()=>{
+  await loadCitas(); renderAgenda();
+  $('#agendaModal').classList.add('open');
+};
+$('#agendaCerrar').onclick = ()=> $('#agendaModal').classList.remove('open');
+$('#agendaModal').onclick = e=>{ if(e.target.id==='agendaModal') $('#agendaModal').classList.remove('open'); };
 
 /* enviar por WhatsApp: link del portal y planilla PDF */
 function portalUrl(){ return `${location.origin}${location.pathname}`; }
@@ -3021,7 +3162,7 @@ $('#cModeloManual') && ($('#cModeloManual').oninput = guardarCot);
 
 function irPaso(n){
   cPaso = n;
-  [1,2,3,4].forEach(i=> $('#cP'+i).classList.toggle('hidden', i!==n));
+  [1,2,3,4,5].forEach(i=> $('#cP'+i).classList.toggle('hidden', i!==n));
   $$('#cPasos .paso').forEach(p=>{
     const i = +p.dataset.p;
     p.classList.toggle('on', i===n);
@@ -3032,6 +3173,7 @@ function irPaso(n){
   $('#cSiguiente').textContent = n===3 ? 'Ver total' : 'Siguiente';
   if (n===3){ renderInsumos(); renderExtras(); }
   if (n===4) renderResumenCot();
+  if (n===5) iniciarAgenda();
   actualizarTotalCot();
   guardarCot();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -3324,6 +3466,170 @@ async function cotizaPDF(){
   doc.save(`Cotizacion_MecaMotor_${marca}_${modelo}.pdf`.replace(/\s+/g,'_'));
 }
 $('#cPdf').onclick=async()=>{ toast('Generando PDF…','ok'); try{ await cotizaPDF(); }catch(e){ toast('No se pudo generar el PDF','bad'); } };
+
+/* ============================================================
+   AGENDA · paso 5 del cotizador
+   ============================================================ */
+$('#cIrAgendar').onclick = ()=> irPaso(5);
+$('#agOtraCita').onclick = reiniciarCot;
+
+function resumenTextoCita(){
+  const ins = Object.entries(cot.insumos||{}).filter(([,n])=>n>0);
+  let t = '';
+  if (ins.length) t += 'Insumos: ' + ins.map(([id,n])=>{ const p=productos.find(x=>x.id===id); return p? `${p.nombre} x${n}`:''; }).filter(Boolean).join(', ');
+  if ((cot.extras||[]).length) t += (t?' · ':'') + 'Extra: ' + cot.extras.map(e=>e.desc).join(', ');
+  return t || null;
+}
+function horarioDia(fechaStr){
+  const d = new Date(fechaStr+'T00:00:00');
+  const dow = d.getDay();
+  if (dow===0) return null; // domingo cerrado
+  if (dow===6) return {ini:9*60, fin:15*60};
+  return {ini:9*60, fin:18*60+30};
+}
+function bloquesDia(fechaStr){
+  const h = horarioDia(fechaStr); if(!h) return [];
+  const out=[];
+  const hoy = new Date();
+  const esHoy = fechaStr === hoy.toISOString().slice(0,10);
+  const minAhora = hoy.getHours()*60 + hoy.getMinutes() + 60;
+  for (let m=h.ini; m<=h.fin-30; m+=30){
+    if (esHoy && m<minAhora) continue;
+    out.push(String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'));
+  }
+  return out;
+}
+async function refreshHoras(){
+  const sel=$('#agHora'), fecha=$('#agFecha').value, hint=$('#agHint');
+  hint.textContent='';
+  if (!fecha){ sel.innerHTML='<option value="">Elige una fecha primero…</option>'; return; }
+  const bloques = bloquesDia(fecha);
+  if (!bloques.length){ sel.innerHTML='<option value="">Cerrado ese día</option>'; hint.textContent='Los domingos no atendemos — elige otra fecha.'; return; }
+  let ocupadas=[];
+  try{ const {data} = await db.rpc('mm_horas_ocupadas',{p_fecha:fecha}); ocupadas = data||[]; }catch(e){}
+  const libres = bloques.filter(h=>!ocupadas.includes(h));
+  if (!libres.length){ sel.innerHTML='<option value="">Sin horas disponibles</option>'; hint.textContent='Ese día está lleno — prueba con otra fecha.'; return; }
+  sel.innerHTML = libres.map(h=>`<option value="${h}">${h} hrs</option>`).join('');
+}
+$('#agFecha') && ($('#agFecha').onchange = refreshHoras);
+
+function iniciarAgenda(){
+  const hoy = new Date().toISOString().slice(0,10);
+  const f = $('#agFecha');
+  f.min = hoy;
+  if (!f.value) f.value = hoy;
+  refreshHoras();
+  $('#cP5Form').classList.remove('hidden');
+  $('#cP5Ok').classList.add('hidden');
+  $('#agErr').classList.add('hidden');
+}
+
+let citaActual = null;
+$('#agConfirmar').onclick = async ()=>{
+  const nombre=$('#agNombre').value.trim();
+  const telefono=$('#agTelefono').value.trim();
+  const patente=$('#agPatente').value.trim().toUpperCase();
+  const fecha=$('#agFecha').value;
+  const hora=$('#agHora').value;
+  const err=$('#agErr'); err.classList.add('hidden');
+  if (!nombre || !telefono){ err.textContent='Escribe tu nombre y teléfono.'; err.classList.remove('hidden'); return; }
+  if (!fecha || !hora){ err.textContent='Elige fecha y hora.'; err.classList.remove('hidden'); return; }
+  const btn=$('#agConfirmar'); btn.disabled=true; btn.textContent='Agendando…';
+  const marca = cot.marca || $('#cMarcaManual').value.trim() || null;
+  const modelo = cot.modelo || $('#cModeloManual').value.trim() || null;
+  const pr = cot.plan ? ((CONFIG.precios[cot.categoria]||{})[cot.plan]||0) : null;
+  const { data, error } = await db.rpc('mm_crear_cita', {
+    p_fecha: fecha, p_hora: hora, p_nombre: nombre, p_telefono: telefono, p_patente: patente||null,
+    p_marca: marca, p_modelo: modelo, p_categoria: cot.categoria||null,
+    p_plan_key: cot.plan||null, p_plan_nombre: cot.plan? PLAN_META[cot.plan].nombre : null,
+    p_plan_precio: pr, p_notas: resumenTextoCita()
+  });
+  btn.disabled=false; btn.textContent='Confirmar hora';
+  if (error){ err.textContent = error.message || 'No se pudo agendar, intenta de nuevo.'; err.classList.remove('hidden'); return; }
+  citaActual = Array.isArray(data)? data[0] : data;
+  $('#cP5Form').classList.add('hidden');
+  $('#cP5Ok').classList.remove('hidden');
+  const fd = new Date(citaActual.fecha+'T00:00:00').toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'});
+  $('#agOkTxt').innerHTML = `Te esperamos el <b>${fd}</b> a las <b>${citaActual.hora} hrs</b>.<br>Folio: <b>${citaActual.folio}</b>`;
+  limpiarCotGuardada();
+};
+
+function mensajeCita(c){
+  const fd = new Date(c.fecha+'T00:00:00').toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'});
+  let msg = `Hola *MecaMotor* 🏍️\nAgendé una hora de mantención:\n\n`;
+  msg += `*Folio:* ${c.folio}\n*Fecha:* ${fd}\n*Hora:* ${c.hora} hrs\n`;
+  msg += `*Nombre:* ${c.cliente_nombre}\n*Teléfono:* ${c.cliente_telefono}\n`;
+  if (c.moto_patente) msg += `*Patente:* ${c.moto_patente}\n`;
+  if (c.moto_marca) msg += `*Moto:* ${c.moto_marca} ${c.moto_modelo||''}\n`;
+  if (c.plan_nombre) msg += `*Plan:* ${c.plan_nombre}\n`;
+  return msg;
+}
+$('#agWa').onclick = ()=>{
+  if (!citaActual) return;
+  const tel=(CONFIG.taller.telefonoWa||'').replace(/\D/g,'');
+  window.open(`https://wa.me/${tel}?text=${encodeURIComponent(mensajeCita(citaActual))}`,'_blank');
+};
+$('#agPdf').onclick = async()=>{
+  if (!citaActual) return;
+  toast('Generando PDF…','ok');
+  try{ await citaPDF(citaActual); }catch(e){ toast('No se pudo generar el PDF','bad'); }
+};
+async function citaPDF(c){
+  const { jsPDF }=window.jspdf; const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210, M=14; let y=14;
+  const logo=await loadImg('./logo.png');
+  if (logo){ try{ doc.addImage(logo,'PNG',M,y,44,20); }catch(e){} }
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(90);
+  doc.text(CONFIG.taller.nombre.toUpperCase(),W-M,y+6,{align:'right'});
+  doc.setFont('helvetica','normal'); doc.setTextColor(120);
+  doc.text(CONFIG.taller.subtitulo,W-M,y+11,{align:'right'});
+  doc.text('Tel: '+CONFIG.taller.telefono,W-M,y+16,{align:'right'});
+  if (CONFIG.taller.direccion) doc.text(CONFIG.taller.direccion,W-M,y+21,{align:'right'});
+  y+=30;
+  doc.setDrawColor(224,26,34); doc.setLineWidth(1); doc.line(M,y,W-M,y); y+=8;
+
+  doc.setTextColor(20); doc.setFont('helvetica','bold'); doc.setFontSize(15);
+  doc.text('HORA AGENDADA',M,y);
+  doc.setFontSize(9); doc.setTextColor(224,26,34);
+  doc.text('Folio '+c.folio,W-M,y,{align:'right'});
+  y+=10;
+
+  const fd = new Date(c.fecha+'T00:00:00').toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  doc.setFillColor(245,246,248); doc.roundedRect(M,y,W-M*2,20,2,2,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(224,26,34);
+  doc.text('FECHA Y HORA',M+4,y+7);
+  doc.setFont('helvetica','normal'); doc.setFontSize(12); doc.setTextColor(40);
+  doc.text(`${fd} · ${c.hora} hrs`,M+4,y+15);
+  y+=28;
+
+  const filas = [
+    ['Cliente', c.cliente_nombre],
+    ['Teléfono', c.cliente_telefono],
+    ['Patente', c.moto_patente || '—'],
+    ['Moto', [c.moto_marca,c.moto_modelo].filter(Boolean).join(' ') || '—'],
+    ['Plan', c.plan_nombre || '—'],
+  ];
+  doc.setFontSize(10);
+  filas.forEach(([k,v],i)=>{
+    if (i%2){ doc.setFillColor(248,249,250); doc.rect(M,y,W-M*2,8,'F'); }
+    doc.setFont('helvetica','bold'); doc.setTextColor(90); doc.text(k,M+3,y+5.5);
+    doc.setFont('helvetica','normal'); doc.setTextColor(30); doc.text(String(v),M+55,y+5.5);
+    y+=8;
+  });
+  if (c.notas){
+    y+=4;
+    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(224,26,34);
+    doc.text('DETALLE',M,y); y+=5;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(60);
+    const notas = doc.splitTextToSize(c.notas, W-M*2);
+    doc.text(notas,M,y); y += notas.length*4.5;
+  }
+  y+=10;
+  doc.setFont('helvetica','italic'); doc.setFontSize(8); doc.setTextColor(120);
+  doc.text('Presenta este folio al llegar al taller. Si necesitas cambiar tu hora, escríbenos por WhatsApp.',M,y);
+
+  doc.save(`Hora_MecaMotor_${c.folio}.pdf`);
+}
 
 /* ============================================================
    PWA · instalación
