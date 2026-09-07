@@ -160,25 +160,33 @@
   .marquee-track span{display:inline-block;padding:0 30px;font-size:13.5px;font-weight:600;letter-spacing:.2px}
   .marquee:hover .marquee-track{animation-play-state:paused}
   @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  #login .card{position:relative;background:var(--panel);border-radius:18px;padding:34px 26px;width:100%;max-width:390px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  #login .card{position:relative;background:linear-gradient(165deg,rgba(32,34,40,.62),rgba(16,17,21,.8));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:40px 26px 30px;width:100%;max-width:400px;text-align:center;box-shadow:0 30px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.07)}
+  .login-kicker{font-family:Oswald;font-size:11px;letter-spacing:5px;color:#c7cad1;text-transform:uppercase;opacity:.7;margin-bottom:16px}
   .temabtn.abs{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;background:var(--panel2);color:var(--tinta);font-size:18px;border:1px solid var(--gris2);display:flex;align-items:center;justify-content:center}
-  .ig-home{display:inline-flex;align-items:center;gap:7px;margin:14px auto 20px;padding:7px 15px;border-radius:999px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-weight:600;font-size:13px;text-decoration:none}
-  #login p.credito{margin:18px 0 0;font-size:9.5px;color:var(--gris5);text-align:center;text-transform:none;letter-spacing:.2px;line-height:1.4}
-  #login p.credito a{color:var(--rojo);text-decoration:none;font-weight:700}
-  #login img{height:60px;margin-bottom:6px}
-  #login h1{font-size:24px}
-  #login p{color:var(--gris5);font-size:13px;letter-spacing:2px;text-transform:uppercase;margin:2px 0 22px}
+  #login .temabtn.abs{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.14)}
+  .ig-home{display:inline-flex;align-items:center;gap:7px;margin:14px auto 22px;padding:7px 15px;border-radius:999px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-weight:600;font-size:13px;text-decoration:none;box-shadow:0 8px 20px rgba(220,39,67,.35)}
+  #login p.credito{margin:22px 0 0;font-size:9.5px;color:rgba(255,255,255,.35);text-align:center;text-transform:none;letter-spacing:.2px;line-height:1.4}
+  #login p.credito a{color:#ff6b6f;text-decoration:none;font-weight:700}
+  #login img{height:60px;margin-bottom:6px;filter:drop-shadow(0 6px 16px rgba(224,26,34,.4))}
+  #login h1{font-size:26px;color:#fff;font-family:Oswald;letter-spacing:1px}
+  #login p{color:#9aa0ab;font-size:12.5px;letter-spacing:3px;text-transform:uppercase;margin:2px 0 24px}
   #login .err{margin-top:12px}
   /* botones de elección */
   #loginChoice{display:flex;flex-direction:column;gap:12px}
-  .lbtn{display:flex;align-items:center;gap:14px;text-align:left;padding:16px 16px;border-radius:14px;border:2px solid var(--gris2);background:var(--panel)}
-  .lbtn .lbi{font-size:26px;line-height:1}
-  .lbtn .lbt{font-family:Oswald;font-size:16px;color:var(--tinta);text-transform:uppercase;letter-spacing:.5px;line-height:1.1}
-  .lbtn .lbt small{display:block;font-family:Inter;font-weight:500;font-size:11.5px;color:var(--gris5);text-transform:none;letter-spacing:0;margin-top:3px}
-  .lbtn .lba{margin-left:auto;font-size:24px;color:var(--gris3)}
-  .lbtn-taller:hover{border-color:var(--rojo);background:#fff6f6}
-  .lbtn-cliente:hover{border-color:var(--verde);background:#f4fdf6}
-  .lbtn-tienda:hover{border-color:var(--tinta);background:var(--panel2)}
+  .lbtn{display:flex;align-items:center;gap:14px;text-align:left;padding:14px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(155deg,rgba(255,255,255,.07),rgba(255,255,255,.02));box-shadow:0 12px 26px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);transition:.18s ease}
+  .lbtn:hover{transform:translateY(-2px)}
+  .lbtn .lbi{font-size:20px;line-height:1;width:42px;height:42px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,.07)}
+  .lbtn .lbt{font-family:Oswald;font-size:15.5px;color:#fff;text-transform:uppercase;letter-spacing:.5px;line-height:1.1}
+  .lbtn .lbt small{display:block;font-family:Inter;font-weight:500;font-size:11px;color:#9aa0ab;text-transform:none;letter-spacing:0;margin-top:3px}
+  .lbtn .lba{margin-left:auto;font-size:22px;color:rgba(255,255,255,.3)}
+  .lbtn-taller .lbi{background:rgba(224,26,34,.2);color:#ff6b6f}
+  .lbtn-cliente .lbi{background:rgba(22,163,74,.2);color:#4ade80}
+  .lbtn-tienda .lbi{background:rgba(124,58,237,.22);color:#c9b6fb}
+  .lbtn-web .lbi{background:rgba(255,255,255,.1);color:#fff}
+  .lbtn-taller:hover{border-color:rgba(224,26,34,.55)}
+  .lbtn-cliente:hover{border-color:rgba(22,163,74,.55)}
+  .lbtn-tienda:hover{border-color:rgba(124,58,237,.55)}
+  .lbtn-web:hover{border-color:rgba(255,255,255,.3)}
   /* formularios */
   .lform{text-align:left}
   .passwrap{display:flex;align-items:stretch;border:1px solid var(--gris2);border-radius:10px;overflow:hidden;background:var(--panel)}
@@ -193,6 +201,17 @@
   .lsubmit{width:100%;margin-top:16px;background:var(--rojo);color:#fff;padding:13px}
   .lsubmit:hover{background:var(--rojo-osc)}
   .lsubmit-cli{background:var(--verde)} .lsubmit-cli:hover{background:var(--verde-osc)}
+  /* login siempre oscuro (independiente del tema claro/oscuro de la app) */
+  #login .lform-head{color:#fff}
+  #login .lform label{color:#9aa0ab}
+  #login .lform input,#login .passwrap{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#fff}
+  #login .lform input::placeholder{color:rgba(255,255,255,.35)}
+  #login .lform input:focus{outline-color:var(--rojo)}
+  #login .lback{background:rgba(255,255,255,.09);color:#fff}
+  #login .passeye{background:rgba(255,255,255,.08);color:#fff;border-left-color:rgba(255,255,255,.14)}
+  #login .marquee.brands{background:rgba(10,11,14,.55);backdrop-filter:blur(8px);border-bottom-color:rgba(255,255,255,.08)}
+  #login .marquee.brands .marquee-track span{color:#c7cad1}
+  #login .marquee.bene{box-shadow:0 14px 30px rgba(0,0,0,.4)}
   /* banner instalar */
   #installBar{position:fixed;left:12px;right:12px;bottom:12px;background:var(--tinta);color:#fff;border-radius:14px;padding:12px 14px;display:none;align-items:center;gap:12px;z-index:120;box-shadow:0 12px 30px rgba(0,0,0,.35)}
   #installBar.show{display:flex}
@@ -502,10 +521,12 @@
   #cotiza{display:none;min-height:100vh;background:var(--fondo);flex-direction:column}
   #cotiza.open{display:flex}
   #cotiza .wrap{flex:1;display:flex;flex-direction:column;width:100%;padding-bottom:130px}
-  .lbtn-cotiza{border-color:transparent;background:linear-gradient(135deg,#a855f7,#e01a22);box-shadow:0 6px 18px rgba(224,26,34,.30)}
+  .lbtn-cotiza{border-color:transparent;background:linear-gradient(135deg,#a855f7,#e01a22);box-shadow:0 16px 36px rgba(224,26,34,.45),inset 0 1px 0 rgba(255,255,255,.25);padding:18px 16px}
+  .lbtn-cotiza .lbi{background:rgba(255,255,255,.22)}
   .lbtn-cotiza .lbt,.lbtn-cotiza .lba{color:#fff}
+  .lbtn-cotiza .lbt{font-size:16.5px}
   .lbtn-cotiza .lbt small{color:rgba(255,255,255,.9)}
-  .lbtn-cotiza:hover{border-color:transparent;background:linear-gradient(135deg,#9333ea,#c81419)}
+  .lbtn-cotiza:hover{border-color:transparent;background:linear-gradient(135deg,#9333ea,#c81419);transform:translateY(-2px);box-shadow:0 20px 44px rgba(224,26,34,.55),inset 0 1px 0 rgba(255,255,255,.25)}
   .pasos{display:flex;gap:6px;max-width:1060px;margin:0 auto;padding:0 14px 11px;overflow-x:auto;scrollbar-width:none;width:100%}
   .pasos::-webkit-scrollbar{display:none}
   .paso{flex:1 0 auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--gris5);padding:7px 11px;border-radius:999px;background:var(--panel2);white-space:nowrap;cursor:pointer}
@@ -741,9 +762,10 @@
   </div></div>
   <div class="card">
     <button id="temaBtn" class="temabtn abs" title="Modo claro / oscuro" aria-label="Cambiar tema">🌙</button>
+    <p class="login-kicker">More than a workshop</p>
     <img src="./logo.png" alt="MecaMotor" />
     <h1>MecaMotor</h1>
-    <p>Taller de Motos</p>
+    <p>Tu moto en las mejores manos</p>
     <a href="https://www.instagram.com/mecamotor_chile" target="_blank" rel="noopener" class="ig-home">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
       mecamotor_chile
