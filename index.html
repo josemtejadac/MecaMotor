@@ -165,16 +165,14 @@
   #login .card::after{content:"";position:absolute;bottom:-55%;right:-25%;width:80%;height:140%;background:radial-gradient(closest-side,rgba(168,85,247,.22),transparent 70%);z-index:-1;pointer-events:none}
   #login .card>.sheen{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.09),transparent 45%);pointer-events:none;z-index:0}
   .login-kicker{font-family:Oswald;font-size:11px;letter-spacing:5px;color:#c7cad1;text-transform:uppercase;opacity:.7;margin-bottom:18px}
-  .login-logo-plate{width:88px;height:88px;margin:0 auto 14px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#22242b,#0d0e12);border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 30px rgba(0,0,0,.5),0 0 0 1px rgba(224,26,34,.15),inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 22px rgba(224,26,34,.08)}
-  .login-logo-plate img{height:52px;width:auto;margin:0;filter:none;border-radius:8px}
-  .login-rule{display:block;width:46px;height:3px;margin:10px auto 14px;border-radius:3px;background:linear-gradient(90deg,#a855f7,#e01a22);box-shadow:0 0 14px rgba(224,26,34,.6)}
+  .login-rule{display:block;width:46px;height:3px;margin:12px auto 14px;border-radius:3px;background:linear-gradient(90deg,#a855f7,#e01a22);box-shadow:0 0 14px rgba(224,26,34,.6)}
   .temabtn.abs{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;background:var(--panel2);color:var(--tinta);font-size:18px;border:1px solid var(--gris2);display:flex;align-items:center;justify-content:center}
   #login .temabtn.abs{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.14);z-index:2}
   .ig-home{display:inline-flex;align-items:center;gap:7px;margin:14px auto 24px;padding:7px 15px;border-radius:999px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;font-weight:600;font-size:13px;text-decoration:none;box-shadow:0 10px 24px rgba(220,39,67,.4)}
   #login p.credito{margin:22px 0 0;font-size:9.5px;color:rgba(255,255,255,.35);text-align:center;text-transform:none;letter-spacing:.2px;line-height:1.4}
   #login p.credito a{color:#ff6b6f;text-decoration:none;font-weight:700}
-  #login img{height:60px;margin-bottom:6px}
-  #login h1{font-size:27px;color:#fff;font-family:Oswald;letter-spacing:2px;text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 30px rgba(224,26,34,.3)}
+  #login h1.login-word{font-size:34px;color:#fff;font-family:Oswald;font-weight:700;letter-spacing:1px;text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 34px rgba(224,26,34,.35)}
+  #login h1.login-word span{background:linear-gradient(90deg,#e01a22,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}
   #login p{color:#9aa0ab;font-size:12.5px;letter-spacing:3px;text-transform:uppercase;margin:0 0 24px}
   #login .err{margin-top:12px}
   /* botones de elección */
@@ -773,8 +771,7 @@
     <span class="sheen" aria-hidden="true"></span>
     <button id="temaBtn" class="temabtn abs" title="Modo claro / oscuro" aria-label="Cambiar tema">🌙</button>
     <p class="login-kicker">More than a workshop</p>
-    <div class="login-logo-plate"><img src="./logo.png" alt="MecaMotor" /></div>
-    <h1>MecaMotor</h1>
+    <h1 class="login-word">Meca<span>Motor</span></h1>
     <span class="login-rule"></span>
     <p>Tu moto en las mejores manos</p>
     <a href="https://www.instagram.com/mecamotor_chile" target="_blank" rel="noopener" class="ig-home">
