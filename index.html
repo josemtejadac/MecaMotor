@@ -236,7 +236,10 @@
   .btnprecios:hover{background:#fff5f5}
   .badge-count{display:inline-block;background:var(--rojo);color:#fff;font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:999px;margin-left:3px;vertical-align:middle}
   .citacard{background:var(--panel);border:1px solid var(--gris2);border-radius:12px;padding:14px;margin-bottom:10px}
-  .citacard .cc-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .citacard .cc-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .citacard .cc-folio{margin-right:auto}
+  .citacard .cc-del{flex:0 0 auto;width:28px;height:28px;border-radius:8px;background:#fdeaea;color:var(--rojo);font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center}
+  .citacard .cc-del:hover{background:var(--rojo);color:#fff}
   .citacard .cc-fh{font-family:Oswald;font-size:15px;color:var(--tinta)}
   .citacard .cc-folio{font-size:11px;color:var(--gris5);letter-spacing:.5px}
   .citacard .cc-body{margin-top:8px;font-size:13.5px;color:var(--gris9);line-height:1.55}
@@ -2340,7 +2343,7 @@ $('#nuevoIngresoBtn').onclick=()=>{
 let citas = [];
 async function loadCitas(){
   const { data, error } = await db.from('mecamotor_citas').select('*')
-    .order('fecha',{ascending:true}).order('hora',{ascending:true});
+    .order('created_at',{ascending:false});
   if (error){ toast('Error al cargar la agenda: '+error.message,'bad'); return; }
   citas = data||[];
 }
@@ -2364,7 +2367,7 @@ function renderAgenda(){
     const moto = [c.moto_marca,c.moto_modelo].filter(Boolean).join(' ');
     const tomada = c.estado==='tomada';
     return `<div class="citacard" data-id="${c.id}">
-      <div class="cc-top"><span class="cc-fh">${fmtFechaCita(c.fecha)} · ${esc(c.hora)} hrs</span><span class="cc-folio">${esc(c.folio)}</span></div>
+      <div class="cc-top"><span class="cc-fh">${fmtFechaCita(c.fecha)} · ${esc(c.hora)} hrs</span><span class="cc-folio">${esc(c.folio)}</span><button class="cc-del" data-id="${c.id}" title="Eliminar esta cita">🗑</button></div>
       <div class="cc-body">
         <div><b>${esc(c.cliente_nombre)}</b> · ${esc(c.cliente_telefono)}</div>
         ${c.moto_patente || moto ? `<div>${esc(moto||'—')}${c.moto_patente?' · '+esc(c.moto_patente):''}</div>`:''}
@@ -2377,11 +2380,20 @@ function renderAgenda(){
     </div>`;
   }).join('');
   L.querySelectorAll('.cc-tomar').forEach(b=> b.onclick = ()=> tomarCita(b.dataset.id));
+  L.querySelectorAll('.cc-del').forEach(b=> b.onclick = ()=> eliminarCita(b.dataset.id));
   L.querySelectorAll('.cc-abrir').forEach(b=> b.onclick = ()=>{
     const s = servicios.find(x=>x.folio===b.dataset.fol);
     $('#agendaModal').classList.remove('open');
     if (s) openEditor(s); else toast('No encontré esa hoja de servicio','bad');
   });
+}
+async function eliminarCita(id){
+  const cita = citas.find(c=>c.id===id); if (!cita) return;
+  if (!confirm(`¿Eliminar la cita de ${cita.cliente_nombre} (${fmtFechaCita(cita.fecha)} · ${cita.hora} hrs)?`)) return;
+  const { error } = await db.from('mecamotor_citas').delete().eq('id', id);
+  if (error){ toast('No pude eliminar la cita: '+error.message,'bad'); return; }
+  toast('Cita eliminada','ok');
+  await loadCitas(); renderAgenda(); await refreshAgendaBadge();
 }
 async function tomarCita(id){
   const cita = citas.find(c=>c.id===id); if (!cita) return;
