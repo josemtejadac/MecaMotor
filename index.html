@@ -2371,7 +2371,8 @@ function renderAgenda(){
       <div class="cc-body">
         <div><b>${esc(c.cliente_nombre)}</b> · ${esc(c.cliente_telefono)}</div>
         ${c.moto_patente || moto ? `<div>${esc(moto||'—')}${c.moto_patente?' · '+esc(c.moto_patente):''}</div>`:''}
-        ${c.plan_nombre ? `<div>Plan: <b>${esc(c.plan_nombre)}</b></div>`:''}
+        ${c.plan_nombre ? `<div>Plan: <b>${esc(c.plan_nombre)}</b>${c.plan_precio?' · '+money(c.plan_precio):''}</div>`:''}
+        ${c.cliente_email ? `<div>✉️ ${esc(c.cliente_email)}</div>`:''}
       </div>
       ${c.notas ? `<div class="cc-notas">${esc(c.notas)}</div>`:''}
       ${tomada
@@ -2403,14 +2404,22 @@ async function tomarCita(id){
     .eq('id', id).eq('estado','pendiente').select().single();
   if (e1 || !upd){ toast('Esa cita ya fue tomada por otro trabajador','bad'); await loadCitas(); renderAgenda(); return; }
 
-  const items = cita.plan_nombre ? [{ tipo:'plan', descripcion:`${cita.plan_nombre} · ${CAT_LABEL[cita.categoria]||''}`, cantidad:1, precio:cita.plan_precio||0 }] : [];
+  const total = cita.plan_precio||0;
+  const planSolo = cita.plan_key ? ((CONFIG.precios[cita.categoria]||{})[cita.plan_key]||0) : 0;
+  const extra = Math.max(0, total - planSolo);
+  const items = [];
+  if (cita.plan_nombre) items.push({ tipo:'plan', descripcion:`${cita.plan_nombre} · ${CAT_LABEL[cita.categoria]||''}`, cantidad:1, precio:planSolo });
+  if (extra>0) items.push({ tipo:'extra', descripcion: cita.notas ? `Insumos/extras: ${cita.notas}` : 'Insumos y extras seleccionados por el cliente', cantidad:1, precio:extra });
+  const obsPartes = [`Agendado por el cliente para ${fmtFechaCita(cita.fecha)} ${cita.hora} hrs.`];
+  if (cita.notas) obsPartes.push('Detalle: '+cita.notas);
+  if (cita.cliente_email) obsPartes.push('Correo: '+cita.cliente_email);
   const payload = {
     folio: nuevoFol, estado:'recibido', categoria: cita.categoria||'100_300',
     plan_key: cita.plan_key, plan_nombre: cita.plan_nombre,
     cliente_nombre: cita.cliente_nombre, cliente_telefono: cita.cliente_telefono,
     moto_patente: cita.moto_patente, moto_marca: cita.moto_marca, moto_modelo: cita.moto_modelo,
-    items, checklist:[], total: cita.plan_precio||0, descuento:0,
-    observaciones: cita.notas ? ('Agendado por el cliente: '+cita.notas) : `Hora agendada para ${fmtFechaCita(cita.fecha)} ${cita.hora} hrs`,
+    items, checklist:[], total, descuento:0,
+    observaciones: obsPartes.join(' '),
     fotos_ingreso:[], fotos_salida:[], mostrar_nota_insumos:true,
     creado_por: trabajadorNombre, creado_por_email: trabajadorEmail
   };
@@ -3582,7 +3591,7 @@ $('#agConfirmar').onclick = async ()=>{
   const btn=$('#agConfirmar'); btn.disabled=true; btn.textContent='Agendando…';
   const marca = cot.marca || $('#cMarcaManual').value.trim() || null;
   const modelo = cot.modelo || $('#cModeloManual').value.trim() || null;
-  const pr = cot.plan ? ((CONFIG.precios[cot.categoria]||{})[cot.plan]||0) : null;
+  const pr = cot.plan ? totalCot() : null;
   const email = $('#agEmail').value.trim();
   const { data, error } = await db.rpc('mm_crear_cita', {
     p_fecha: fecha, p_hora: hora, p_nombre: nombre, p_telefono: telefono, p_patente: patente||null,
