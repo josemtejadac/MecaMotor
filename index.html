@@ -238,6 +238,25 @@
   .cabono{margin:14px 0 0;padding:10px 12px;background:#f5f0ff;border:1px solid #ddd0fb;border-radius:10px;font-size:12.5px;color:#5b21b6;line-height:1.4}
   .spinner{width:36px;height:36px;border:4px solid var(--gris2);border-top-color:var(--morado);border-radius:50%;margin:0 auto;animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
+  .agtabs{display:flex;gap:8px;margin:2px 0 14px}
+  .agtab{flex:1;padding:9px;border-radius:10px;border:1px solid var(--gris2);background:var(--panel);color:var(--gris5);font-size:13px;font-weight:700}
+  .agtab.on{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+  .agcal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .agcal-nav b{font-family:Oswald;font-size:14px;text-transform:uppercase;letter-spacing:.5px}
+  .agcal-nav button{padding:6px 14px;font-size:15px}
+  .agcal-dow{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--gris5);font-weight:700;margin-bottom:4px}
+  .agcal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .agcal-day{aspect-ratio:1;border-radius:9px;border:1px solid var(--gris2);background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;font-weight:600;color:var(--gris9);cursor:pointer;position:relative}
+  .agcal-day:hover{border-color:var(--morado)}
+  .agcal-day.off{visibility:hidden;pointer-events:none}
+  .agcal-day.hoy{border-color:var(--rojo);color:var(--rojo)}
+  .agcal-day.sel{background:var(--morado);border-color:var(--morado);color:#fff}
+  .agcal-day .agcal-dot{width:6px;height:6px;border-radius:50%;background:var(--morado)}
+  .agcal-day.sel .agcal-dot{background:#fff}
+  .agcal-day .agcal-n{font-size:9px;font-weight:800;position:absolute;top:2px;right:4px;color:var(--rojo)}
+  .agcal-day.sel .agcal-n{color:#fff}
+  #agCalDia{margin-top:14px}
+  #agCalDia .csub{margin:0 0 8px}
   .citacard{background:var(--panel);border:1px solid var(--gris2);border-radius:12px;padding:14px;margin-bottom:10px}
   .citacard .cc-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .citacard .cc-folio{margin-right:auto}
@@ -1555,7 +1574,21 @@
   <div class="modalbox" style="max-width:560px">
     <h3>Agenda de horas</h3>
     <p class="modalsub">Citas agendadas por clientes desde el cotizador. Cualquiera puede tomar una.</p>
+    <div class="agtabs">
+      <button class="agtab on" id="agTabLista">📋 Lista</button>
+      <button class="agtab" id="agTabCal">📅 Calendario</button>
+    </div>
     <div id="agendaLista"></div>
+    <div id="agendaCal" class="hidden">
+      <div class="agcal-nav">
+        <button class="btn-ghost" id="agCalPrev">‹</button>
+        <b id="agCalTit"></b>
+        <button class="btn-ghost" id="agCalNext">›</button>
+      </div>
+      <div class="agcal-dow"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+      <div class="agcal-grid" id="agCalGrid"></div>
+      <div id="agCalDia"></div>
+    </div>
     <div class="modalact">
       <button class="btn-ghost" id="agendaCerrar" style="flex:1">Cerrar</button>
     </div>
@@ -2379,13 +2412,10 @@ async function refreshAgendaBadge(){
 function fmtFechaCita(f){
   return new Date(f+'T00:00:00').toLocaleDateString('es-CL',{weekday:'short',day:'numeric',month:'short'});
 }
-function renderAgenda(){
-  const L=$('#agendaLista');
-  if (!citas.length){ L.innerHTML='<p class="csub" style="text-align:center;padding:20px 0">No hay citas agendadas todavía.</p>'; return; }
-  L.innerHTML = citas.map(c=>{
-    const moto = [c.moto_marca,c.moto_modelo].filter(Boolean).join(' ');
-    const tomada = c.estado==='tomada';
-    return `<div class="citacard" data-id="${c.id}">
+function citacardHTML(c){
+  const moto = [c.moto_marca,c.moto_modelo].filter(Boolean).join(' ');
+  const tomada = c.estado==='tomada';
+  return `<div class="citacard" data-id="${c.id}">
       <div class="cc-top"><span class="cc-fh">${fmtFechaCita(c.fecha)} · ${esc(c.hora)} hrs</span><span class="cc-folio">${esc(c.folio)}</span><button class="cc-del" data-id="${c.id}" title="Eliminar esta cita">🗑</button></div>
       <div class="cc-body">
         <div><b>${esc(c.cliente_nombre)}</b> · ${esc(c.cliente_telefono)}</div>
@@ -2399,14 +2429,80 @@ function renderAgenda(){
         ? `<div class="cc-tomada"><span>✅ Tomada por <b>${esc(c.tomado_por||'')}</b></span>${c.folio_servicio?`<button class="btn-ghost cc-abrir" data-fol="${esc(c.folio_servicio)}" style="padding:6px 12px;font-size:12.5px">Abrir hoja ${esc(c.folio_servicio)}</button>`:''}</div>`
         : `<button class="cc-tomar" data-id="${c.id}">Tomar esta cita</button>`}
     </div>`;
-  }).join('');
-  L.querySelectorAll('.cc-tomar').forEach(b=> b.onclick = ()=> tomarCita(b.dataset.id));
-  L.querySelectorAll('.cc-del').forEach(b=> b.onclick = ()=> eliminarCita(b.dataset.id));
-  L.querySelectorAll('.cc-abrir').forEach(b=> b.onclick = ()=>{
+}
+function wireCitacards(container){
+  container.querySelectorAll('.cc-tomar').forEach(b=> b.onclick = ()=> tomarCita(b.dataset.id));
+  container.querySelectorAll('.cc-del').forEach(b=> b.onclick = ()=> eliminarCita(b.dataset.id));
+  container.querySelectorAll('.cc-abrir').forEach(b=> b.onclick = ()=>{
     const s = servicios.find(x=>x.folio===b.dataset.fol);
     $('#agendaModal').classList.remove('open');
     if (s) openEditor(s); else toast('No encontré esa hoja de servicio','bad');
   });
+}
+function renderAgenda(){
+  const L=$('#agendaLista');
+  if (!citas.length){ L.innerHTML='<p class="csub" style="text-align:center;padding:20px 0">No hay citas agendadas todavía.</p>'; return; }
+  L.innerHTML = citas.map(citacardHTML).join('');
+  wireCitacards(L);
+}
+
+/* --- vista de calendario mensual --- */
+let agCalMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let agCalDiaSel = null;
+const AG_MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+function citasPorDia(){
+  const m = {};
+  citas.forEach(c=>{ (m[c.fecha] = m[c.fecha]||[]).push(c); });
+  return m;
+}
+function renderAgCal(){
+  const grid = $('#agCalGrid'), tit = $('#agCalTit');
+  const y = agCalMes.getFullYear(), m = agCalMes.getMonth();
+  tit.textContent = `${AG_MESES[m]} ${y}`;
+  const porDia = citasPorDia();
+  const primerDia = new Date(y,m,1);
+  const off = (primerDia.getDay()+6)%7; // lunes=0
+  const totalDias = new Date(y,m+1,0).getDate();
+  const hoy = new Date().toISOString().slice(0,10);
+  let html = '';
+  for (let i=0;i<off;i++) html += `<div class="agcal-day off"></div>`;
+  for (let d=1; d<=totalDias; d++){
+    const fecha = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const n = (porDia[fecha]||[]).length;
+    const cls = ['agcal-day'];
+    if (fecha===hoy) cls.push('hoy');
+    if (fecha===agCalDiaSel) cls.push('sel');
+    html += `<div class="${cls.join(' ')}" data-fecha="${fecha}">${n>1?`<span class="agcal-n">${n}</span>`:''}${d}${n?'<span class="agcal-dot"></span>':''}</div>`;
+  }
+  grid.innerHTML = html;
+  grid.querySelectorAll('.agcal-day[data-fecha]').forEach(el=>{
+    el.onclick = ()=>{ agCalDiaSel = el.dataset.fecha; renderAgCal(); renderAgCalDia(); };
+  });
+  if (!agCalDiaSel) $('#agCalDia').innerHTML='';
+}
+function renderAgCalDia(){
+  const cont = $('#agCalDia');
+  if (!agCalDiaSel){ cont.innerHTML=''; return; }
+  const lista = citasPorDia()[agCalDiaSel] || [];
+  const fd = new Date(agCalDiaSel+'T00:00:00').toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'});
+  if (!lista.length){ cont.innerHTML = `<p class="csub">Sin citas el ${fd}.</p>`; return; }
+  cont.innerHTML = `<p class="csub">${lista.length} cita${lista.length>1?'s':''} el ${fd}:</p>` + lista.map(citacardHTML).join('');
+  wireCitacards(cont);
+}
+$('#agTabLista').onclick = ()=>{
+  $('#agTabLista').classList.add('on'); $('#agTabCal').classList.remove('on');
+  $('#agendaLista').classList.remove('hidden'); $('#agendaCal').classList.add('hidden');
+};
+$('#agTabCal').onclick = ()=>{
+  $('#agTabCal').classList.add('on'); $('#agTabLista').classList.remove('on');
+  $('#agendaCal').classList.remove('hidden'); $('#agendaLista').classList.add('hidden');
+  renderAgCal(); renderAgCalDia();
+};
+$('#agCalPrev').onclick = ()=>{ agCalMes = new Date(agCalMes.getFullYear(), agCalMes.getMonth()-1, 1); renderAgCal(); };
+$('#agCalNext').onclick = ()=>{ agCalMes = new Date(agCalMes.getFullYear(), agCalMes.getMonth()+1, 1); renderAgCal(); };
+function refrescarVistaAgenda(){
+  renderAgenda();
+  if (!$('#agendaCal').classList.contains('hidden')){ renderAgCal(); renderAgCalDia(); }
 }
 async function eliminarCita(id){
   const cita = citas.find(c=>c.id===id); if (!cita) return;
@@ -2414,7 +2510,7 @@ async function eliminarCita(id){
   const { error } = await db.from('mecamotor_citas').delete().eq('id', id);
   if (error){ toast('No pude eliminar la cita: '+error.message,'bad'); return; }
   toast('Cita eliminada','ok');
-  await loadCitas(); renderAgenda(); await refreshAgendaBadge();
+  await loadCitas(); refrescarVistaAgenda(); await refreshAgendaBadge();
 }
 async function tomarCita(id){
   const cita = citas.find(c=>c.id===id); if (!cita) return;
@@ -2422,7 +2518,7 @@ async function tomarCita(id){
   const { data:upd, error:e1 } = await db.from('mecamotor_citas')
     .update({ estado:'tomada', tomado_por:trabajadorNombre, tomado_por_email:trabajadorEmail, tomado_at:new Date().toISOString(), folio_servicio:nuevoFol })
     .eq('id', id).eq('estado','pendiente').select().single();
-  if (e1 || !upd){ toast('Esa cita ya fue tomada por otro trabajador','bad'); await loadCitas(); renderAgenda(); return; }
+  if (e1 || !upd){ toast('Esa cita ya fue tomada por otro trabajador','bad'); await loadCitas(); refrescarVistaAgenda(); return; }
 
   const totalCotizado = cita.plan_precio||0;
   const planSolo = cita.plan_key ? ((CONFIG.precios[cita.categoria]||{})[cita.plan_key]||0) : 0;
@@ -2455,7 +2551,7 @@ async function tomarCita(id){
   openEditor(serv);
 }
 $('#agendaBtn').onclick = async ()=>{
-  await loadCitas(); renderAgenda();
+  await loadCitas(); refrescarVistaAgenda();
   $('#agendaModal').classList.add('open');
 };
 $('#agendaCerrar').onclick = ()=> $('#agendaModal').classList.remove('open');
