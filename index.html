@@ -1301,6 +1301,7 @@
         <button class="chip" data-c="repuestos">Repuestos</button>
         <button class="chip" data-c="neumaticos">Neumáticos</button>
       </div>
+      <input id="cInsBuscar" placeholder="Buscar insumo…" style="width:100%;margin:11px 0 4px" />
       <div class="tgrid" id="cInsumos"></div>
 
       <div class="cextra">
@@ -1349,7 +1350,7 @@
           </div>
         </div>
         <p class="chint" id="agHint"></p>
-        <p class="cabono">💳 Para reservar tu hora se paga un abono de <b>$10.000</b>, que se descuenta del total de tu mantención.<br>⚠️ Si no asistes a tu hora, el abono <b>no tiene devolución</b>.</p>
+        <p class="cabono">📅 Elige con cuidado la fecha y hora que te acomode, y por favor asiste a tu cita.<br>💳 Para reservar tu hora se paga un abono de <b>$10.000</b>, que se descuenta del total de tu mantención.<br>⚠️ Si no asistes, el abono <b>no tiene devolución</b>.</p>
         <button class="btn-save" id="agConfirmar" style="width:100%;margin-top:10px;padding:14px">Pagar $10.000 y reservar</button>
         <p class="err hidden" id="agErr"></p>
       </div>
@@ -3510,10 +3511,13 @@ $$('#cCatIns .chip').forEach(b=>b.onclick=()=>{
   $$('#cCatIns .chip').forEach(x=>x.classList.remove('on'));
   b.classList.add('on'); cCatIns=b.dataset.c; renderInsumos();
 });
+$('#cInsBuscar') && $('#cInsBuscar').addEventListener('input', renderInsumos);
 function renderInsumos(){
-  const arr = productos.filter(p=>p.categoria===cCatIns && p.activo);
+  const q = ($('#cInsBuscar').value||'').toLowerCase().trim();
+  const arr = productos.filter(p=> p.categoria===cCatIns && p.activo
+    && (!q || p.nombre.toLowerCase().includes(q) || (p.marca||'').toLowerCase().includes(q)));
   const G = $('#cInsumos');
-  if(!arr.length){ G.innerHTML=`<div class="empty" style="grid-column:1/-1"><p>Aún no hay productos en esta sección.</p></div>`; return; }
+  if(!arr.length){ G.innerHTML=`<div class="empty" style="grid-column:1/-1"><p>${q?'No encontramos insumos con ese nombre.':'Aún no hay productos en esta sección.'}</p></div>`; return; }
   G.innerHTML = arr.map(p=>{
     const n = cot.insumos[p.id]||0;
     const img = p.imagen_url ? `<img src="${p.imagen_url}" alt="">` : `<span class="sinimg">🛠️</span>`;
