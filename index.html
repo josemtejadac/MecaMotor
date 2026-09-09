@@ -654,6 +654,11 @@
   .wpromo-txt p{color:#d5d5d8;font-size:14px;margin:0 0 14px}
   .wpromo-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
   .wpromo-chips span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px}
+  .wpromo-feats{display:flex;flex-wrap:wrap;gap:18px;margin:2px 0 18px}
+  .wpromo-feats .wf{display:flex;align-items:center;gap:9px}
+  .wpromo-feats .wf-i{width:34px;height:34px;border-radius:50%;background:rgba(224,26,34,.18);border:1.5px solid rgba(224,26,34,.5);display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto}
+  .wpromo-feats .wf-t{color:#fff;font-size:12.5px;font-weight:600;line-height:1.2;max-width:90px}
+  .wpromo-txt h2 span{color:var(--rojo)}
   .wpromo-imgs{flex:1;display:flex;align-items:center;justify-content:center;gap:12px;z-index:2}
   .wpromo-imgs img{width:118px;height:118px;object-fit:contain;background:#fff;border-radius:12px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.45)}
   .wpromo-imgs img:nth-child(2){width:148px;height:148px}
@@ -666,12 +671,23 @@
   .whero-imgs{position:absolute;inset:0}
   .wslide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease}
   .wslide.on{opacity:1}
-  .whero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,12,.88),rgba(10,10,12,.55) 60%,rgba(10,10,12,.32))}
+  .whero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,12,.88),rgba(10,10,12,.55) 60%,rgba(10,10,12,.32)),repeating-linear-gradient(135deg,rgba(224,26,34,.09) 0 14px,transparent 14px 42px)}
   .whero-cont{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:44px 22px;width:100%;color:#fff}
-  .wtag{display:inline-block;background:var(--rojo);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px}
+  .wtag{display:inline-flex;align-items:center;gap:6px;background:var(--rojo);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px}
   .whero-cont h1{font-family:Oswald;font-size:38px;line-height:1.05;margin:14px 0 10px;text-transform:uppercase;color:#fff}
+  .whero-cont h1 span{color:var(--rojo)}
   .whero-cont p{font-size:15px;color:#e8e8ea;max-width:520px;margin:0 0 20px}
+  .whero-feats{display:flex;flex-wrap:wrap;gap:20px;margin:0 0 22px}
+  .whero-feats .wf{display:flex;align-items:center;gap:9px}
+  .whero-feats .wf-i{width:36px;height:36px;border-radius:10px;background:rgba(224,26,34,.2);border:1.5px solid rgba(224,26,34,.55);display:flex;align-items:center;justify-content:center;font-size:17px;flex:0 0 auto}
+  .whero-feats .wf-t{color:#fff;font-size:12.5px;font-weight:600;line-height:1.2;max-width:120px}
   .whero-btns{display:flex;flex-wrap:wrap;gap:10px}
+  .wbenefits{background:var(--tinta);padding:22px 22px;overflow-x:auto}
+  .wbenefits .inner{max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .wbenefits .wb{display:flex;align-items:center;gap:10px;flex:1;min-width:170px}
+  .wbenefits .wb-i{width:38px;height:38px;border-radius:50%;background:rgba(224,26,34,.22);border:1.5px solid rgba(224,26,34,.5);display:flex;align-items:center;justify-content:center;font-size:17px;flex:0 0 auto;color:#ff8285}
+  .wbenefits .wb-t{color:#fff;font-size:12.5px;font-weight:600;line-height:1.25}
+  @media(max-width:760px){ .wbenefits .inner{justify-content:flex-start} }
   .wbtn{display:inline-flex;align-items:center;gap:7px;padding:12px 18px;border-radius:12px;font-weight:700;font-size:14px;text-decoration:none;cursor:pointer;border:0}
   .wbtn-red{background:var(--rojo);color:#fff}
   .wbtn-line{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.5)}
@@ -679,6 +695,11 @@
   .wsec{max-width:1000px;margin:0 auto;padding:38px 22px;width:100%}
   .wsec-t{font-family:Oswald;font-size:26px;text-transform:uppercase;color:var(--tinta);text-align:center;margin:0}
   .wsec-s{text-align:center;color:var(--gris5);font-size:14px;margin:6px 0 24px}
+  .wsec-dark{background:linear-gradient(180deg,#0a0a0c,#151519)}
+  .wsec-dark .wsec-t{color:#fff;display:flex;align-items:center;justify-content:center;gap:16px}
+  .wsec-dark .wsec-t::before,.wsec-dark .wsec-t::after{content:"";width:34px;height:3px;background:var(--rojo);border-radius:2px}
+  .wsec-dark .wsec-s{color:#9a9aa3}
+  .wsec-dark .wcirc b{color:#fff}
   .wstatic{position:static;border-radius:0}
   .wcircles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
   .wcirc{background:transparent;display:flex;flex-direction:column;align-items:center;gap:10px;border:0}
@@ -710,10 +731,18 @@
   .wfoot-cred a{color:var(--rojo);font-weight:700;text-decoration:none}
   .lbtn-web:hover{border-color:#0ea5e9;background:#eff9ff}
   /* CTA lavado en la landing */
-  .wlavado-cta{display:flex;align-items:center;gap:18px;background:linear-gradient(120deg,#0a0a0c,#1a1a20);border:1px solid #2a2a30;border-radius:18px;padding:24px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.3);transition:transform .15s;overflow:hidden}
+  .wlavado-cta{position:relative;display:flex;align-items:center;gap:18px;background:linear-gradient(120deg,#0a0a0c,#1a1a20);border:1px solid #2a2a30;border-radius:18px;padding:24px 24px 24px 32px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.3);transition:transform .15s;overflow:hidden}
+  .wlavado-cta::before{content:"";position:absolute;left:0;top:0;bottom:0;width:11px;background:repeating-linear-gradient(135deg,var(--rojo) 0 6px,transparent 6px 12px)}
   .wlavado-cta:hover{transform:translateY(-2px)}
   .wlavado-txt{flex:1;min-width:0}
   .wlavado-txt h2{overflow-wrap:break-word}
+  .wlavado-feats{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px}
+  .wlavado-feats .wf{display:flex;align-items:center;gap:7px}
+  .wlavado-feats .wf-i{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--rojo);display:flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto;color:#ff8285}
+  .wlavado-feats .wf-t{color:#e5e5ea;font-size:11px;font-weight:600;white-space:nowrap}
+  .wlavado-photo{flex:0 0 auto;width:220px;height:112px;border-radius:14px;background-size:cover;background-position:center;box-shadow:0 10px 24px rgba(0,0,0,.4);border:1px solid #2a2a30}
+  @media(max-width:900px){ .wlavado-photo{width:150px;height:96px} }
+  @media(max-width:760px){ .wlavado-photo{display:none} }
   @media(max-width:560px){
     .wlavado-cta{flex-direction:column;align-items:stretch;gap:14px}
     .wlavado-go{width:100%;text-align:center}
@@ -1367,9 +1396,15 @@
       <div class="wslide" style="background-image:url('./fotos/taller4.jpg')"></div>
     </div>
     <div class="whero-cont">
-      <span class="wtag">Taller de motos · Santiago</span>
-      <h1>Tu moto en manos expertas</h1>
+      <span class="wtag">🔧 Taller de motos · Santiago</span>
+      <h1>Tu moto en <span>manos expertas</span></h1>
       <p>Mantención, repuestos y accesorios con garantía. Atención de calidad, como debe ser.</p>
+      <div class="whero-feats">
+        <div class="wf"><span class="wf-i">🔧</span><span class="wf-t">Mecánica general</span></div>
+        <div class="wf"><span class="wf-i">🔩</span><span class="wf-t">Repuestos originales y alternativos</span></div>
+        <div class="wf"><span class="wf-i">🛡️</span><span class="wf-t">Garantía en el servicio</span></div>
+        <div class="wf"><span class="wf-i">⚡</span><span class="wf-t">Atención rápida y confiable</span></div>
+      </div>
       <div class="whero-btns">
         <button class="wbtn wbtn-red" data-go="cotiza">🧮 Cotiza tu mantención</button>
         <button class="wbtn wbtn-line" data-go="tienda">🛒 Ver la tienda</button>
@@ -1378,6 +1413,16 @@
     </div>
   </section>
 
+  <!-- BENEFICIOS -->
+  <div class="wbenefits">
+    <div class="inner">
+      <div class="wb"><span class="wb-i">🛡️</span><span class="wb-t">Garantía en todos<br>nuestros trabajos</span></div>
+      <div class="wb"><span class="wb-i">✅</span><span class="wb-t">Repuestos originales<br>y alternativos</span></div>
+      <div class="wb"><span class="wb-i">🏆</span><span class="wb-t">Los mejores precios<br>del mercado</span></div>
+      <div class="wb"><span class="wb-i">💬</span><span class="wb-t">Soporte personalizado<br>por WhatsApp</span></div>
+    </div>
+  </div>
+
   <!-- CTA LAVADO PREMIUM -->
   <section class="wsec">
     <div class="wlavado-cta" id="goLavado">
@@ -1385,7 +1430,13 @@
         <span class="wlavado-badge">✨ Nuevo servicio</span>
         <h2>Lavado Premium</h2>
         <p>Deja tu moto impecable con nuestro lavado y detallado profesional.</p>
+        <div class="wlavado-feats">
+          <div class="wf"><span class="wf-i">🧴</span><span class="wf-t">Lavado profundo</span></div>
+          <div class="wf"><span class="wf-i">✨</span><span class="wf-t">Detalle completo</span></div>
+          <div class="wf"><span class="wf-i">💧</span><span class="wf-t">Brillo y protección</span></div>
+        </div>
       </div>
+      <div class="wlavado-photo" style="background-image:url('./fotos/lavado_poster.jpg')"></div>
       <span class="wlavado-go">Visitar Lavado Premium ›</span>
     </div>
   </section>
@@ -1397,7 +1448,13 @@
         <span class="wlavado-badge wvulc-badge">🛞 Servicio express</span>
         <h2>Vulcanización</h2>
         <p>Pinchazos y daños en el neumático, reparados al toque. Sin cita previa.</p>
+        <div class="wlavado-feats">
+          <div class="wf"><span class="wf-i">⚡</span><span class="wf-t">Reparación al toque</span></div>
+          <div class="wf"><span class="wf-i">🛡️</span><span class="wf-t">Trabajo garantizado</span></div>
+          <div class="wf"><span class="wf-i">📅</span><span class="wf-t">Sin cita previa</span></div>
+        </div>
       </div>
+      <div class="wlavado-photo" style="background-image:url('./fotos/vulc_poster.jpg')"></div>
       <span class="wlavado-go wvulc-go">Ir a Vulcanización ›</span>
     </div>
   </section>
@@ -1409,7 +1466,7 @@
   </div></div>
 
   <!-- CATEGORÍAS -->
-  <section class="wsec">
+  <section class="wsec wsec-dark">
     <h2 class="wsec-t">Nuestra tienda</h2>
     <p class="wsec-s">Todo para tu moto, en un solo lugar.</p>
     <div class="wcircles">
@@ -3891,20 +3948,21 @@ window.addEventListener('appinstalled',()=>$('#installBar').classList.remove('sh
   async function irCat(cat){ cerrarWeb(); await abrirTienda(); catActual=cat; $$('#tCats .tcat').forEach(x=>x.classList.toggle('on',x.dataset.c===cat)); try{tTipo=null;}catch(e){} tPagina=1; $('#tBuscar').value=''; renderProductos(); const g=$('#tGrid'); if(g) g.scrollIntoView({behavior:'smooth',block:'start'}); }
 
   const PROMO=[
-    {c:'neumaticos', t:'Neumáticos para tu moto', s:'Las mejores marcas, con montaje y balanceo.', chips:['⚡ Calidad','🛡️ Garantía','🏆 Mejor precio']},
-    {c:'aceites', t:'Lubricantes de marca', s:'Aceites premium para cuidar tu motor.', chips:['IPONE','Liqui Moly','Motul']},
-    {c:'repuestos', t:'Repuestos originales', s:'Todo lo que tu moto necesita, en un solo lugar.', chips:['✅ Originales','🔧 Instalación','🏆 Mejor precio']},
+    {c:'neumaticos', t:'Neumáticos para tu moto', s:'Las mejores marcas, con montaje y balanceo.', feats:[['🛡️','Garantía'],['⚙️','Montaje incluido'],['🏆','Mejor precio']]},
+    {c:'aceites', t:'Lubricantes de marca', s:'Aceites premium para cuidar tu motor.', feats:[['🛡️','Mayor protección'],['⚙️','Mejor rendimiento'],['⏱️','Mayor vida útil']]},
+    {c:'repuestos', t:'Repuestos originales', s:'Todo lo que tu moto necesita, en un solo lugar.', feats:[['✅','Originales'],['🔧','Instalación'],['🏆','Mejor precio']]},
   ];
   function renderPromo(){
     const cont=$('#wPromoSlides'), dots=$('#wPromoDots'); if(!cont) return;
     cont.innerHTML = PROMO.map((b,idx)=>{
       const im=(productos||[]).filter(p=>p.categoria===b.c && p.imagen_url).slice(0,3)
                 .map(p=>`<img src="${p.imagen_url}" alt="" loading="lazy">`).join('');
+      const [primera,...resto]=b.t.split(' ');
       return `<div class="wpromo-slide ${idx===0?'on':''}">
         <div class="wpromo-txt">
           <span class="wpromo-badge">Ya disponible en MecaMotor</span>
-          <h2>${b.t}</h2><p>${b.s}</p>
-          <div class="wpromo-chips">${b.chips.map(c=>`<span>${esc(c)}</span>`).join('')}</div>
+          <h2><span>${esc(primera)}</span> ${esc(resto.join(' '))}</h2><p>${b.s}</p>
+          <div class="wpromo-feats">${b.feats.map(([i,t])=>`<div class="wf"><span class="wf-i">${i}</span><span class="wf-t">${esc(t)}</span></div>`).join('')}</div>
           <button class="wbtn wbtn-red" data-promocat="${b.c}">Ver ${b.t.toLowerCase()}</button>
         </div>
         <div class="wpromo-imgs">${im}</div>
