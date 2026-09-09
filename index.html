@@ -235,6 +235,9 @@
   .btnprecios{padding:7px 13px;border-radius:999px;border:1px solid var(--rojo);background:var(--panel);color:var(--rojo);font-size:13px;font-weight:700}
   .btnprecios:hover{background:#fff5f5}
   .badge-count{display:inline-block;background:var(--rojo);color:#fff;font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:999px;margin-left:3px;vertical-align:middle}
+  .cabono{margin:14px 0 0;padding:10px 12px;background:#f5f0ff;border:1px solid #ddd0fb;border-radius:10px;font-size:12.5px;color:#5b21b6;line-height:1.4}
+  .spinner{width:36px;height:36px;border:4px solid var(--gris2);border-top-color:var(--morado);border-radius:50%;margin:0 auto;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
   .citacard{background:var(--panel);border:1px solid var(--gris2);border-radius:12px;padding:14px;margin-bottom:10px}
   .citacard .cc-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .citacard .cc-folio{margin-right:auto}
@@ -1282,8 +1285,21 @@
           </div>
         </div>
         <p class="chint" id="agHint"></p>
-        <button class="btn-save" id="agConfirmar" style="width:100%;margin-top:16px;padding:14px">Confirmar hora</button>
+        <p class="cabono">💳 Para reservar tu hora se paga un abono de <b>$10.000</b>, que se descuenta del total de tu mantención.</p>
+        <button class="btn-save" id="agConfirmar" style="width:100%;margin-top:10px;padding:14px">Pagar $10.000 y reservar</button>
         <p class="err hidden" id="agErr"></p>
+      </div>
+      <div id="cP5Pagando" class="hidden" style="text-align:center;padding-top:30px">
+        <div class="spinner"></div>
+        <h3 class="ctit" style="margin-top:16px">Confirmando tu pago…</h3>
+        <p class="csub">Esto toma unos segundos, no cierres esta página.</p>
+      </div>
+      <div id="cP5PagoFallo" class="hidden" style="text-align:center;padding-top:10px">
+        <div style="font-size:52px">⚠️</div>
+        <h3 class="ctit" style="margin-top:10px">No pudimos confirmar tu pago</h3>
+        <p class="csub">Si Flow te alcanzó a cobrar, escríbenos por WhatsApp con tu folio. Si no, puedes intentar de nuevo.</p>
+        <button class="btn-wa" id="agPagoWa" style="width:100%;padding:15px;font-size:15px">🟢 Escribir por WhatsApp</button>
+        <button class="btn-ghost" id="agPagoReintentar" style="width:100%;margin-top:10px;padding:12px">Intentar de nuevo</button>
       </div>
       <div id="cP5Ok" class="hidden" style="text-align:center;padding-top:10px">
         <div style="font-size:52px">✅</div>
@@ -2342,7 +2358,10 @@ $('#nuevoIngresoBtn').onclick=()=>{
    ============================================================ */
 let citas = [];
 async function loadCitas(){
+  // solo citas ya pagadas (pendiente = lista para tomar, tomada = ya asignada);
+  // 'pendiente_pago' (todavía pagando) y 'cancelada' (pago fallido/vencido) no se muestran
   const { data, error } = await db.from('mecamotor_citas').select('*')
+    .in('estado',['pendiente','tomada'])
     .order('created_at',{ascending:false});
   if (error){ toast('Error al cargar la agenda: '+error.message,'bad'); return; }
   citas = data||[];
@@ -2373,6 +2392,7 @@ function renderAgenda(){
         ${c.moto_patente || moto ? `<div>${esc(moto||'—')}${c.moto_patente?' · '+esc(c.moto_patente):''}</div>`:''}
         ${c.plan_nombre ? `<div>Plan: <b>${esc(c.plan_nombre)}</b>${c.plan_precio?' · '+money(c.plan_precio):''}</div>`:''}
         ${c.cliente_email ? `<div>✉️ ${esc(c.cliente_email)}</div>`:''}
+        ${c.pagado ? `<div style="color:#15803d">✅ Abono pagado${c.monto_pagado?' · '+money(c.monto_pagado):''}</div>`:''}
       </div>
       ${c.notas ? `<div class="cc-notas">${esc(c.notas)}</div>`:''}
       ${tomada
@@ -2404,15 +2424,18 @@ async function tomarCita(id){
     .eq('id', id).eq('estado','pendiente').select().single();
   if (e1 || !upd){ toast('Esa cita ya fue tomada por otro trabajador','bad'); await loadCitas(); renderAgenda(); return; }
 
-  const total = cita.plan_precio||0;
+  const totalCotizado = cita.plan_precio||0;
   const planSolo = cita.plan_key ? ((CONFIG.precios[cita.categoria]||{})[cita.plan_key]||0) : 0;
-  const extra = Math.max(0, total - planSolo);
+  const extra = Math.max(0, totalCotizado - planSolo);
   const items = [];
   if (cita.plan_nombre) items.push({ tipo:'plan', descripcion:`${cita.plan_nombre} · ${CAT_LABEL[cita.categoria]||''}`, cantidad:1, precio:planSolo });
   if (extra>0) items.push({ tipo:'extra', descripcion: cita.notas ? `Insumos/extras: ${cita.notas}` : 'Insumos y extras seleccionados por el cliente', cantidad:1, precio:extra });
+  if (cita.pagado) items.push({ tipo:'abono', descripcion:'Abono pagado al agendar (Flow)', cantidad:1, precio: -(Number(cita.monto_pagado)||10000) });
+  const total = totalCotizado - (cita.pagado ? (Number(cita.monto_pagado)||10000) : 0);
   const obsPartes = [`Agendado por el cliente para ${fmtFechaCita(cita.fecha)} ${cita.hora} hrs.`];
   if (cita.notas) obsPartes.push('Detalle: '+cita.notas);
   if (cita.cliente_email) obsPartes.push('Correo: '+cita.cliente_email);
+  if (cita.pagado) obsPartes.push(`Ya pagó un abono de ${money(cita.monto_pagado||10000)} por Flow al agendar.`);
   const payload = {
     folio: nuevoFol, estado:'recibido', categoria: cita.categoria||'100_300',
     plan_key: cita.plan_key, plan_nombre: cita.plan_nombre,
@@ -3578,7 +3601,19 @@ function iniciarAgenda(){
   $('#agErr').classList.add('hidden');
 }
 
+const FLOW_FN_BASE = 'https://wiuuzsiiaagqldtxfouj.supabase.co/functions/v1';
 let citaActual = null;
+
+function mostrarCitaConfirmada(c){
+  citaActual = c;
+  ['cP5Form','cP5Pagando','cP5PagoFallo'].forEach(id=> $('#'+id).classList.add('hidden'));
+  $('#cP5Ok').classList.remove('hidden');
+  const fd = new Date(c.fecha+'T00:00:00').toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'});
+  $('#agOkTxt').innerHTML = `Te esperamos el <b>${fd}</b> a las <b>${c.hora} hrs</b>.<br>Folio: <b>${c.folio}</b>`
+    + (c.cliente_email ? `<br><span style="font-size:12px;color:var(--gris5)">Te mandaremos un recordatorio por correo 4h antes.</span>` : '');
+  limpiarCotGuardada();
+}
+
 $('#agConfirmar').onclick = async ()=>{
   const nombre=$('#agNombre').value.trim();
   const telefono=$('#agTelefono').value.trim();
@@ -3588,27 +3623,65 @@ $('#agConfirmar').onclick = async ()=>{
   const err=$('#agErr'); err.classList.add('hidden');
   if (!nombre || !telefono){ err.textContent='Escribe tu nombre y teléfono.'; err.classList.remove('hidden'); return; }
   if (!fecha || !hora){ err.textContent='Elige fecha y hora.'; err.classList.remove('hidden'); return; }
-  const btn=$('#agConfirmar'); btn.disabled=true; btn.textContent='Agendando…';
+  const btn=$('#agConfirmar'); btn.disabled=true; btn.textContent='Redirigiendo a pagar…';
   const marca = cot.marca || $('#cMarcaManual').value.trim() || null;
   const modelo = cot.modelo || $('#cModeloManual').value.trim() || null;
-  const pr = cot.plan ? totalCot() : null;
+  const total = cot.plan ? totalCot() : null;
   const email = $('#agEmail').value.trim();
-  const { data, error } = await db.rpc('mm_crear_cita', {
-    p_fecha: fecha, p_hora: hora, p_nombre: nombre, p_telefono: telefono, p_patente: patente||null,
-    p_marca: marca, p_modelo: modelo, p_categoria: cot.categoria||null,
-    p_plan_key: cot.plan||null, p_plan_nombre: cot.plan? PLAN_META[cot.plan].nombre : null,
-    p_plan_precio: pr, p_notas: resumenTextoCita(), p_email: email||null
-  });
-  btn.disabled=false; btn.textContent='Confirmar hora';
-  if (error){ err.textContent = error.message || 'No se pudo agendar, intenta de nuevo.'; err.classList.remove('hidden'); return; }
-  citaActual = Array.isArray(data)? data[0] : data;
-  $('#cP5Form').classList.add('hidden');
-  $('#cP5Ok').classList.remove('hidden');
-  const fd = new Date(citaActual.fecha+'T00:00:00').toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'});
-  $('#agOkTxt').innerHTML = `Te esperamos el <b>${fd}</b> a las <b>${citaActual.hora} hrs</b>.<br>Folio: <b>${citaActual.folio}</b>`
-    + (citaActual.cliente_email ? `<br><span style="font-size:12px;color:var(--gris5)">Te mandaremos un recordatorio por correo 4h antes.</span>` : '');
-  limpiarCotGuardada();
+  try{
+    const r = await fetch(`${FLOW_FN_BASE}/flow-crear-orden`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        fecha, hora, nombre, telefono, patente: patente||null,
+        marca, modelo, categoria: cot.categoria||null,
+        plan_key: cot.plan||null, plan_nombre: cot.plan? PLAN_META[cot.plan].nombre : null,
+        total, notas: resumenTextoCita(), email: email||null
+      })
+    });
+    const data = await r.json();
+    if (!r.ok || !data?.url) throw new Error(data?.error || 'No se pudo iniciar el pago.');
+    guardarCot();
+    window.location.href = `${data.url}?token=${encodeURIComponent(data.token)}`;
+  }catch(e){
+    btn.disabled=false; btn.textContent='Pagar $10.000 y reservar';
+    err.textContent = e.message || 'No se pudo iniciar el pago, intenta de nuevo.'; err.classList.remove('hidden');
+  }
 };
+
+$('#agPagoReintentar').onclick = ()=>{
+  ['cP5Pagando','cP5PagoFallo','cP5Ok'].forEach(id=> $('#'+id).classList.add('hidden'));
+  $('#cP5Form').classList.remove('hidden');
+  history.replaceState(null,'',location.pathname);
+};
+$('#agPagoWa').onclick = ()=>{
+  const tel=(CONFIG.taller.telefonoWa||'').replace(/\D/g,'');
+  const folio = new URLSearchParams(location.search).get('cita_folio') || '';
+  window.open(`https://wa.me/${tel}?text=${encodeURIComponent('Hola, intenté agendar y pagar una hora (folio '+folio+') pero no me llegó la confirmación. ¿Me ayudan?')}`,'_blank');
+};
+
+// vuelta desde Flow: la URL trae ?cita_folio=... — hay que confirmar el estado del pago
+async function revisarVueltaDeFlow(){
+  const folio = new URLSearchParams(location.search).get('cita_folio');
+  if (!folio) return;
+  $('#login').style.display='none';
+  $('#cotiza').classList.add('open');
+  if (!cot) cot = cotNueva();
+  irPaso(5);
+  ['cP5Form','cP5Ok'].forEach(id=> $('#'+id).classList.add('hidden'));
+  $('#cP5Pagando').classList.remove('hidden');
+  for (let i=0;i<10;i++){
+    const { data: rows } = await db.rpc('mm_estado_cita', { p_folio: folio });
+    const data = rows && rows[0];
+    if (data && data.estado !== 'pendiente_pago'){
+      if (data.pagado) mostrarCitaConfirmada(data);
+      else { $('#cP5Pagando').classList.add('hidden'); $('#cP5PagoFallo').classList.remove('hidden'); }
+      return;
+    }
+    await new Promise(res=> setTimeout(res, 2000));
+  }
+  $('#cP5Pagando').classList.add('hidden');
+  $('#cP5PagoFallo').classList.remove('hidden');
+}
 
 function mensajeCita(c){
   const fd = new Date(c.fecha+'T00:00:00').toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'});
@@ -3869,6 +3942,7 @@ document.addEventListener('DOMContentLoaded', function(){
   if(tiendaEl) new MutationObserver(syncFab).observe(tiendaEl,{attributes:true,attributeFilter:['class']});
   syncFab();
 });
+revisarVueltaDeFlow();
 </script>
 <button id="chatFab" class="hide" title="Bot Meca">💬</button>
 <div id="chatPanel">
