@@ -677,10 +677,11 @@
   .whero-cont h1{font-family:Oswald;font-size:38px;line-height:1.05;margin:14px 0 10px;text-transform:uppercase;color:#fff}
   .whero-cont h1 span{color:var(--rojo)}
   .whero-cont p{font-size:15px;color:#e8e8ea;max-width:520px;margin:0 0 20px}
-  .whero-feats{display:flex;flex-wrap:wrap;gap:20px;margin:0 0 22px}
-  .whero-feats .wf{display:flex;align-items:center;gap:9px}
+  .whero-feats{display:grid;grid-template-columns:repeat(2,minmax(0,190px));gap:14px 26px;margin:0 0 24px}
+  .whero-feats .wf{display:flex;align-items:center;gap:9px;min-width:0}
   .whero-feats .wf-i{width:36px;height:36px;border-radius:10px;background:rgba(224,26,34,.2);border:1.5px solid rgba(224,26,34,.55);display:flex;align-items:center;justify-content:center;font-size:17px;flex:0 0 auto}
-  .whero-feats .wf-t{color:#fff;font-size:12.5px;font-weight:600;line-height:1.2;max-width:120px}
+  .whero-feats .wf-t{color:#fff;font-size:12.5px;font-weight:600;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @media(max-width:480px){ .whero-feats{grid-template-columns:1fr} }
   .whero-btns{display:flex;flex-wrap:wrap;gap:10px}
   .wbenefits{background:var(--tinta);padding:22px 22px;overflow-x:auto}
   .wbenefits .inner{max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
@@ -757,9 +758,6 @@
   .wlavado-feats .wf{display:flex;align-items:center;gap:7px}
   .wlavado-feats .wf-i{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--rojo);display:flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto;color:#ff8285}
   .wlavado-feats .wf-t{color:#e5e5ea;font-size:11px;font-weight:600;white-space:nowrap}
-  .wlavado-photo{flex:0 0 auto;width:220px;height:112px;border-radius:14px;background-size:cover;background-position:center;box-shadow:0 10px 24px rgba(0,0,0,.4);border:1px solid #2a2a30}
-  @media(max-width:900px){ .wlavado-photo{width:150px;height:96px} }
-  @media(max-width:760px){ .wlavado-photo{display:none} }
   @media(max-width:560px){
     .wlavado-cta{flex-direction:column;align-items:stretch;gap:14px}
     .wlavado-go{width:100%;text-align:center}
@@ -1418,7 +1416,7 @@
       <p>Mantención, repuestos y accesorios con garantía. Atención de calidad, como debe ser.</p>
       <div class="whero-feats">
         <div class="wf"><span class="wf-i">🔧</span><span class="wf-t">Mecánica general</span></div>
-        <div class="wf"><span class="wf-i">🔩</span><span class="wf-t">Repuestos originales y alternativos</span></div>
+        <div class="wf"><span class="wf-i">🔩</span><span class="wf-t">Repuestos originales</span></div>
         <div class="wf"><span class="wf-i">🛡️</span><span class="wf-t">Garantía en el servicio</span></div>
         <div class="wf"><span class="wf-i">⚡</span><span class="wf-t">Atención rápida y confiable</span></div>
       </div>
@@ -1453,7 +1451,6 @@
           <div class="wf"><span class="wf-i">💧</span><span class="wf-t">Brillo y protección</span></div>
         </div>
       </div>
-      <div class="wlavado-photo" style="background-image:url('./fotos/lavado_poster.jpg')"></div>
       <span class="wlavado-go">Visitar Lavado Premium ›</span>
     </div>
   </section>
@@ -1471,7 +1468,6 @@
           <div class="wf"><span class="wf-i">📅</span><span class="wf-t">Sin cita previa</span></div>
         </div>
       </div>
-      <div class="wlavado-photo" style="background-image:url('./fotos/vulc_poster.jpg')"></div>
       <span class="wlavado-go wvulc-go">Ir a Vulcanización ›</span>
     </div>
   </section>
@@ -4018,11 +4014,30 @@ window.addEventListener('appinstalled',()=>$('#installBar').classList.remove('sh
   $('#wPromoPrev') && ($('#wPromoPrev').onclick=()=>goPromo(pi-1));
   $('#wPromoNext') && ($('#wPromoNext').onclick=()=>goPromo(pi+1));
 
+  // el contenido varía según el ancho (columna en mobile) y según cuántas fotos de
+  // producto haya por categoría, así que la altura del carrusel se mide en vez de
+  // dejarla fija — si no, el contenido más alto se corta (overflow:hidden)
+  function ajustarAlturaPromo(){
+    const wrap=$('#wPromoSlides'), prom=$('#wPromo'); if(!wrap) return;
+    const slides=[...wrap.querySelectorAll('.wpromo-slide')];
+    if(!slides.length) return;
+    let max=0;
+    slides.forEach(s=>{
+      const pos=s.style.position; s.style.position='static';
+      max=Math.max(max, s.offsetHeight);
+      s.style.position=pos;
+    });
+    if(max>0){ const h=max+'px'; wrap.style.minHeight=h; if(prom) prom.style.minHeight=h; }
+  }
+  let promoResizeT=null;
+  window.addEventListener('resize', ()=>{ clearTimeout(promoResizeT); promoResizeT=setTimeout(ajustarAlturaPromo,150); });
+
   async function abrirWeb(){
     $('#login').style.display='none'; web.classList.add('open'); window.scrollTo(0,0);
     renderWebPlanes();
     if(!(productos&&productos.length)){ try{ const {data}=await db.from('mecamotor_productos').select('*').eq('activo',true).order('orden'); productos=data||[]; }catch(e){} }
     renderPromo();
+    ajustarAlturaPromo();
     wi=0; if(wtimer) clearInterval(wtimer); wtimer=setInterval(rotar,2800);
     if(ptimer) clearInterval(ptimer); ptimer=setInterval(()=>goPromo(pi+1),3800);
   }
