@@ -638,12 +638,13 @@
   .chat-foot input{flex:1;padding:11px 12px;border:1px solid var(--gris2);border-radius:10px;font-size:16px}
   .chat-foot button{background:var(--rojo);color:#fff;padding:0 15px;border-radius:10px;font-size:17px}
   /* ===== LANDING / PÁGINA ===== */
-  #web{display:none;min-height:100vh;background:var(--fondo);flex-direction:column}
+  #web{display:none;min-height:100vh;background:#0a0a0c;flex-direction:column}
   #web.open{display:flex}
-  .whead{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel);border-bottom:1px solid var(--gris2);box-shadow:var(--sombra)}
-  .whead .wlogo{height:30px}
-  .whead .brandtxt strong{font-family:Oswald;font-size:15px;text-transform:uppercase;color:var(--tinta);display:block;line-height:1}
-  .whead .brandtxt span{font-size:10.5px;color:var(--gris5)}
+  .whead{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 14px;background:#0d0d10;border-bottom:1px solid #2a2a30;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+  .whead .brandtxt strong{font-family:Oswald;font-size:15px;text-transform:uppercase;color:#fff;display:block;line-height:1}
+  .whead .brandtxt span{font-size:10.5px;color:#9a9aa3}
+  #web .marquee.brands{background:#0d0d10;border-bottom-color:#2a2a30}
+  #web .marquee.brands .marquee-track span{color:#c7cad1}
   .wpromo{position:relative;background:#0d0d10;overflow:hidden;min-height:340px}
   .wpromo-slides{position:relative;min-height:340px}
   .wpromo-slide{position:absolute;inset:0;display:flex;align-items:center;gap:20px;max-width:1000px;margin:0 auto;padding:32px 26px;opacity:0;transition:opacity .8s ease;pointer-events:none;background-image:repeating-linear-gradient(135deg,rgba(224,26,34,.13) 0 14px,transparent 14px 42px)}
@@ -1388,7 +1389,6 @@
 <div id="web">
   <header class="whead">
     <button class="iconbtn dark" id="webBack">←</button>
-    <img src="./logo.png" alt="MecaMotor" class="wlogo" />
     <div class="brandtxt"><strong>MecaMotor</strong><span>Taller de Motos</span></div>
     <button class="iconbtn dark temabtn" title="Modo claro / oscuro" style="margin-left:auto">🌙</button>
   </header>
