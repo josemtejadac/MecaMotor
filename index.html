@@ -705,30 +705,47 @@
   .wcirc{background:transparent;display:flex;flex-direction:column;align-items:center;gap:10px;border:0}
   .wcirc-i{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--tinta),#2b2f37);display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:0 8px 22px rgba(0,0,0,.25);border:3px solid var(--rojo)}
   .wcirc b{font-family:Oswald;font-size:14px;text-transform:uppercase;color:var(--tinta);letter-spacing:.5px}
-  .wabout{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
-  .wabout-img{min-height:320px;border-radius:16px;background-size:cover;background-position:center;box-shadow:var(--sombra)}
-  .wabout-txt p{color:var(--gris5);font-size:14.5px;line-height:1.6;margin:0 0 12px}
-  .wabout-txt .wsec-t{text-align:left}
-  .wpills{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-  .wpills span{background:var(--panel);border:1px solid var(--gris2);border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:600;color:var(--tinta)}
+  .wabout{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;background:linear-gradient(120deg,#0a0a0c,#1a1a20);border-radius:18px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.3)}
+  .wabout::after{content:"";position:absolute;right:0;bottom:0;width:130px;height:130px;background:repeating-linear-gradient(135deg,var(--rojo) 0 8px,transparent 8px 16px);opacity:.5;pointer-events:none;-webkit-mask:linear-gradient(135deg,transparent 40%,#000 100%);mask:linear-gradient(135deg,transparent 40%,#000 100%)}
+  .wabout-img{min-height:320px;background-size:cover;background-position:center}
+  .wabout-txt{padding:28px 30px;position:relative;z-index:1}
+  .wabout-txt p{color:#c9c9cf;font-size:14.5px;line-height:1.6;margin:0 0 12px}
+  .wabout-badge{display:inline-flex;align-items:center;gap:6px;background:var(--rojo);color:#fff;font-size:11px;font-weight:800;padding:5px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+  .wabout-txt .wsec-t{text-align:left;color:#fff;margin:0 0 12px}
+  .wabout-txt .wsec-t span{color:var(--rojo)}
+  .wpills{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .wpills .wf{display:flex;align-items:center;gap:10px}
+  .wpills .wf-i{width:36px;height:36px;border-radius:10px;background:rgba(224,26,34,.2);border:1.5px solid rgba(224,26,34,.55);display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto}
+  .wpills .wf-t{color:#fff;font-size:12.5px;font-weight:600;line-height:1.25}
+  @media(max-width:640px){ .wpills{grid-template-columns:1fr} }
   .wplanes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
-  .wplan{background:var(--panel);border:1px solid var(--gris2);border-radius:14px;padding:20px 16px;text-align:center;box-shadow:var(--sombra)}
-  .wplan.destacado{border:2px solid var(--rojo)}
-  .wplan h3{font-family:Oswald;font-size:18px;color:var(--tinta);text-transform:uppercase}
-  .wplan .wprecio{font-family:Oswald;font-size:24px;color:var(--rojo);margin:6px 0 0}
-  .wplan small{color:var(--gris5);font-size:11.5px}
+  .wplan{position:relative;background:linear-gradient(150deg,#15151a,#0a0a0c);border:1px solid #2a2a30;border-radius:14px;padding:22px 18px;text-align:left;box-shadow:0 10px 24px rgba(0,0,0,.3);display:flex;flex-direction:column}
+  .wplan.destacado{border:1.5px solid var(--rojo);box-shadow:0 0 0 1px rgba(224,26,34,.3),0 14px 32px rgba(224,26,34,.25)}
+  .wplan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--rojo);color:#fff;font-size:10px;font-weight:800;padding:5px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+  .wplan-i{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.06);border:1.5px solid var(--rojo);display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:10px}
+  .wplan h3{font-family:Oswald;font-size:16px;color:#fff;text-transform:uppercase;margin:0}
+  .wplan .wprecio{font-family:Oswald;font-size:23px;color:var(--rojo);margin:6px 0 0}
+  .wplan small{color:#9a9aa3;font-size:11.5px;display:block;margin-bottom:4px}
+  .wplan-div{border-top:1px solid #2a2a30;margin:14px 0 12px}
+  .wplan-list{list-style:none;margin:0 0 16px;padding:0;flex:1}
+  .wplan-list li{font-size:12.5px;color:#d5d5d8;padding:3px 0 3px 20px;position:relative}
+  .wplan-list li::before{content:"✓";position:absolute;left:0;color:var(--rojo);font-weight:800}
+  .wplan-wa{margin-top:auto;background:rgba(224,26,34,.14);border:1.5px solid var(--rojo);color:#fff;padding:10px;border-radius:10px;font-size:12.5px;font-weight:700;text-align:center;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}
+  .wplan-wa:hover{background:var(--rojo)}
+  @media(max-width:900px){ .wplanes{grid-template-columns:1fr} .wplan.destacado{order:-1} }
   .wcont-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-  .wcont-item{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--gris2);border-radius:12px;padding:14px;text-decoration:none}
-  .wcont-item span{font-size:24px}
-  .wcont-item b{display:block;font-size:14px;color:var(--tinta)}
-  .wcont-item small{color:var(--gris5);font-size:12.5px}
-  .wmap{border-radius:14px;overflow:hidden;height:280px;box-shadow:var(--sombra)}
-  .wmap iframe{width:100%;height:100%;border:0;display:block}
-  .wfoot{text-align:center;padding:30px 20px;background:var(--panel);border-top:1px solid var(--gris2)}
-  .wfoot img{height:34px;margin-bottom:8px}
-  .wfoot p{color:var(--gris5);font-size:12.5px;margin:2px 0}
+  .wcont-item{display:flex;align-items:center;gap:12px;background:linear-gradient(150deg,#15151a,#0a0a0c);border:1px solid #2a2a30;border-radius:12px;padding:14px;text-decoration:none}
+  .wcont-item span{font-size:20px;width:38px;height:38px;border-radius:10px;background:rgba(224,26,34,.18);border:1.5px solid rgba(224,26,34,.5);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .wcont-item b{display:block;font-size:14px;color:#fff}
+  .wcont-item small{color:#9a9aa3;font-size:12.5px}
+  .wmap{border-radius:14px;overflow:hidden;height:280px;box-shadow:0 10px 24px rgba(0,0,0,.35);border:1px solid #2a2a30}
+  .wmap iframe{width:100%;height:100%;border:0;display:block;filter:grayscale(.25) contrast(1.05)}
+  .wfoot{text-align:center;padding:34px 20px;background:linear-gradient(180deg,#0a0a0c,#101014);border-top:1px solid #2a2a30}
+  .wfoot-word{font-family:Oswald;font-size:20px;font-weight:700;letter-spacing:1px;color:#fff;text-transform:uppercase}
+  .wfoot-word span{color:var(--rojo)}
+  .wfoot p{color:#9a9aa3;font-size:12.5px;margin:8px 0 2px}
   .wfoot-cred{font-size:11px}
-  .wfoot-cred a{color:var(--rojo);font-weight:700;text-decoration:none}
+  .wfoot-cred a{color:#ff6b6f;font-weight:700;text-decoration:none}
   .lbtn-web:hover{border-color:#0ea5e9;background:#eff9ff}
   /* CTA lavado en la landing */
   .wlavado-cta{position:relative;display:flex;align-items:center;gap:18px;background:linear-gradient(120deg,#0a0a0c,#1a1a20);border:1px solid #2a2a30;border-radius:18px;padding:24px 24px 24px 32px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.3);transition:transform .15s;overflow:hidden}
@@ -1479,31 +1496,32 @@
   </section>
 
   <!-- SOBRE NOSOTROS -->
-  <section class="wsec wabout">
-    <div class="wabout-img" style="background-image:url('./fotos/taller5.jpg')"></div>
-    <div class="wabout-txt">
-      <h2 class="wsec-t">Sobre nosotros</h2>
-      <p>Somos <b>MecaMotor</b>, un taller de motos en Santiago que funciona desde <b>2023</b>. Nos dedicamos a la mantención y reparación de motos con un trabajo prolijo, repuestos originales y precios justos.</p>
-      <p>Cada moto que entra la tratamos como si fuera nuestra: revisión honesta, te explicamos qué necesita, y te mantenemos al tanto del estado de tu servicio en todo momento.</p>
-      <div class="wpills">
-        <span>✅ Garantía en nuestros trabajos</span>
-        <span>🏆 Repuestos originales</span>
-        <span>💬 Asistencia por WhatsApp</span>
-        <span>🏍️ Expertos en mantención</span>
+  <section class="wsec">
+    <div class="wabout">
+      <div class="wabout-img" style="background-image:url('./fotos/taller5.jpg')"></div>
+      <div class="wabout-txt">
+        <span class="wabout-badge">👤 Sobre nosotros</span>
+        <h2 class="wsec-t">Somos <span>MecaMotor</span></h2>
+        <p>Somos <b>MecaMotor</b>, un taller de motos en Santiago que funciona desde <b>2023</b>. Nos dedicamos a la mantención y reparación de motos con un trabajo prolijo, repuestos originales y precios justos.</p>
+        <div class="wpills">
+          <div class="wf"><span class="wf-i">🛡️</span><span class="wf-t">Garantía en nuestros<br>trabajos</span></div>
+          <div class="wf"><span class="wf-i">🏆</span><span class="wf-t">Repuestos<br>originales</span></div>
+          <div class="wf"><span class="wf-i">💬</span><span class="wf-t">Atención por<br>WhatsApp</span></div>
+          <div class="wf"><span class="wf-i">🏍️</span><span class="wf-t">Técnicos<br>especializados</span></div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- PLANES -->
-  <section class="wsec">
+  <section class="wsec wsec-dark">
     <h2 class="wsec-t">Planes de mantención</h2>
     <p class="wsec-s">Elige el plan según tu moto. Valores referenciales.</p>
     <div class="wplanes" id="wPlanes"></div>
-    <div style="text-align:center"><button class="wbtn wbtn-red" data-go="cotiza" style="margin-top:4px">Cotizar mi mantención</button></div>
   </section>
 
   <!-- CONTACTO -->
-  <section class="wsec wcontacto">
+  <section class="wsec wsec-dark wcontacto">
     <h2 class="wsec-t">Visítanos</h2>
     <div class="wcont-grid">
       <a class="wcont-item" href="https://maps.google.com/?q=Fray+Camilo+Henriquez+1080+Santiago" target="_blank" rel="noopener"><span>📍</span><div><b>Dirección</b><small>Fray Camilo Henríquez 1080, Santiago</small></div></a>
@@ -1515,7 +1533,7 @@
   </section>
 
   <footer class="wfoot">
-    <img src="./logo.png" alt="MecaMotor" />
+    <div class="wfoot-word">Meca<span>Motor</span></div>
     <p>MecaMotor · Taller de Motos · Santiago, Chile</p>
     <p class="wfoot-cred">Página realizada por <a href="https://spotgo.cl" target="_blank" rel="noopener">Spotgo Tecnología SpA</a></p>
   </footer>
@@ -3937,13 +3955,32 @@ window.addEventListener('appinstalled',()=>$('#installBar').classList.remove('sh
   let wi=0, wtimer=null, pi=0, ptimer=null;
   const slides=()=>web.querySelectorAll('.wslide');
   function rotar(){ const s=slides(); if(s.length<2) return; s[wi].classList.remove('on'); wi=(wi+1)%s.length; s[wi].classList.add('on'); }
+  const WPLAN_RESUMEN = {
+    preventivo: ['Cambio de aceite (opcional)','Ajuste y lubricación','Lavado general de la moto'],
+    semifull: ['Cambio de aceite y filtro','Revisión de frenos y neumáticos','Ajustes avanzados'],
+    full: ['Todo lo del Semi Full','Rodamiento de dirección','Cambio líquido de suspensión'],
+  };
   function renderWebPlanes(){
     const P=$('#wPlanes'); if(!P) return;
     const pr=CONFIG.precios||{}, p13=pr['100_300']||{}, p3=pr['300_mas']||{};
-    const card=(nom,a,b,dest)=>`<div class="wplan ${dest?'destacado':''}"><h3>${nom}</h3><div class="wprecio">${money(a)}</div><small>Motos 100–300cc</small><div class="wprecio" style="font-size:20px;margin-top:12px">${money(b)}</div><small>Motos sobre 300cc</small></div>`;
-    P.innerHTML = card('Preventivo',p13.preventivo||0,p3.preventivo||0,false)
-      + card('Semi Full',p13.semifull||0,p3.semifull||0,true)
-      + card('Full',p13.full||0,p3.full||0,false);
+    const tel=(CONFIG.taller.telefonoWa||'').replace(/\D/g,'');
+    const card=(key,nom,icono,a,b,dest)=>{
+      const items=(WPLAN_RESUMEN[key]||[]).map(i=>`<li>${esc(i)}</li>`).join('');
+      const wa=`https://wa.me/${tel}?text=${encodeURIComponent(`Hola! Quiero cotizar el plan ${nom} para mi moto.`)}`;
+      return `<div class="wplan ${dest?'destacado':''}">
+        ${dest?'<span class="wplan-badge">★ Más solicitado</span>':''}
+        <span class="wplan-i">${icono}</span>
+        <h3>${nom}</h3>
+        <div class="wprecio">${money(a)}</div><small>Motos 100–300cc</small>
+        <div class="wprecio" style="font-size:19px;margin-top:8px">${money(b)}</div><small>Motos sobre 300cc</small>
+        <div class="wplan-div"></div>
+        <ul class="wplan-list">${items}</ul>
+        <a class="wplan-wa" href="${wa}" target="_blank" rel="noopener">🟢 Cotizar por WhatsApp</a>
+      </div>`;
+    };
+    P.innerHTML = card('preventivo','Preventivo','🔧',p13.preventivo||0,p3.preventivo||0,false)
+      + card('semifull','Semi Full','⚙️',p13.semifull||0,p3.semifull||0,true)
+      + card('full','Full','🔩',p13.full||0,p3.full||0,false);
   }
   async function irCat(cat){ cerrarWeb(); await abrirTienda(); catActual=cat; $$('#tCats .tcat').forEach(x=>x.classList.toggle('on',x.dataset.c===cat)); try{tTipo=null;}catch(e){} tPagina=1; $('#tBuscar').value=''; renderProductos(); const g=$('#tGrid'); if(g) g.scrollIntoView({behavior:'smooth',block:'start'}); }
 
