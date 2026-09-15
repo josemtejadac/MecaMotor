@@ -344,7 +344,7 @@
   @media(max-width:620px){.row.c2,.row.c3{grid-template-columns:1fr}}
 
   /* categoria */
-  .segbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .segbtns{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
   .seg{padding:14px;border:2px solid var(--gris2);border-radius:12px;text-align:center;background:var(--panel);font-weight:700;color:var(--gris5);font-family:Oswald;font-size:15px;letter-spacing:.5px}
   .seg small{display:block;font-family:Inter;font-weight:500;font-size:11px;letter-spacing:0;text-transform:none;color:var(--gris5);margin-top:2px}
   .seg.on{border-color:var(--rojo);color:var(--rojo);background:#fff5f5}
@@ -989,6 +989,7 @@
       <h3>Categoría de la moto</h3>
       <div class="segbtns" id="catBtns">
         <div class="seg on" data-c="100_300">100 – 300 cc<small>Motos pequeñas y medianas</small></div>
+        <div class="seg" data-c="250">Exactamente 250 cc<small>+$10.000 sobre 100–300cc</small></div>
         <div class="seg" data-c="300_mas">300 cc en adelante<small>Motos de mayor cilindrada</small></div>
       </div>
     </div>
@@ -1276,6 +1277,7 @@
         <label style="margin-top:18px">Cilindrada</label>
         <div class="segbtns" id="cCils">
           <div class="seg" data-c="100_300">100 – 300 cc<small>Motos pequeñas y medianas</small></div>
+          <div class="seg" data-c="250">Exactamente 250 cc<small>+$10.000 sobre 100–300cc</small></div>
           <div class="seg" data-c="300_mas">300 cc en adelante<small>Motos de mayor cilindrada</small></div>
         </div>
         <p class="chint" id="cHint"></p>
@@ -1770,7 +1772,13 @@ const PLAN_META = {
   semifull:   { nombre:"Mantención Semi Full",  cls:"semi", tag:"" },
   full:       { nombre:"Mantención Full",       cls:"full", tag:"COMPLETO" }
 };
-const CAT_LABEL = { "100_300":"100 – 300 cc", "300_mas":"300 cc en adelante" };
+const CAT_LABEL = { "100_300":"100 – 300 cc", "250":"Exactamente 250 cc", "300_mas":"300 cc en adelante" };
+// la categoría "250" (exactamente 250cc) usa los mismos 3 planes que "100_300" pero $10.000 más cara —
+// no tiene precios propios guardados, se calcula siempre a partir de "100_300"
+function precioPlanCat(categoria, planKey){
+  const base = (CONFIG.precios[categoria==='250' ? '100_300' : categoria] || {})[planKey] || 0;
+  return categoria==='250' ? base + 10000 : base;
+}
 
 /* ============================================================
    INICIALIZACIÓN
@@ -2255,11 +2263,11 @@ $$('#catBtns .seg').forEach(b=>b.onclick=()=>setCatUI(b.dataset.c));
 
 /* planes */
 function renderPlanes(){
-  const pr = CONFIG.precios[current.categoria];
   $('#planBtns').innerHTML = Object.keys(PLAN_META).map(k=>{
     const m=PLAN_META[k]; const on = current.plan_key===k;
     const tag = m.tag? `<span class="tag">${m.tag}</span>`:'';
-    const precio = pr[k]? money(pr[k]) : 'Definir';
+    const pv = precioPlanCat(current.categoria,k);
+    const precio = pv? money(pv) : 'Definir';
     return `<button class="plan ${m.cls} ${on?'on':''}" data-p="${k}">
       ${tag}<div class="pn">${m.nombre}</div><div class="pp">${precio}</div>
       <div class="pt">${CAT_LABEL[current.categoria]} · no incluye insumos</div></button>`;
@@ -2275,7 +2283,7 @@ function renderPlanes(){
   } else $('#planCheck').classList.add('hidden');
 }
 function applyPlan(k, keepItems){
-  const pr = CONFIG.precios[current.categoria][k]||0;
+  const pr = precioPlanCat(current.categoria,k);
   current.plan_key=k; current.plan_nombre=PLAN_META[k].nombre;
   current.checklist = PLAN_ITEMS[k].slice();
   // reemplaza la línea de plan en items
@@ -2593,7 +2601,7 @@ async function tomarCita(id){
   if (e1 || !upd){ toast('Esa cita ya fue tomada por otro trabajador','bad'); await loadCitas(); refrescarVistaAgenda(); return; }
 
   const totalCotizado = cita.plan_precio||0;
-  const planSolo = cita.plan_key ? ((CONFIG.precios[cita.categoria]||{})[cita.plan_key]||0) : 0;
+  const planSolo = cita.plan_key ? precioPlanCat(cita.categoria, cita.plan_key) : 0;
   const extra = Math.max(0, totalCotizado - planSolo);
   const items = [];
   if (cita.plan_nombre) items.push({ tipo:'plan', descripcion:`${cita.plan_nombre} · ${CAT_LABEL[cita.categoria]||''}`, cantidad:1, precio:planSolo });
@@ -3469,7 +3477,7 @@ function renderModelos(){
       const m = motosCat.find(x=>x.id===b.dataset.id);
       cot.modelo = m.modelo; cot.cc = m.cc;
       $('#cManualBox').classList.add('hidden');
-      const cat = m.cc <= 300 ? '100_300' : '300_mas';
+      const cat = m.cc===250 ? '250' : (m.cc <= 300 ? '100_300' : '300_mas');
       setCilUI(cat);
       $('#cHint').textContent = `Tu ${m.marca} ${m.modelo} es de ${m.cc} cc. Si no coincide, puedes cambiarlo.`;
     }
@@ -3485,7 +3493,6 @@ $$('#cCils .seg').forEach(b=>b.onclick=()=>{ setCilUI(b.dataset.c); actualizarTo
 
 /* --- paso 2: planes --- */
 function renderPlanesCot(){
-  const pr = CONFIG.precios[cot.categoria] || {};
   const marca = cot.marca || $('#cMarcaManual').value.trim();
   const modelo = cot.modelo || $('#cModeloManual').value.trim();
   $('#cMotoResumen').textContent = [marca, modelo].filter(Boolean).join(' ')
@@ -3494,7 +3501,7 @@ function renderPlanesCot(){
     const m = PLAN_META[k], on = cot.plan===k;
     return `<button class="plan ${m.cls} ${on?'on':''}" data-p="${k}">
       ${m.tag?`<span class="tag">${m.tag}</span>`:''}
-      <div class="pn">${m.nombre}</div><div class="pp">${money(pr[k]||0)}</div>
+      <div class="pn">${m.nombre}</div><div class="pp">${money(precioPlanCat(cot.categoria,k))}</div>
       <div class="pt">${CAT_LABEL[cot.categoria]} · no incluye insumos</div></button>`;
   }).join('');
   $$('#cPlanes .plan').forEach(b=>b.onclick=()=>{
@@ -3551,7 +3558,7 @@ function renderInsumos(){
 /* --- total y resumen --- */
 function totalCot(){
   let t = 0;
-  if (cot.plan) t += (CONFIG.precios[cot.categoria]||{})[cot.plan] || 0;
+  if (cot.plan) t += precioPlanCat(cot.categoria, cot.plan);
   for (const [id,n] of Object.entries(cot.insumos)){
     const p = productos.find(x=>x.id===id); if(p) t += precioFinal(p)*n;
   }
@@ -3563,7 +3570,7 @@ function actualizarTotalCot(){ $('#cTotal').textContent = money(totalCot()); gua
 function renderResumenCot(){
   const marca = cot.marca || $('#cMarcaManual').value.trim() || '—';
   const modelo = cot.modelo || $('#cModeloManual').value.trim() || '—';
-  const pr = (CONFIG.precios[cot.categoria]||{})[cot.plan] || 0;
+  const pr = precioPlanCat(cot.categoria, cot.plan);
   let filas = `<div class="cfila"><span><b>${esc(marca)} ${esc(modelo)}</b>${cot.cc?` · ${cot.cc} cc`:''}</span><span>${CAT_LABEL[cot.categoria]||''}</span></div>`;
   if (cot.plan) filas += `<div class="cfila plan"><span>${PLAN_META[cot.plan].nombre}</span><span>${money(pr)}</span></div>`;
   for (const [id,n] of Object.entries(cot.insumos)){
@@ -3627,7 +3634,7 @@ $('#cReiniciarTop').onclick = ()=>{ if(confirm('¿Empezar una cotización nueva?
 $('#cEnviar').onclick = ()=>{
   const marca = cot.marca || $('#cMarcaManual').value.trim();
   const modelo = cot.modelo || $('#cModeloManual').value.trim();
-  const pr = (CONFIG.precios[cot.categoria]||{})[cot.plan] || 0;
+  const pr = precioPlanCat(cot.categoria, cot.plan);
   let msg = `Hola *MecaMotor* 🏍️\nQuisiera cotizar una mantención:\n\n`;
   msg += `*Moto:* ${marca} ${modelo}${cot.cc?` (${cot.cc} cc)`:''}\n`;
   msg += `*Categoría:* ${CAT_LABEL[cot.categoria]}\n`;
@@ -3682,7 +3689,7 @@ async function cotizaPDF(){
   doc.setFont('helvetica','normal'); doc.setTextColor(30);
   let i=0;
   if (cot.plan){
-    const pr=(CONFIG.precios[cot.categoria]||{})[cot.plan]||0;
+    const pr=precioPlanCat(cot.categoria, cot.plan);
     if (i%2){ doc.setFillColor(248,249,250); doc.rect(M,y,W-M*2,7,'F'); }
     doc.text(PLAN_META[cot.plan].nombre+' · '+(CAT_LABEL[cot.categoria]||''),M+3,y+5);
     doc.text(money(pr),W-M-3,y+5,{align:'right'}); y+=7; i++;
