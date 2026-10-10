@@ -940,6 +940,9 @@
       <button class="btnprecios" id="preciosBtn">💲 Editar precios</button>
     </div>
     <div class="grid" id="list"></div>
+    <div style="text-align:center;padding:4px 0 24px">
+      <button class="btn-ghost hidden" id="verMasBtn" style="padding:11px 22px">Ver más servicios</button>
+    </div>
     <footer class="appfoot">
       MecaMotor · Taller de Motos<br>
       <span id="appAddr" style="color:var(--gris5)"></span><br>
@@ -2011,22 +2014,46 @@ async function logout(){
 /* ============================================================
    LISTADO
    ============================================================ */
-async function loadServicios(){
-  const { data, error } = await db.from('mecamotor_servicios')
-    .select('*').order('created_at',{ascending:false});
+let servPage = 1;
+const SERV_PAGE_SIZE = 20;
+let servHayMas = false;
+async function loadServicios(reset=true){
+  if (reset) servPage = 1;
+  const { data, error, count } = await db.from('mecamotor_servicios')
+    .select('*', {count:'estimated'}).order('created_at',{ascending:false})
+    .range(0, servPage*SERV_PAGE_SIZE - 1);
   if (error){ toast('Error al cargar: '+error.message,'bad'); return; }
   servicios = data||[];
+  servHayMas = (count==null) ? (servicios.length === servPage*SERV_PAGE_SIZE) : (count > servicios.length);
   renderList();
   refreshAgendaBadge();
 }
-function renderList(){
+$('#verMasBtn').onclick = ()=>{ servPage++; loadServicios(false); };
+
+// buscar/filtrar: si no hay texto ni filtro, se ve la lista paginada ya cargada.
+// si hay texto o un filtro de estado, se busca directo en la base (para no perder
+// servicios viejos que todavia no se cargaron localmente).
+let servBuscaTok = 0;
+async function renderList(){
   const q = ($('#search').value||'').toLowerCase().trim();
-  let arr = servicios.filter(s=>{
-    if (filtro!=='todos' && s.estado!==filtro) return false;
-    if (!q) return true;
-    return [s.folio,s.moto_patente,s.moto_marca,s.moto_modelo,s.cliente_nombre]
-      .some(v=>(v||'').toLowerCase().includes(q));
-  });
+  const miTok = ++servBuscaTok;
+  let arr;
+  if (!q && filtro==='todos'){
+    arr = servicios;
+    $('#verMasBtn').classList.toggle('hidden', !servHayMas);
+  } else {
+    $('#verMasBtn').classList.add('hidden');
+    let qb = db.from('mecamotor_servicios').select('*').order('created_at',{ascending:false}).limit(200);
+    if (filtro!=='todos') qb = qb.eq('estado', filtro);
+    if (q){
+      const qs = q.replace(/[,()%]/g,' ').trim();
+      if (qs) qb = qb.or([`folio.ilike.%${qs}%`,`moto_patente.ilike.%${qs}%`,`moto_marca.ilike.%${qs}%`,`moto_modelo.ilike.%${qs}%`,`cliente_nombre.ilike.%${qs}%`].join(','));
+    }
+    const { data, error } = await qb;
+    if (miTok !== servBuscaTok) return; // llegó una búsqueda más nueva mientras esperábamos
+    if (error){ toast('Error al buscar: '+error.message,'bad'); return; }
+    arr = data||[];
+  }
   const L = $('#list');
   if (!arr.length){
     L.innerHTML = `<div class="empty" style="grid-column:1/-1">
@@ -2049,13 +2076,14 @@ function renderList(){
       ${s.creado_por?`<div class="autor">Ingresada por ${esc(s.creado_por)}</div>`:''}
       </div>`;
   }).join('');
-  $$('.scard').forEach(c=>c.onclick=()=>openEditor(servicios.find(s=>s.id===c.dataset.id)));
+  $$('.scard').forEach(c=>c.onclick=()=>openEditor(arr.find(s=>s.id===c.dataset.id)));
 }
 function estadoLabel(e){ return {recibido:'Recibido',en_proceso:'En proceso',en_pausa:'En pausa',lista_retiro:'Lista para retiro',entregado:'Entregado'}[e]||e; }
 function fechaCorta(iso){ if(!iso) return ''; const d=new Date(iso);
   return d.toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'2-digit'})+' · '+d.toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'}); }
 
-$('#search').addEventListener('input', renderList);
+let servBuscaDeb=null;
+$('#search').addEventListener('input', ()=>{ clearTimeout(servBuscaDeb); servBuscaDeb=setTimeout(renderList,300); });
 $$('#filterChips .chip').forEach(c=>c.onclick=()=>{
   $$('#filterChips .chip').forEach(x=>x.classList.remove('on'));
   c.classList.add('on'); filtro=c.dataset.f; renderList();
