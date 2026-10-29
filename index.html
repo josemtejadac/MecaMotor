@@ -3513,13 +3513,19 @@ $('#cotizaBack').onclick = ()=>{
 };
 
 const COT_KEY='mm_cotiza_progreso';
+const COT_ADMIN_KEY='mm_cotiza_admin_progreso';
 function guardarCot(){
-  if (cotAdmin) return;
-  try{ localStorage.setItem(COT_KEY, JSON.stringify({
+  const key = cotAdmin ? COT_ADMIN_KEY : COT_KEY;
+  const extra = cotAdmin ? {
+    caRut:$('#caRut').value, caNombre:$('#caNombre').value,
+    caCorreo:$('#caCorreo').value, caTelefono:$('#caTelefono').value,
+    caIva:$('#caIva').checked
+  } : {};
+  try{ localStorage.setItem(key, JSON.stringify(Object.assign({
     cot, cPaso, cCatIns, mm:$('#cMarcaManual').value, mo:$('#cModeloManual').value
-  })); }catch(e){}
+  }, extra))); }catch(e){}
 }
-function limpiarCotGuardada(){ try{ localStorage.removeItem(COT_KEY); }catch(e){} }
+function limpiarCotGuardada(){ try{ localStorage.removeItem(cotAdmin?COT_ADMIN_KEY:COT_KEY); }catch(e){} }
 function hayProgresoCot(s){ return !!(s && s.cot && (s.cot.marca || (s.mm||'').trim() || s.cot.plan || Object.keys(s.cot.insumos||{}).length)); }
 
 async function abrirCotizador(admin){
@@ -3528,10 +3534,6 @@ async function abrirCotizador(admin){
   $('#cotiza').classList.add('open');
   $('#cAdminDatos').classList.toggle('hidden', !cotAdmin);
   $('#cIrAgendar').classList.toggle('hidden', cotAdmin);
-  if (cotAdmin){
-    ['caRut','caNombre','caCorreo','caTelefono'].forEach(id=> $('#'+id).value='');
-    $('#caIva').checked = false;
-  }
   if (!motosCat.length){
     const { data } = await db.from('mecamotor_motos').select('*').eq('activo',true).order('marca').order('modelo');
     motosCat = data || [];
@@ -3544,14 +3546,19 @@ async function abrirCotizador(admin){
     const { data:cfg } = await db.from('mecamotor_config').select('value').eq('key','precios').maybeSingle();
     if (cfg && cfg.value) CONFIG.precios = cfg.value;
   }catch(e){}
-  let saved=null; if(!cotAdmin) try{ saved=JSON.parse(localStorage.getItem(COT_KEY)||'null'); }catch(e){}
+  let saved=null; try{ saved=JSON.parse(localStorage.getItem(cotAdmin?COT_ADMIN_KEY:COT_KEY)||'null'); }catch(e){}
+  if (cotAdmin){
+    $('#caRut').value = saved?.caRut||''; $('#caNombre').value = saved?.caNombre||'';
+    $('#caCorreo').value = saved?.caCorreo||''; $('#caTelefono').value = saved?.caTelefono||'';
+    $('#caIva').checked = !!saved?.caIva;
+  }
   if (hayProgresoCot(saved)){
     cot = Object.assign(cotNueva(), saved.cot);
     cCatIns = saved.cCatIns || 'aceites';
     $('#cMarcaManual').value = saved.mm || '';
     $('#cModeloManual').value = saved.mo || '';
     restaurarCotUI(saved.cPaso || 1);
-    toast('Retomamos tu cotización donde ibas','ok');
+    toast(cotAdmin?'Retomamos la cotización donde quedaste':'Retomamos tu cotización donde ibas','ok');
   } else {
     cot = cotNueva(); cPaso = 1; cCatIns = 'aceites';
     $('#cMarcaManual').value=''; $('#cModeloManual').value='';
@@ -3585,6 +3592,8 @@ function restaurarCotUI(paso){
 }
 $('#cMarcaManual') && ($('#cMarcaManual').oninput = guardarCot);
 $('#cModeloManual') && ($('#cModeloManual').oninput = guardarCot);
+['caRut','caNombre','caCorreo','caTelefono'].forEach(id=> $('#'+id) && ($('#'+id).oninput = guardarCot));
+$('#caIva') && ($('#caIva').onchange = guardarCot);
 
 function irPaso(n){
   cPaso = n;
