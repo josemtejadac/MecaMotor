@@ -937,6 +937,7 @@
         <button class="chip" data-f="entregado">Entregados</button>
       </div>
       <button class="btnprecios" id="agendaBtn">📅 Agenda <span class="badge-count hidden" id="agendaBadge">0</span></button>
+      <button class="btnprecios" id="cotizarAdminBtn">🧾 Hacer cotización</button>
       <button class="btnprecios" id="preciosBtn">💲 Editar precios</button>
     </div>
     <div class="grid" id="list"></div>
@@ -1325,6 +1326,20 @@
     <!-- paso 4: total -->
     <section class="cpaso hidden" id="cP4">
       <h3 class="ctit">Tu cotización</h3>
+      <div class="block hidden" id="cAdminDatos">
+        <h3 style="margin-bottom:12px">Datos de la cotización</h3>
+        <div class="row c2">
+          <div><label>RUT empresa/cliente</label><input id="caRut" placeholder="Ej: 76.123.456-7" /></div>
+          <div><label>Nombre</label><input id="caNombre" placeholder="Empresa o persona" /></div>
+        </div>
+        <div class="row c2" style="margin-top:12px">
+          <div><label>Correo</label><input id="caCorreo" type="email" placeholder="correo@empresa.cl" /></div>
+          <div><label>Teléfono</label>
+            <div class="telinput"><span class="telpre">+56</span><input id="caTelefono" type="tel" inputmode="numeric" placeholder="9 1234 5678" /></div>
+          </div>
+        </div>
+        <label class="chkline" style="margin-top:14px"><input type="checkbox" id="caIva" /> Agregar IVA (19%) al total de la cotización</label>
+      </div>
       <div class="block" id="cResumen"></div>
       <p class="cref">⚠️ Valor referencial. El precio final puede variar si la moto requiere trabajos o repuestos adicionales, lo que se te informará antes de realizarlos.</p>
       <button class="btn-wa" id="cEnviar" style="width:100%;padding:15px;font-size:15px">🟢 Enviar cotización por WhatsApp</button>
@@ -3476,15 +3491,22 @@ $('#pEliminar').onclick=async()=>{
 /* ============================================================
    COTIZADOR
    ============================================================ */
-let motosCat = [], cot = null, cPaso = 1, cCatIns = 'aceites';
+let motosCat = [], cot = null, cPaso = 1, cCatIns = 'aceites', cotAdmin = false;
 
 function cotNueva(){
   return { marca:null, modelo:null, cc:null, categoria:null, plan:null, insumos:{}, extras:[] };
 }
 
-$('#chooseCotiza').onclick = abrirCotizador;
+$('#chooseCotiza').onclick = ()=> abrirCotizador(false);
+$('#cotizarAdminBtn') && ($('#cotizarAdminBtn').onclick = ()=> abrirCotizador(true));
 $('#cotizaBack').onclick = ()=>{
   $('#cotiza').classList.remove('open');
+  if (cotAdmin){
+    cotAdmin = false;
+    $('#cAdminDatos').classList.add('hidden');
+    $('#app').classList.remove('hidden');
+    return;
+  }
   $('#login').style.display='';
   $('#loginTaller').classList.add('hidden'); $('#loginCliente').classList.add('hidden');
   $('#loginChoice').classList.remove('hidden');
@@ -3492,6 +3514,7 @@ $('#cotizaBack').onclick = ()=>{
 
 const COT_KEY='mm_cotiza_progreso';
 function guardarCot(){
+  if (cotAdmin) return;
   try{ localStorage.setItem(COT_KEY, JSON.stringify({
     cot, cPaso, cCatIns, mm:$('#cMarcaManual').value, mo:$('#cModeloManual').value
   })); }catch(e){}
@@ -3499,9 +3522,15 @@ function guardarCot(){
 function limpiarCotGuardada(){ try{ localStorage.removeItem(COT_KEY); }catch(e){} }
 function hayProgresoCot(s){ return !!(s && s.cot && (s.cot.marca || (s.mm||'').trim() || s.cot.plan || Object.keys(s.cot.insumos||{}).length)); }
 
-async function abrirCotizador(){
-  $('#login').style.display='none';
+async function abrirCotizador(admin){
+  cotAdmin = !!admin;
+  if (cotAdmin) $('#app').classList.add('hidden'); else $('#login').style.display='none';
   $('#cotiza').classList.add('open');
+  $('#cAdminDatos').classList.toggle('hidden', !cotAdmin);
+  if (cotAdmin){
+    ['caRut','caNombre','caCorreo','caTelefono'].forEach(id=> $('#'+id).value='');
+    $('#caIva').checked = false;
+  }
   if (!motosCat.length){
     const { data } = await db.from('mecamotor_motos').select('*').eq('activo',true).order('marca').order('modelo');
     motosCat = data || [];
@@ -3514,7 +3543,7 @@ async function abrirCotizador(){
     const { data:cfg } = await db.from('mecamotor_config').select('value').eq('key','precios').maybeSingle();
     if (cfg && cfg.value) CONFIG.precios = cfg.value;
   }catch(e){}
-  let saved=null; try{ saved=JSON.parse(localStorage.getItem(COT_KEY)||'null'); }catch(e){}
+  let saved=null; if(!cotAdmin) try{ saved=JSON.parse(localStorage.getItem(COT_KEY)||'null'); }catch(e){}
   if (hayProgresoCot(saved)){
     cot = Object.assign(cotNueva(), saved.cot);
     cCatIns = saved.cCatIns || 'aceites';
@@ -3523,7 +3552,8 @@ async function abrirCotizador(){
     restaurarCotUI(saved.cPaso || 1);
     toast('Retomamos tu cotización donde ibas','ok');
   } else {
-    cot = cotNueva(); cPaso = 1;
+    cot = cotNueva(); cPaso = 1; cCatIns = 'aceites';
+    $('#cMarcaManual').value=''; $('#cModeloManual').value='';
     renderMarcas(); irPaso(1);
   }
 }
@@ -3818,6 +3848,20 @@ async function cotizaPDF(){
   doc.text(new Date().toLocaleDateString('es-CL'),W-M,y,{align:'right'});
   y+=8;
 
+  if (cotAdmin){
+    const rut=$('#caRut').value.trim(), nom=$('#caNombre').value.trim(), cor=$('#caCorreo').value.trim(), tel=$('#caTelefono').value.trim();
+    if (rut||nom||cor||tel){
+      const filas=[nom?`Cliente: ${nom}`:null, rut?`RUT: ${rut}`:null, tel?`Tel: +56 ${tel}`:null, cor?`Correo: ${cor}`:null].filter(Boolean);
+      const alto = 6 + filas.length*5;
+      doc.setFillColor(245,246,248); doc.roundedRect(M,y,W-M*2,alto,2,2,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(224,26,34);
+      doc.text('DATOS DEL CLIENTE',M+4,y+6);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(40);
+      filas.forEach((f,i)=> doc.text(f,M+4,y+11+i*5));
+      y+=alto+6;
+    }
+  }
+
   doc.setFillColor(245,246,248); doc.roundedRect(M,y,W-M*2,16,2,2,'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(224,26,34);
   doc.text('MOTO',M+4,y+6);
@@ -3849,9 +3893,18 @@ async function cotizaPDF(){
     doc.text(money(e.monto),W-M-3,y+5,{align:'right'}); y+=7; i++;
   });
   doc.setDrawColor(200); doc.line(M,y,W-M,y); y+=2;
+  const subtotal = totalCot();
+  const conIva = cotAdmin && $('#caIva').checked;
+  const iva = conIva ? Math.round(subtotal*0.19) : 0;
+  const totalFinal = subtotal + iva;
+  if (conIva){
+    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(60);
+    doc.text('Subtotal (neto)',W-M-82,y+5); doc.text(money(subtotal),W-M-3,y+5,{align:'right'}); y+=6;
+    doc.text('IVA (19%)',W-M-82,y+5); doc.text(money(iva),W-M-3,y+5,{align:'right'}); y+=7;
+  }
   doc.setFillColor(224,26,34); doc.roundedRect(W-M-82,y,82,11,2,2,'F');
   doc.setTextColor(255); doc.setFont('helvetica','bold'); doc.setFontSize(11);
-  doc.text('TOTAL ESTIMADO',W-M-78,y+7.3); doc.text(money(totalCot()),W-M-3,y+7.3,{align:'right'});
+  doc.text(conIva?'TOTAL + IVA':'TOTAL ESTIMADO',W-M-78,y+7.3); doc.text(money(totalFinal),W-M-3,y+7.3,{align:'right'});
   y+=18;
 
   doc.setTextColor(120); doc.setFont('helvetica','italic'); doc.setFontSize(8);
