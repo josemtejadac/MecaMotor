@@ -278,6 +278,13 @@
   .cextra-add input:first-child{flex:1}
   .cextra-add #cExtraMonto{width:100px;flex:0 0 auto}
   .cextra-add button{flex:0 0 auto;width:46px;background:var(--rojo);color:#fff;border-radius:10px;font-size:22px}
+  #cP3.manual{display:flex;flex-direction:column}
+  #cP3.manual #cP3Tit{order:-3} #cP3.manual #cP3Sub{order:-2} #cP3.manual .cextra{order:-1;border-top:0;padding-top:0;margin-bottom:26px}
+  #cP3.manual #cExtraTit{margin-top:10px!important}
+  #cP3.manual .cextra-add #cExtraMonto{width:130px}
+  #cP3.manual .cextra-add button{width:auto;padding:0 18px;font-size:14px;font-weight:700}
+  .cins-tit small{font-family:Inter;font-size:12px;font-weight:600;color:var(--gris5);text-transform:none;letter-spacing:0}
+  @media(max-width:560px){ #cP3.manual .cextra-add{flex-wrap:wrap} #cP3.manual .cextra-add #cExtraDesc{flex:1 1 100%} #cP3.manual .cextra-add #cExtraMonto{flex:1} }
   .cextra-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--panel);border:1px solid var(--gris2);border-radius:11px;margin-bottom:8px}
   .cextra-row .xn{flex:1;font-size:14px;font-weight:600;color:var(--gris9)}
   .cextra-row .xm{font-family:Oswald;font-weight:600;white-space:nowrap}
@@ -1611,8 +1618,9 @@
 
     <!-- paso 3: insumos -->
     <section class="cpaso hidden" id="cP3">
-      <h3 class="ctit">¿Agregas insumos?</h3>
-      <p class="csub">Los planes no incluyen insumos. Puedes sumarlos aquí o dejarlo así.</p>
+      <h3 class="ctit" id="cP3Tit">¿Agregas insumos?</h3>
+      <p class="csub" id="cP3Sub">Los planes no incluyen insumos. Puedes sumarlos aquí o dejarlo así.</p>
+      <h3 class="ctit cins-tit hidden" id="cInsTit">Insumos de la tienda <small>(opcional)</small></h3>
       <div class="chips" id="cCatIns">
         <button class="chip on" data-c="aceites">Aceites</button>
         <button class="chip" data-c="repuestos">Repuestos</button>
@@ -1622,8 +1630,8 @@
       <div class="tgrid" id="cInsumos"></div>
 
       <div class="cextra">
-        <h3 class="ctit" style="margin-top:22px">¿Algún trabajo extra?</h3>
-        <p class="csub">Agrega trabajos o repuestos adicionales con su valor (ej: cambio de disco de embrague).</p>
+        <h3 class="ctit" id="cExtraTit" style="margin-top:22px">¿Algún trabajo extra?</h3>
+        <p class="csub" id="cExtraSub">Agrega trabajos o repuestos adicionales con su valor (ej: cambio de disco de embrague).</p>
         <div id="cExtrasList"></div>
         <div class="cextra-add">
           <input id="cExtraDesc" placeholder="Ej: Cambio de disco de embrague" />
@@ -4132,7 +4140,7 @@ function irPaso(n){
   $('#cBar').classList.toggle('on', n<4);
   $('#cAtras').style.visibility = n===1 ? 'hidden' : 'visible';
   $('#cSiguiente').textContent = n===3 ? 'Ver total' : 'Siguiente';
-  if (n===3){ renderInsumos(); renderExtras(); }
+  if (n===3){ ajustarPaso3(); renderInsumos(); renderExtras(); }
   if (n===4) renderResumenCot();
   if (n===5) iniciarAgenda();
   actualizarTotalCot();
@@ -4295,6 +4303,24 @@ function renderResumenCot(){
   $('#cResumen').innerHTML = filas +
     `<div class="totalbar"><span>Total estimado</span><strong>${money(totalCot())}</strong></div>`;
 }
+// en la cotización manual (sin plan) lo principal es escribir la mano de obra / trabajos con su
+// precio, así que ese bloque pasa arriba y los insumos de la tienda quedan como opcionales
+function ajustarPaso3(){
+  const manual = cotAdmin && cot && cot.sinPlan;
+  $('#cP3').classList.toggle('manual', !!manual);
+  $('#cInsTit').classList.toggle('hidden', !manual);
+  $('#cP3Tit').textContent = manual ? 'Detalle de la cotización' : '¿Agregas insumos?';
+  $('#cP3Sub').textContent = manual
+    ? 'Escribe cada trabajo, repuesto o mano de obra con su precio. Se van sumando al total.'
+    : 'Los planes no incluyen insumos. Puedes sumarlos aquí o dejarlo así.';
+  $('#cExtraTit').textContent = manual ? 'Mano de obra, trabajos y repuestos' : '¿Algún trabajo extra?';
+  $('#cExtraSub').textContent = manual
+    ? 'Ej: "Motor completo" $350.000 · "Mano de obra cambio de embrague" $25.000'
+    : 'Agrega trabajos o repuestos adicionales con su valor (ej: cambio de disco de embrague).';
+  $('#cExtraDesc').placeholder = manual ? 'Descripción (ej: Motor completo)' : 'Ej: Cambio de disco de embrague';
+  $('#cExtraMonto').placeholder = manual ? 'Precio $' : '$';
+  $('#cExtraAdd').textContent = manual ? 'Agregar' : '＋';
+}
 function renderExtras(){
   const L=$('#cExtrasList'); if(!L) return;
   L.innerHTML=(cot.extras||[]).map((e,i)=>`<div class="cextra-row"><span class="xn">${esc(e.desc)}</span><span class="xm">${money(e.monto)}</span><button class="xdel" data-x="${i}">×</button></div>`).join('');
@@ -4309,6 +4335,7 @@ $('#cExtraAdd').onclick=()=>{
   renderExtras(); actualizarTotalCot();
 };
 $('#cExtraMonto') && $('#cExtraMonto').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#cExtraAdd').click(); });
+$('#cExtraDesc') && $('#cExtraDesc').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); $('#cExtraMonto').focus(); } });
 
 /* --- navegación --- */
 // tocar un paso para saltar a él (atrás libre; adelante si ya está lo necesario)
