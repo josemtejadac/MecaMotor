@@ -691,6 +691,23 @@
   .wbenefits .wb-i{width:38px;height:38px;border-radius:50%;background:rgba(224,26,34,.22);border:1.5px solid rgba(224,26,34,.5);display:flex;align-items:center;justify-content:center;font-size:17px;flex:0 0 auto;color:#ff8285}
   .wbenefits .wb-t{color:#fff;font-size:12.5px;font-weight:600;line-height:1.25}
   @media(max-width:760px){ .wbenefits .inner{justify-content:flex-start} }
+  .wprod-marquee{background:linear-gradient(180deg,#0a0a0c,#131317);padding:34px 0 30px;overflow:hidden;position:relative}
+  .wprod-marquee::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,rgba(224,26,34,.06) 0 14px,transparent 14px 42px);pointer-events:none}
+  .wpm-head{text-align:center;margin-bottom:22px;position:relative}
+  .wpm-kick{display:inline-flex;align-items:center;gap:6px;background:var(--rojo);color:#fff;font-size:10.5px;font-weight:800;padding:5px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:1px}
+  .wpm-kick::before{content:"●";color:#ffb3b3;font-size:8px;animation:wpmPulse 1.6s ease-in-out infinite}
+  @keyframes wpmPulse{0%,100%{opacity:1}50%{opacity:.25}}
+  .wpm-head h2{font-family:Oswald;font-size:24px;text-transform:uppercase;color:#fff;margin:10px 0 0;letter-spacing:.5px}
+  .wpm-wrap{position:relative;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+  .wpm-track{display:inline-flex;width:max-content;animation:marq 38s linear infinite}
+  .wprod-marquee:hover .wpm-track{animation-play-state:paused}
+  .wpm-card{display:inline-flex;flex-direction:column;align-items:center;width:138px;margin:0 11px;cursor:pointer;flex:0 0 auto;transition:transform .2s ease}
+  .wpm-card:hover{transform:translateY(-4px)}
+  .wpm-card .wpm-img{width:112px;height:112px;background:#fff;border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.08)}
+  .wpm-card .wpm-img img{width:100%;height:100%;object-fit:contain;padding:10px}
+  .wpm-card .wpm-nom{color:#e5e5ea;font-size:11.5px;font-weight:600;text-align:center;margin-top:9px;line-height:1.25;max-width:132px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .wpm-card .wpm-precio{color:#ff6b6f;font-family:Oswald;font-size:13.5px;font-weight:600;margin-top:3px}
+  @media(max-width:640px){ .wpm-head h2{font-size:19px} .wpm-card{width:112px;margin:0 8px} .wpm-card .wpm-img{width:94px;height:94px;border-radius:13px} }
   .wbtn{display:inline-flex;align-items:center;gap:7px;padding:12px 18px;border-radius:12px;font-weight:700;font-size:14px;text-decoration:none;cursor:pointer;border:0}
   .wbtn-red{background:var(--rojo);color:#fff}
   .wbtn-line{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.5)}
@@ -1457,6 +1474,17 @@
       <div class="wb"><span class="wb-i">✅</span><span class="wb-t">Repuestos originales<br>y alternativos</span></div>
       <div class="wb"><span class="wb-i">🏆</span><span class="wb-t">Los mejores precios<br>del mercado</span></div>
       <div class="wb"><span class="wb-i">💬</span><span class="wb-t">Soporte personalizado<br>por WhatsApp</span></div>
+    </div>
+  </div>
+
+  <!-- PRODUCTOS EN LA TIENDA (carrusel en movimiento) -->
+  <div class="wprod-marquee hidden" id="wProdMarquee">
+    <div class="wpm-head">
+      <span class="wpm-kick">Disponibles ahora</span>
+      <h2>Lo que tenemos en la tienda</h2>
+    </div>
+    <div class="wpm-wrap">
+      <div class="wpm-track" id="wProdMarqueeTrack"></div>
     </div>
   </div>
 
@@ -4254,8 +4282,23 @@ window.addEventListener('appinstalled',()=>$('#installBar').classList.remove('sh
     if(!(productos&&productos.length)){ try{ const {data}=await db.from('mecamotor_productos').select('*').eq('activo',true).order('orden'); productos=data||[]; }catch(e){} }
     renderPromo();
     ajustarAlturaPromo();
+    renderProdMarquee();
     wi=0; if(wtimer) clearInterval(wtimer); wtimer=setInterval(rotar,2800);
     if(ptimer) clearInterval(ptimer); ptimer=setInterval(()=>goPromo(pi+1),3800);
+  }
+  function renderProdMarquee(){
+    const sec=$('#wProdMarquee'), track=$('#wProdMarqueeTrack'); if(!sec||!track) return;
+    const list=(productos||[]).filter(p=>p.activo!==false && p.imagen_url).slice(0,16);
+    if (!list.length){ sec.classList.add('hidden'); return; }
+    sec.classList.remove('hidden');
+    const card = p=>`<div class="wpm-card" data-cat="${esc(p.categoria||'')}">
+        <div class="wpm-img"><img src="${p.imagen_url}" alt="${esc(p.nombre)}" loading="lazy"></div>
+        <div class="wpm-nom">${esc(p.nombre)}</div>
+        <div class="wpm-precio">${money(precioFinal(p))}</div>
+      </div>`;
+    const html = list.map(card).join('');
+    track.innerHTML = html + html;
+    track.querySelectorAll('.wpm-card').forEach(el=> el.onclick = ()=> irCat(el.dataset.cat));
   }
   function cerrarWeb(){ web.classList.remove('open'); $('#login').style.display=''; if(wtimer){clearInterval(wtimer);wtimer=null;} if(ptimer){clearInterval(ptimer);ptimer=null;} }
   $('#chooseWeb') && ($('#chooseWeb').onclick=abrirWeb);
