@@ -1247,6 +1247,7 @@
       <button class="btnprecios" id="agendaBtn">📅 Agenda <span class="badge-count hidden" id="agendaBadge">0</span></button>
       <button class="btnprecios" id="cotizarAdminBtn">🧾 Hacer cotización</button>
       <button class="btnprecios" id="preciosBtn">💲 Editar precios</button>
+      <button class="btnprecios hidden" id="planesBtn">📋 Editar planes</button>
     </div>
     <div class="grid" id="list"></div>
     <div style="text-align:center;padding:4px 0 24px">
@@ -2185,6 +2186,21 @@
   </div>
 </div>
 
+<div id="planesModal" class="modalov">
+  <div class="modalbox" style="max-width:640px">
+    <h3>Editar planes de mantención</h3>
+    <p class="modalsub">Cambia el nombre, la descripción y lo que incluye cada plan. Se refleja en el cotizador, la página web, la agenda, las hojas de servicio nuevas y el bot. Los precios se cambian en "Editar precios".</p>
+    <div id="planesEdit"></div>
+    <div class="modalact" style="flex-wrap:wrap">
+      <button class="btn-ghost" id="planesReset" title="Carga los textos originales (no se guarda hasta tocar Guardar)">Restaurar originales</button>
+      <div style="display:flex;gap:10px;margin-left:auto">
+        <button class="btn-ghost" id="planesCancel">Cancelar</button>
+        <button class="btn-save" id="planesSave" style="flex:0 0 auto;padding:12px 20px">Guardar planes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="preciosModal" class="modalov">
   <div class="modalbox">
     <h3>Editar precios de planes</h3>
@@ -2284,16 +2300,39 @@ PLAN_ITEMS.full = PLAN_ITEMS.semifull.concat([
 ]);
 
 const PLAN_META = {
-  preventivo: { nombre:"Mantención Preventivo", cls:"prev", tag:"" },
-  semifull:   { nombre:"Mantención Semi Full",  cls:"semi", tag:"" },
-  full:       { nombre:"Mantención Full",       cls:"full", tag:"COMPLETO" }
+  preventivo: { nombre:"Mantención Preventivo", cls:"prev", tag:"", desc:"Lo esencial para mantener tu moto al día." },
+  semifull:   { nombre:"Mantención Semi Full",  cls:"semi", tag:"", desc:"La mantención más completa en precio–calidad." },
+  full:       { nombre:"Mantención Full",       cls:"full", tag:"COMPLETO", desc:"Mantención total: todo lo del Semi Full y más." }
 };
+// copia de los textos originales, para poder restaurarlos desde el editor de planes
+const PLAN_DEFAULTS = JSON.parse(JSON.stringify(Object.fromEntries(Object.keys(PLAN_META).map(k=>[k,{ nombre:PLAN_META[k].nombre, desc:PLAN_META[k].desc, items:PLAN_ITEMS[k] }]))));
 const CAT_LABEL = { "100_300":"100 – 300 cc", "250":"Exactamente 250 cc", "300_mas":"300 cc en adelante" };
 // la categoría "250" (exactamente 250cc) usa los mismos 3 planes que "100_300" pero $10.000 más cara —
 // no tiene precios propios guardados, se calcula siempre a partir de "100_300"
 function precioPlanCat(categoria, planKey){
   const base = (CONFIG.precios[categoria==='250' ? '100_300' : categoria] || {})[planKey] || 0;
   return categoria==='250' ? base + 10000 : base;
+}
+// el admin puede editar nombre, descripción y contenido de cada plan; se guarda en
+// mecamotor_config (key 'planes') y pisa los valores por defecto de arriba
+function aplicarPlanesConfig(v){
+  if (!v || typeof v!=='object') return;
+  Object.keys(PLAN_META).forEach(k=>{
+    const p=v[k]; if(!p) return;
+    if (p.nombre && String(p.nombre).trim()) PLAN_META[k].nombre=String(p.nombre).trim();
+    if (typeof p.desc==='string') PLAN_META[k].desc=p.desc.trim();
+    if (Array.isArray(p.items)){ const it=p.items.map(x=>String(x).trim()).filter(Boolean); if(it.length) PLAN_ITEMS[k]=it; }
+  });
+}
+const nombreCortoPlan = k => ((PLAN_META[k]&&PLAN_META[k].nombre)||k).replace(/^Mantenci[oó]n\s+/i,'');
+async function cargarConfigPlanes(){
+  try{
+    const { data } = await db.from('mecamotor_config').select('key,value').in('key',['precios','planes']);
+    (data||[]).forEach(r=>{
+      if (r.key==='precios' && r.value) CONFIG.precios = r.value;
+      if (r.key==='planes') aplicarPlanesConfig(r.value);
+    });
+  }catch(e){}
 }
 
 /* ============================================================
@@ -2458,10 +2497,8 @@ async function openApp(){
   const tn=$('#trabTag'); if(tn) tn.textContent = nombreConRol();
   const wc=$('#welcome'); if(wc) wc.innerHTML = 'Trabajador: <b>'+esc(trabajadorNombre)+'</b>'+(esAdmin()?' <span class="rolchip">ADMIN</span>':'');
   toast('Bienvenido, '+nombreConRol(),'ok');
-  try{
-    const { data:cfg } = await db.from('mecamotor_config').select('value').eq('key','precios').maybeSingle();
-    if (cfg && cfg.value) CONFIG.precios = cfg.value;
-  }catch(e){}
+  const pb=$('#planesBtn'); if(pb) pb.classList.toggle('hidden', !esAdmin());
+  await cargarConfigPlanes();
   loadServicios();
 }
 
@@ -2559,9 +2596,55 @@ $('#tiendaLink').onclick = ()=>{ $('#app').classList.add('hidden'); abrirTienda(
 const PZ = [['100_300','preventivo'],['300_mas','preventivo'],['100_300','semifull'],['300_mas','semifull'],['100_300','full'],['300_mas','full']];
 $('#preciosBtn').onclick = ()=>{
   PZ.forEach(([cat,pl])=>{ const el=$('#pz_'+cat+'_'+pl); if(el) el.value = (CONFIG.precios[cat]&&CONFIG.precios[cat][pl])||0; });
+  const filas=$$('#preciosModal tbody tr td:first-child');
+  ['preventivo','semifull','full'].forEach((k,i)=>{ if(filas[i]) filas[i].textContent=nombreCortoPlan(k); });
   $('#preciosModal').classList.add('open');
 };
 $('#preciosCancel').onclick = ()=> $('#preciosModal').classList.remove('open');
+
+/* ---- editor de planes (solo admin) ---- */
+function renderPlanesEdit(src){
+  $('#planesEdit').innerHTML = Object.keys(PLAN_META).map(k=>{
+    const p=src[k]||{};
+    return `<div class="block" style="margin-bottom:12px">
+      <h3>${esc(nombreCortoPlan(k))}</h3>
+      <label>Nombre del plan</label>
+      <input data-pk="${k}" data-f="nombre" value="${esc(p.nombre||'')}" />
+      <label style="margin-top:10px">Descripción corta (se ve en la página web)</label>
+      <input data-pk="${k}" data-f="desc" value="${esc(p.desc||'')}" />
+      <label style="margin-top:10px">Qué incluye — un punto por línea</label>
+      <textarea data-pk="${k}" data-f="items" rows="7">${esc((p.items||[]).join('\n'))}</textarea>
+    </div>`;
+  }).join('');
+}
+$('#planesBtn').onclick = ()=>{
+  if (!esAdmin()){ toast('Solo el administrador puede editar los planes','bad'); return; }
+  renderPlanesEdit(Object.fromEntries(Object.keys(PLAN_META).map(k=>[k,{ nombre:PLAN_META[k].nombre, desc:PLAN_META[k].desc||'', items:PLAN_ITEMS[k]||[] }])));
+  $('#planesModal').classList.add('open');
+};
+$('#planesReset').onclick = ()=>{ renderPlanesEdit(PLAN_DEFAULTS); toast('Textos originales cargados — toca Guardar para aplicarlos','ok'); };
+$('#planesCancel').onclick = ()=> $('#planesModal').classList.remove('open');
+$('#planesModal').onclick = e=>{ if(e.target.id==='planesModal') $('#planesModal').classList.remove('open'); };
+$('#planesSave').onclick = async ()=>{
+  const obj={};
+  for (const k of Object.keys(PLAN_META)){
+    const val=f=>{ const el=$(`#planesEdit [data-pk="${k}"][data-f="${f}"]`); return el?el.value:''; };
+    const nombre=val('nombre').trim();
+    const items=val('items').split('\n').map(s=>s.replace(/^\s*[-•*✓]\s*/,'').trim()).filter(Boolean);
+    if (!nombre){ toast('Falta el nombre de un plan','bad'); return; }
+    if (!items.length){ toast(`"${nombre}" debe incluir al menos un punto`,'bad'); return; }
+    obj[k]={ nombre, desc:val('desc').trim(), items };
+  }
+  const btn=$('#planesSave'); btn.disabled=true; btn.textContent='Guardando…';
+  const { error } = await db.from('mecamotor_config')
+    .upsert({ key:'planes', value:obj, updated_at:new Date().toISOString() }, { onConflict:'key' });
+  btn.disabled=false; btn.textContent='Guardar planes';
+  if (error){ toast('Error al guardar los planes: '+error.message,'bad'); return; }
+  aplicarPlanesConfig(obj);
+  if (current) renderPlanes();
+  $('#planesModal').classList.remove('open');
+  toast('Planes actualizados','ok');
+};
 $('#preciosModal').onclick = e=>{ if(e.target.id==='preciosModal') $('#preciosModal').classList.remove('open'); };
 $('#preciosSave').onclick = async ()=>{
   const obj={ "100_300":{}, "300_mas":{} };
@@ -3146,6 +3229,7 @@ async function cmRefreshHoras(){
 }
 $('#agNueva').onclick = ()=>{
   ['cmNombre','cmTelefono','cmPatente','cmMarca','cmModelo','cmNotas','cmEmail'].forEach(id=> $('#'+id).value='');
+  $$('#cmPlan option').forEach(o=>{ if(o.value && PLAN_META[o.value]) o.textContent=nombreCortoPlan(o.value); });
   $('#cmPlan').value=''; $('#cmTotal').value=''; $('#cmPago').value='10000';
   cmCat='100_300'; $$('#cmCats .seg').forEach(b=>b.classList.toggle('on', b.dataset.c===cmCat));
   const hoy=new Date().toISOString().slice(0,10);
@@ -3986,10 +4070,7 @@ async function abrirCotizador(admin){
     const { data } = await db.from('mecamotor_productos').select('*').order('orden');
     productos = data || [];
   }
-  try{
-    const { data:cfg } = await db.from('mecamotor_config').select('value').eq('key','precios').maybeSingle();
-    if (cfg && cfg.value) CONFIG.precios = cfg.value;
-  }catch(e){}
+  await cargarConfigPlanes();
   let saved=null; try{ saved=JSON.parse(localStorage.getItem(cotAdmin?COT_ADMIN_KEY:COT_KEY)||'null'); }catch(e){}
   if (cotAdmin){
     $('#caRut').value = saved?.caRut||''; $('#caNombre').value = saved?.caNombre||'';
@@ -4618,11 +4699,7 @@ window.addEventListener('appinstalled',()=>$('#installBar').classList.remove('sh
   }
 
   /* --- planes --- */
-  const WPLAN_META = {
-    preventivo:{ n:'Preventivo', i:'🔧', d:'Lo esencial para mantener tu moto al día.' },
-    semifull:{ n:'Semi Full', i:'⚙️', d:'La mantención más completa en precio–calidad.' },
-    full:{ n:'Full', i:'🏁', d:'Mantención total: todo lo del Semi Full y más.' },
-  };
+  const WPLAN_ICON = { preventivo:'🔧', semifull:'⚙️', full:'🏁' };
   const TIERS=[['100_300','100 – 300 cc'],['250','250 cc'],['300_mas','300 cc +']];
   function renderWebPlanes(){
     const P=$('#wPlanes'), T=$('#nxTier'); if(!P) return;
@@ -4633,7 +4710,7 @@ window.addEventListener('appinstalled',()=>$('#installBar').classList.remove('sh
     const tel=(CONFIG.taller.telefonoWa||'').replace(/\D/g,'');
     const tierLbl=(TIERS.find(t=>t[0]===planTier)||TIERS[0])[1];
     P.innerHTML = ['preventivo','semifull','full'].map(k=>{
-      const m=WPLAN_META[k], feat=k==='semifull';
+      const m={ n:nombreCortoPlan(k), i:WPLAN_ICON[k]||'🔧', d:(PLAN_META[k]&&PLAN_META[k].desc)||'' }, feat=k==='semifull';
       const items=PLAN_ITEMS[k]||[];
       const top=items.slice(0,5).map(i=>`<li>${esc(i)}</li>`).join('');
       const rest=items.slice(5);
@@ -4774,7 +4851,7 @@ window.addEventListener('appinstalled',()=>$('#installBar').classList.remove('sh
     renderWebPlanes();
     observarReveal();
     if(!(productos&&productos.length)){ try{ const {data}=await db.from('mecamotor_productos').select('*').eq('activo',true).order('orden'); productos=data||[]; }catch(e){} }
-    try{ const { data:cfg } = await db.from('mecamotor_config').select('value').eq('key','precios').maybeSingle(); if (cfg && cfg.value){ CONFIG.precios=cfg.value; renderWebPlanes(); } }catch(e){}
+    await cargarConfigPlanes(); renderWebPlanes();
     renderPromo();
     renderCatImgs();
     renderOfertas();
