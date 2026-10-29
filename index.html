@@ -844,6 +844,298 @@
     .wplanes{grid-template-columns:1fr}
     .wcont-grid{grid-template-columns:1fr}
   }
+  /* ===================== NUESTRA PÁGINA (rediseño) ===================== */
+  #web{--nx-bg:#0b0c0f;--nx-bg2:#111318;--nx-card:#17191f;--nx-card2:#1d2027;--nx-line:rgba(255,255,255,.08);--nx-txt:#f4f4f5;--nx-mut:#a1a1aa;--nx-red:#e01a22;--nx-red2:#ff3d46;
+       background:var(--nx-bg);color:var(--nx-txt);font-family:Inter,system-ui,sans-serif;overflow-x:hidden;overflow-x:clip}
+  #web .nx-in{max-width:1200px;margin:0 auto;padding:0 24px;width:100%}
+  #web .nx-gtxt,#web .nx-h1 .g{background:linear-gradient(90deg,#ff3d46,#ff8a5c);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* navegación */
+  .nx-nav{position:fixed;top:0;left:0;right:0;z-index:60;transition:background .35s,box-shadow .35s}
+  .nx-nav.solid{background:rgba(11,12,15,.84);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(255,255,255,.08)}
+  .nx-nav-in{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:14px}
+  .nx-logo{display:flex;flex-direction:column;line-height:1;color:#fff}
+  .nx-logo b{font-family:Oswald;font-weight:700;font-size:21px;letter-spacing:1.5px}
+  .nx-logo b span{color:var(--nx-red2)}
+  .nx-logo small{font-size:9.5px;letter-spacing:3px;text-transform:uppercase;color:var(--nx-mut);font-weight:600;margin-top:5px;white-space:nowrap}
+  @media(max-width:400px){ .nx-logo small{display:none} }
+  .nx-links{display:flex;gap:2px;margin-left:auto}
+  .nx-links button{background:none;color:#d4d4d8;font-size:13.5px;font-weight:600;padding:9px 14px;border-radius:999px;transition:.2s}
+  .nx-links button:hover{color:#fff;background:rgba(255,255,255,.08)}
+  #web .nx-ico{width:42px;height:42px;border-radius:13px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-size:17px;display:inline-flex;align-items:center;justify-content:center;padding:0;flex:0 0 auto;transition:.2s;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  #web .nx-ico:hover{background:rgba(255,255,255,.14)}
+  @media(max-width:920px){ .nx-links{display:none} .nx-nav .temabtn{margin-left:auto} }
+
+  /* botones */
+  #web .nx-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:13px;padding:11px 18px;font-weight:700;font-size:14px;text-decoration:none;transition:transform .25s,box-shadow .25s,background .25s,border-color .25s;white-space:nowrap;border:1px solid transparent}
+  #web .nx-btn:hover{transform:translateY(-2px)}
+  #web .nx-btn b{display:inline-block;transition:transform .25s}
+  #web .nx-btn:hover b{transform:translateX(4px)}
+  #web .nx-btn-lg{padding:16px 26px;font-size:15px;border-radius:15px}
+  #web .nx-btn-red{background:linear-gradient(135deg,#ff3d46,#d4141c);color:#fff;box-shadow:0 12px 30px rgba(224,26,34,.32)}
+  #web .nx-btn-red:hover{box-shadow:0 18px 42px rgba(224,26,34,.48)}
+  #web .nx-btn-glass{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  #web .nx-btn-glass:hover{background:rgba(255,255,255,.15)}
+  #web .nx-btn-wa{background:#25d366;color:#04210d}
+  #web .nx-btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.16)}
+  #web .nx-btn-ghost:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.05)}
+  #web .nx-btn-dark{background:#0b0c0f;color:#fff}
+
+  /* hero */
+  .nx-hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;overflow:hidden;padding:120px 0 110px}
+  .nx-hero-bg{position:absolute;inset:0}
+  .nx-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.1);transition:opacity 1.6s ease,transform 8s ease-out}
+  .nx-slide.on{opacity:1;transform:scale(1)}
+  .nx-hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,12,15,.95) 0%,rgba(11,12,15,.78) 45%,rgba(11,12,15,.3) 100%),linear-gradient(0deg,#0b0c0f 0%,rgba(11,12,15,0) 38%)}
+  .nx-hero-in{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:0 24px;width:100%}
+  .nx-kick{display:inline-flex;align-items:center;gap:10px;font-size:11.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#e4e4e7;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .nx-kick i{width:8px;height:8px;border-radius:50%;background:#ff3d46;animation:nxPing 2s infinite}
+  @keyframes nxPing{0%{box-shadow:0 0 0 0 rgba(255,61,70,.6)}70%{box-shadow:0 0 0 10px rgba(255,61,70,0)}100%{box-shadow:0 0 0 0 rgba(255,61,70,0)}}
+  #web .nx-h1{font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:clamp(50px,9.4vw,124px);line-height:.92;letter-spacing:-.5px;margin:24px 0;color:#fff}
+  .nx-h1 .ln{display:block}
+  .nx-lead{font-size:clamp(15px,1.5vw,18px);color:#d4d4d8;max-width:570px;line-height:1.65;margin:0 0 32px}
+  .nx-cta{display:flex;flex-wrap:wrap;gap:12px}
+  .nx-cta-c{justify-content:center}
+  .nx-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:56px;max-width:780px;border-radius:20px;overflow:hidden;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1)}
+  .nx-stats div{background:rgba(14,15,19,.75);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:18px 20px}
+  .nx-stats b{display:block;font-family:Oswald;font-size:26px;letter-spacing:.5px;color:#fff;line-height:1.1}
+  .nx-stats span{font-size:12px;color:var(--nx-mut)}
+  #web.open .nx-kick,#web.open .nx-h1 .ln,#web.open .nx-lead,#web.open .nx-hero .nx-cta,#web.open .nx-stats{animation:nxUp 1s cubic-bezier(.2,.8,.2,1) both}
+  #web.open .nx-h1 .ln:nth-child(1){animation-delay:.08s}
+  #web.open .nx-h1 .ln:nth-child(2){animation-delay:.18s}
+  #web.open .nx-h1 .ln:nth-child(3){animation-delay:.28s}
+  #web.open .nx-lead{animation-delay:.4s}
+  #web.open .nx-hero .nx-cta{animation-delay:.5s}
+  #web.open .nx-stats{animation-delay:.65s}
+  @keyframes nxUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+  .nx-hero-bars{position:absolute;right:24px;bottom:42px;z-index:3;display:flex;gap:6px}
+  .nx-hero-bars i{width:24px;height:3px;border-radius:2px;background:rgba(255,255,255,.25);transition:all .5s}
+  .nx-hero-bars i.on{background:#fff;width:46px}
+  #web .nx-scroll{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);z-index:3;width:26px;height:42px;border-radius:14px;border:2px solid rgba(255,255,255,.4);background:none;padding:0}
+  .nx-scroll span{position:absolute;left:50%;top:8px;width:4px;height:8px;border-radius:2px;background:#fff;transform:translateX(-50%);animation:nxWheel 1.8s infinite}
+  @keyframes nxWheel{0%{opacity:1;top:8px}100%{opacity:0;top:22px}}
+  @media(max-width:720px){ .nx-stats{grid-template-columns:1fr 1fr;margin-top:40px} .nx-scroll,.nx-hero-bars{display:none} .nx-hero{padding:104px 0 70px} }
+
+  /* marcas */
+  .nx-ticker{border-top:1px solid var(--nx-line);border-bottom:1px solid var(--nx-line);overflow:hidden;padding:22px 0}
+  .nx-tk-track{display:flex;align-items:center;width:max-content;animation:nxMarq 45s linear infinite}
+  .nx-tk-track span{font-family:Oswald;font-weight:700;font-size:clamp(26px,3.4vw,44px);text-transform:uppercase;letter-spacing:1px;color:transparent;-webkit-text-stroke:1.2px rgba(255,255,255,.35);padding:0 28px;white-space:nowrap;transition:color .3s}
+  .nx-tk-track span:hover{color:#fff}
+  .nx-tk-track i{color:#ff3d46;font-style:normal;font-size:16px}
+  .nx-ticker:hover .nx-tk-track{animation-play-state:paused}
+  @keyframes nxMarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* secciones */
+  .nx-sec{position:relative;padding:110px 0;scroll-margin-top:70px}
+  .nx-tight{padding-top:20px}
+  .nx-alt{background:var(--nx-bg2)}
+  .nx-head{margin-bottom:46px;max-width:690px}
+  .nx-center{text-align:center;margin-left:auto;margin-right:auto}
+  .nx-head-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;max-width:none;flex-wrap:wrap}
+  .nx-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#ff5a62}
+  .nx-eyebrow::before{content:"";width:24px;height:2px;background:currentColor;border-radius:2px}
+  .nx-center .nx-eyebrow::after{content:"";width:24px;height:2px;background:currentColor;border-radius:2px}
+  #web .nx-h2{font-family:Oswald;font-weight:700;text-transform:uppercase;font-size:clamp(34px,4.6vw,58px);line-height:1;letter-spacing:.3px;margin:14px 0 0;color:#fff}
+  .nx-sub{color:var(--nx-mut);font-size:16px;line-height:1.7;margin:16px 0 0}
+  .nx-center .nx-sub{max-width:580px;margin-left:auto;margin-right:auto}
+  @media(max-width:720px){ .nx-sec{padding:76px 0} .nx-tight{padding-top:10px} .nx-head{margin-bottom:30px} }
+
+  /* servicios */
+  .nx-serv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+  #web .nx-scard{position:relative;text-align:left;background:var(--nx-card);border:1px solid var(--nx-line);border-radius:24px;padding:30px 26px 28px;color:#fff;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;min-height:310px;font-weight:400;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s,box-shadow .4s}
+  .nx-scard::before{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,61,70,.18),rgba(255,61,70,0) 55%);opacity:0;transition:opacity .4s}
+  #web .nx-scard:hover{transform:translateY(-8px);border-color:rgba(255,61,70,.45);box-shadow:0 34px 70px rgba(0,0,0,.5)}
+  .nx-scard:hover::before{opacity:1}
+  .nx-num{position:absolute;right:14px;bottom:-14px;font-family:Oswald;font-size:110px;font-weight:700;line-height:1;color:rgba(255,255,255,.04);transition:color .4s}
+  .nx-scard:hover .nx-num{color:rgba(255,61,70,.1)}
+  .nx-sico{position:relative;width:60px;height:60px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid var(--nx-line);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:28px;transition:transform .4s}
+  .nx-scard:hover .nx-sico{transform:scale(1.08) rotate(-6deg)}
+  #web .nx-scard h3{position:relative;font-family:Oswald;font-size:25px;text-transform:uppercase;letter-spacing:.4px;margin:0 0 10px;color:#fff}
+  .nx-scard p{position:relative;color:var(--nx-mut);font-size:14.5px;line-height:1.65;margin:0}
+  .nx-go{position:relative;margin-top:auto;padding-top:24px;font-size:13.5px;font-weight:700;color:#ff5a62}
+  .nx-tag{position:absolute;top:26px;right:22px;font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(255,61,70,.14);color:#ff8a8f;border:1px solid rgba(255,61,70,.3)}
+  @media(max-width:1020px){ .nx-serv{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  @media(max-width:560px){ .nx-serv{grid-template-columns:1fr} #web .nx-scard{min-height:0} }
+
+  /* categorías */
+  .nx-cats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+  #web .nx-cat{position:relative;display:flex;flex-direction:column;padding:0;border-radius:24px;overflow:hidden;background:var(--nx-card);border:1px solid var(--nx-line);color:#fff;text-align:left;font-weight:400;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s,box-shadow .4s}
+  #web .nx-cat:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.2);box-shadow:0 30px 60px rgba(0,0,0,.5)}
+  .nx-cat-img{display:block;position:relative;aspect-ratio:1/0.92;background:#fff;overflow:hidden}
+  .nx-cat-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:22px;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+  #web .nx-cat:hover .nx-cat-img img{transform:scale(1.08)}
+  .nx-cat-img.nx-emoji{display:flex;align-items:center;justify-content:center;font-size:72px;background:radial-gradient(circle at 30% 25%,#2a2d35,#121318)}
+  .nx-cat-lbl{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 20px}
+  .nx-cat-lbl b{display:block;font-family:Oswald;font-size:21px;text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+  .nx-cat-lbl small{display:block;color:var(--nx-mut);font-size:12.5px;margin-top:3px}
+  .nx-cat-lbl::after{content:"→";width:38px;height:38px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.07);font-size:16px;transition:.3s}
+  #web .nx-cat:hover .nx-cat-lbl::after{background:#ff3d46}
+  @media(max-width:900px){ .nx-cats{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  @media(max-width:480px){ .nx-cats{gap:12px} .nx-cat-lbl{padding:14px} .nx-cat-lbl::after{display:none} .nx-cat-lbl b{font-size:17px} }
+
+  /* destacados (carrusel) */
+  .nx-promo{position:relative;border-radius:30px;overflow:hidden;background:linear-gradient(135deg,#1c1f26 0%,#121419 65%);border:1px solid var(--nx-line)}
+  .nx-promo::after{content:"";position:absolute;right:-160px;top:-160px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.07),rgba(255,255,255,0) 65%);pointer-events:none}
+  .nx-promo-slides{display:grid}
+  .nx-pslide{grid-area:1/1;display:grid;grid-template-columns:1.05fr 1fr;gap:30px;align-items:center;padding:60px 60px 92px;opacity:0;visibility:hidden;transform:translateX(30px);transition:opacity .7s,transform .7s,visibility .7s;position:relative;z-index:1}
+  .nx-pslide.on{opacity:1;visibility:visible;transform:none}
+  .nx-pbadge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#ff8a8f}
+  #web .nx-pslide h3{font-family:Oswald;font-size:clamp(36px,4.6vw,62px);text-transform:uppercase;line-height:.98;margin:14px 0 14px;color:#fff}
+  .nx-pslide h3 span{background:linear-gradient(90deg,#ff3d46,#ff8a5c);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nx-pslide p{color:#d4d4d8;font-size:16px;line-height:1.6;margin:0 0 22px}
+  .nx-pfeats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px}
+  .nx-pfeats span{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--nx-line)}
+  .nx-pimgs{display:flex;align-items:center;justify-content:center;gap:18px;min-height:240px;animation:nxFloat 6s ease-in-out infinite}
+  .nx-pimgs img{width:150px;height:150px;object-fit:contain;background:#fff;border-radius:24px;padding:16px;box-shadow:0 30px 60px rgba(0,0,0,.55)}
+  .nx-pimgs img:nth-child(2){width:196px;height:196px;position:relative;z-index:2}
+  .nx-pimgs img:nth-child(1){transform:rotate(-6deg) translateY(16px)}
+  .nx-pimgs img:nth-child(3){transform:rotate(6deg) translateY(16px)}
+  .nx-pph{width:200px;height:200px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:96px;background:radial-gradient(circle at 30% 25%,#2a2d35,#121318);border:1px solid rgba(255,255,255,.1)}
+  @keyframes nxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .nx-promo-ctrl{position:absolute;left:60px;bottom:28px;display:flex;align-items:center;gap:12px;z-index:3}
+  .nx-promo-dots{display:flex;gap:6px}
+  .nx-promo-dots i{width:22px;height:3px;border-radius:2px;background:rgba(255,255,255,.25);cursor:pointer;transition:.35s}
+  .nx-promo-dots i.on{width:42px;background:#fff}
+  @media(max-width:860px){ .nx-pslide{grid-template-columns:1fr;padding:36px 24px 88px;gap:24px} .nx-pimgs{min-height:0} .nx-pimgs img{width:96px;height:96px;padding:10px;border-radius:18px} .nx-pimgs img:nth-child(2){width:124px;height:124px} .nx-pph{width:130px;height:130px;font-size:62px} .nx-promo-ctrl{left:24px;bottom:22px} }
+
+  /* grilla de ofertas / destacados */
+  .nx-pgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+  #web .nx-prod{position:relative;display:flex;flex-direction:column;padding:0;border-radius:22px;overflow:hidden;background:var(--nx-card);border:1px solid var(--nx-line);color:#fff;text-align:left;font-weight:400;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s,box-shadow .4s}
+  #web .nx-prod:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.2);box-shadow:0 30px 60px rgba(0,0,0,.5)}
+  .nx-prod-img{position:relative;display:block;aspect-ratio:1/1;background:#fff;overflow:hidden}
+  .nx-prod-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:20px;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+  #web .nx-prod:hover .nx-prod-img img{transform:scale(1.07)}
+  .nx-off{position:absolute;top:14px;left:14px;z-index:2;background:linear-gradient(135deg,#ff3d46,#d4141c);color:#fff;font-size:12px;font-weight:800;padding:6px 10px;border-radius:10px;box-shadow:0 8px 20px rgba(224,26,34,.35)}
+  .nx-prod-tx{display:flex;flex-direction:column;gap:4px;padding:16px 18px 20px;flex:1}
+  .nx-prod-tx .m{font-size:10.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#ff5a62}
+  .nx-prod-tx .t{font-size:14.5px;font-weight:600;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .nx-prod-tx .pr{margin-top:auto;padding-top:10px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .nx-prod-tx .pr b{font-family:Oswald;font-size:24px;font-weight:700;color:#fff}
+  .nx-prod-tx .pr s{color:#71717a;font-size:13.5px}
+  @media(max-width:1000px){ .nx-pgrid{grid-template-columns:repeat(3,minmax(0,1fr))} }
+  @media(max-width:720px){ .nx-pgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px} .nx-prod-tx{padding:12px 13px 15px} .nx-prod-tx .t{font-size:13px} .nx-prod-tx .pr b{font-size:19px} }
+
+  /* productos en movimiento */
+  .nx-flush{padding-top:20px;overflow:hidden}
+  .nx-live{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:nxPingG 2s infinite}
+  @keyframes nxPingG{0%{box-shadow:0 0 0 0 rgba(34,197,94,.6)}70%{box-shadow:0 0 0 9px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+  .nx-pm{display:flex;flex-direction:column;gap:18px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+  .nx-pm-row{display:flex;width:max-content;animation:nxMarq 70s linear infinite}
+  .nx-pm-row.rev{animation-direction:reverse;animation-duration:80s}
+  .nx-pm:hover .nx-pm-row{animation-play-state:paused}
+  #web .nx-pc{flex:0 0 auto;width:250px;margin-right:16px;display:flex;align-items:center;gap:14px;background:var(--nx-card);border:1px solid var(--nx-line);border-radius:20px;padding:12px;color:#fff;text-align:left;font-weight:400;transition:border-color .3s,transform .3s}
+  #web .nx-pc:hover{border-color:rgba(255,61,70,.45);transform:translateY(-3px)}
+  .nx-pc .im{width:76px;height:76px;flex:0 0 auto;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .nx-pc .im img{width:100%;height:100%;object-fit:contain;padding:7px}
+  .nx-pc .tx{display:flex;flex-direction:column;min-width:0}
+  .nx-pc .m{font-size:10px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#ff5a62}
+  .nx-pc .t{font-size:13px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .nx-pc .p{font-family:Oswald;font-size:18px;margin-top:4px}
+  @media(max-width:600px){ #web .nx-pc{width:210px} .nx-pc .im{width:62px;height:62px} }
+
+  /* cómo funciona */
+  .nx-steps{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+  .nx-steps::before{content:"";position:absolute;top:52px;left:8%;right:8%;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.2),rgba(255,255,255,0))}
+  .nx-step{position:relative;background:var(--nx-card);border:1px solid var(--nx-line);border-radius:24px;padding:28px 24px}
+  .nx-step span{display:flex;align-items:center;justify-content:center;width:50px;height:50px;border-radius:15px;background:linear-gradient(135deg,#ff3d46,#d4141c);font-family:Oswald;font-size:19px;font-weight:700;color:#fff;margin-bottom:20px;box-shadow:0 12px 26px rgba(224,26,34,.3)}
+  #web .nx-step h4{font-family:Oswald;font-size:21px;text-transform:uppercase;margin:0 0 8px;letter-spacing:.3px;color:#fff}
+  .nx-step p{color:var(--nx-mut);font-size:14px;line-height:1.65;margin:0}
+  @media(max-width:920px){ .nx-steps{grid-template-columns:repeat(2,minmax(0,1fr))} .nx-steps::before{display:none} }
+  @media(max-width:520px){ .nx-steps{grid-template-columns:1fr} }
+
+  /* nosotros */
+  .nx-about{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+  .nx-collage{position:relative;height:560px}
+  .nx-collage .ph{position:absolute;background-size:cover;background-position:center;border-radius:26px;box-shadow:0 34px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.08)}
+  .nx-collage .ph1{left:0;top:0;width:70%;height:76%}
+  .nx-collage .ph2{right:0;top:10%;width:42%;height:38%}
+  .nx-collage .ph3{right:5%;bottom:0;width:54%;height:44%}
+  .nx-since{position:absolute;left:7%;bottom:8%;z-index:2;background:#fff;color:#0b0c0f;border-radius:22px;padding:16px 22px;box-shadow:0 24px 50px rgba(0,0,0,.45);text-align:center}
+  .nx-since span{display:block;font-size:10.5px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6b7280}
+  .nx-since b{display:block;font-family:Oswald;font-size:38px;line-height:1;margin-top:2px}
+  .nx-quote{margin:28px 0;padding:4px 0 4px 22px;border-left:3px solid #ff3d46;color:#e4e4e7;font-size:16.5px;line-height:1.7;font-style:italic}
+  .nx-feats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .nx-feat{display:flex;align-items:center;gap:12px;background:var(--nx-card);border:1px solid var(--nx-line);border-radius:16px;padding:14px}
+  .nx-feat i{font-style:normal;width:42px;height:42px;flex:0 0 auto;border-radius:12px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:19px}
+  .nx-feat b{font-size:13.5px;font-weight:600;line-height:1.3}
+  @media(max-width:920px){ .nx-about{grid-template-columns:1fr;gap:44px} .nx-collage{height:440px} }
+  @media(max-width:520px){ .nx-collage{height:340px} .nx-feats{grid-template-columns:1fr} }
+
+  /* planes */
+  .nx-tier{display:flex;justify-content:center;margin:-12px 0 46px}
+  .nx-tier-in{display:inline-flex;flex-wrap:wrap;justify-content:center;padding:5px;border-radius:999px;background:var(--nx-card);border:1px solid var(--nx-line);gap:4px}
+  #web .nx-tier button{background:none;color:#d4d4d8;font-weight:700;font-size:13.5px;padding:10px 20px;border-radius:999px;transition:.25s}
+  #web .nx-tier button.on{background:#fff;color:#0b0c0f}
+  .nx-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:stretch}
+  .nx-plan{position:relative;background:var(--nx-card);border:1px solid var(--nx-line);border-radius:28px;padding:34px 28px 28px;display:flex;flex-direction:column;transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s}
+  .nx-plan:hover{transform:translateY(-6px);box-shadow:0 30px 60px rgba(0,0,0,.45)}
+  .nx-plan.feat{background:linear-gradient(180deg,#22252d,#17191f);border-color:rgba(255,61,70,.55);box-shadow:0 30px 70px rgba(224,26,34,.16)}
+  .nx-plan-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff3d46,#d4141c);color:#fff;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:7px 15px;border-radius:999px;white-space:nowrap;box-shadow:0 10px 24px rgba(224,26,34,.35)}
+  .nx-plan-top{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+  .nx-plan-top i{font-style:normal;width:50px;height:50px;flex:0 0 auto;border-radius:15px;background:rgba(255,255,255,.06);border:1px solid var(--nx-line);display:flex;align-items:center;justify-content:center;font-size:23px}
+  #web .nx-plan-top h3{font-family:Oswald;font-size:25px;text-transform:uppercase;margin:0;letter-spacing:.4px;color:#fff}
+  .nx-plan-top small{display:block;color:var(--nx-mut);font-size:12.5px;line-height:1.4;margin-top:2px}
+  .nx-price{font-family:Oswald;font-size:52px;font-weight:700;line-height:1;letter-spacing:-.5px;color:#fff;animation:nxUp .5s cubic-bezier(.2,.8,.2,1)}
+  .nx-price-n{color:var(--nx-mut);font-size:13px;margin:8px 0 24px}
+  .nx-plan ul{list-style:none;margin:0;padding:22px 0 0;border-top:1px solid var(--nx-line);display:flex;flex-direction:column;gap:11px}
+  .nx-plan li{position:relative;padding-left:30px;font-size:14px;color:#d4d4d8;line-height:1.45}
+  .nx-plan li::before{content:"✓";position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:rgba(34,197,94,.14);color:#4ade80;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .nx-more{margin-top:14px}
+  .nx-more summary{cursor:pointer;font-size:13px;font-weight:700;color:#fff;opacity:.8;list-style:none}
+  .nx-more summary::-webkit-details-marker{display:none}
+  .nx-more[open] summary{margin-bottom:4px}
+  .nx-more ul{border-top:0;padding-top:12px}
+  .nx-plan-btns{margin-top:auto;padding-top:26px;display:flex;flex-direction:column;gap:10px}
+  #web .nx-plan-btns .nx-btn{width:100%}
+  @media(max-width:920px){ .nx-plans{grid-template-columns:1fr;max-width:480px;margin:0 auto} .nx-plan.feat{order:-1} }
+
+  /* galería */
+  .nx-gal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:240px;gap:16px}
+  #web .nx-gal .g{padding:0;border:0;border-radius:24px;background-size:cover;background-position:center;cursor:zoom-in;transition:transform .5s cubic-bezier(.2,.8,.2,1),filter .5s;filter:saturate(.92)}
+  #web .nx-gal .g:hover{transform:scale(1.02);filter:saturate(1.1) brightness(1.05)}
+  .nx-gal .g1{grid-column:span 2;grid-row:span 2}
+  @media(max-width:820px){ .nx-gal{grid-template-columns:1fr 1fr;grid-auto-rows:170px;gap:12px} }
+
+  /* CTA final */
+  .nx-final{padding:0 0 110px}
+  .nx-final-in{border-radius:34px;padding:80px 40px;text-align:center;background:linear-gradient(135deg,#ffffff,#e9eaee);color:#0b0c0f;box-shadow:0 40px 90px rgba(0,0,0,.5)}
+  #web .nx-final h2{font-family:Oswald;font-size:clamp(34px,5vw,64px);text-transform:uppercase;line-height:1;margin:0 0 16px;color:#0b0c0f}
+  .nx-final h2 span{color:#e01a22}
+  .nx-final p{color:#4b5563;font-size:17px;line-height:1.6;max-width:540px;margin:0 auto 32px}
+  @media(max-width:720px){ .nx-final{padding-bottom:76px} .nx-final-in{padding:54px 22px;border-radius:26px} }
+
+  /* contacto */
+  .nx-contact{display:grid;grid-template-columns:1fr 1.15fr;gap:50px;align-items:stretch}
+  .nx-contact-info .nx-h2{margin-bottom:22px}
+  #web .nx-ci{display:flex;align-items:center;gap:16px;padding:18px;border-radius:18px;background:var(--nx-card);border:1px solid var(--nx-line);color:#fff;text-decoration:none;margin-top:12px;transition:.25s}
+  #web a.nx-ci:hover{border-color:rgba(255,255,255,.22);transform:translateX(4px)}
+  .nx-ci-i{width:48px;height:48px;flex:0 0 auto;border-radius:15px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:21px}
+  .nx-ci b{display:block;font-size:14.5px}
+  .nx-ci small{color:var(--nx-mut);font-size:13.5px}
+  .nx-map{border-radius:28px;overflow:hidden;border:1px solid var(--nx-line);min-height:440px;box-shadow:0 34px 70px rgba(0,0,0,.5)}
+  .nx-map iframe{width:100%;height:100%;min-height:440px;border:0;display:block;filter:grayscale(1) invert(.92) contrast(.88) hue-rotate(180deg)}
+  @media(max-width:920px){ .nx-contact{grid-template-columns:1fr;gap:36px} .nx-map,.nx-map iframe{min-height:320px} }
+
+  /* footer */
+  .nx-foot{border-top:1px solid var(--nx-line);padding:66px 0 0;background:#08090b}
+  .nx-foot-in{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px}
+  .nx-logo-lg b{font-size:32px}
+  .nx-foot p{color:var(--nx-mut);font-size:14px;line-height:1.65;max-width:340px;margin:14px 0 0}
+  .nx-foot-links{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+  .nx-foot-links>b{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:6px}
+  #web .nx-foot-links button,.nx-foot-links a,.nx-foot-links span{background:none;border:0;padding:0;color:var(--nx-mut);font-size:14px;font-weight:500;text-decoration:none;text-align:left}
+  #web .nx-foot-links button:hover,.nx-foot-links a:hover{color:#fff}
+  .nx-foot-bot{max-width:1200px;margin:50px auto 0;padding:22px 24px 30px;border-top:1px solid var(--nx-line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#71717a;font-size:12.5px}
+  .nx-foot-bot a{color:#ff8a8f;font-weight:700;text-decoration:none}
+  @media(max-width:760px){ .nx-foot-in{grid-template-columns:1fr 1fr} .nx-foot-in>div:first-child{grid-column:1/-1} }
+
+  /* aparición al hacer scroll */
+  #web.nx-anim .rv{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+  #web.nx-anim .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){
+    #web *{animation:none!important;transition:none!important}
+    #web.nx-anim .rv{opacity:1;transform:none}
+  }
 </style>
 <script>try{if(localStorage.getItem('mm_tema')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
 </head>
@@ -1426,162 +1718,287 @@
 
 <!-- ===================== PÁGINA / LANDING ===================== -->
 <div id="web">
-  <header class="whead">
-    <button class="iconbtn dark" id="webBack">←</button>
-    <div class="brandtxt"><strong>MecaMotor</strong><span>Taller de Motos</span></div>
-    <button class="iconbtn dark temabtn" title="Modo claro / oscuro" style="margin-left:auto">🌙</button>
+  <header class="nx-nav" id="nxNav">
+    <div class="nx-nav-in">
+      <button class="nx-ico" id="webBack" aria-label="Volver">←</button>
+      <div class="nx-logo"><b>MECA<span>MOTOR</span></b><small>Taller de motos</small></div>
+      <nav class="nx-links">
+        <button data-scroll="nxServicios">Servicios</button>
+        <button data-scroll="nxTienda">Tienda</button>
+        <button data-scroll="nxPlanes">Planes</button>
+        <button data-scroll="nxNosotros">Nosotros</button>
+        <button data-scroll="nxContacto">Contacto</button>
+      </nav>
+      <button class="nx-ico temabtn" title="Modo claro / oscuro">🌙</button>
+      <button class="nx-btn nx-btn-red nx-nav-cta" data-go="cotiza">Cotizar</button>
+    </div>
   </header>
 
-  <!-- BANNER PROMOCIONAL -->
-  <div class="wpromo" id="wPromo">
-    <div class="wpromo-slides" id="wPromoSlides"></div>
-    <button class="wpromo-nav prev" id="wPromoPrev" aria-label="Anterior">‹</button>
-    <button class="wpromo-nav next" id="wPromoNext" aria-label="Siguiente">›</button>
-    <div class="wpromo-dots" id="wPromoDots"></div>
-  </div>
-
   <!-- HERO -->
-  <section class="whero">
-    <div class="whero-imgs" id="wheroImgs">
-      <div class="wslide on" style="background-image:url('./fotos/taller1.jpg')"></div>
-      <div class="wslide" style="background-image:url('./fotos/taller5.jpg')"></div>
-      <div class="wslide" style="background-image:url('./fotos/taller3.jpg')"></div>
-      <div class="wslide" style="background-image:url('./fotos/taller2.jpg')"></div>
-      <div class="wslide" style="background-image:url('./fotos/taller4.jpg')"></div>
+  <section class="nx-hero">
+    <div class="nx-hero-bg" id="wheroImgs">
+      <div class="nx-slide on" style="background-image:url('./fotos/taller1.jpg')"></div>
+      <div class="nx-slide" style="background-image:url('./fotos/taller5.jpg')"></div>
+      <div class="nx-slide" style="background-image:url('./fotos/taller3.jpg')"></div>
+      <div class="nx-slide" style="background-image:url('./fotos/taller2.jpg')"></div>
+      <div class="nx-slide" style="background-image:url('./fotos/taller4.jpg')"></div>
     </div>
-    <div class="whero-cont">
-      <span class="wtag">🔧 Taller de motos · Santiago</span>
-      <h1>Tu moto en <span>manos expertas</span></h1>
-      <p>Mantención, repuestos y accesorios con garantía. Atención de calidad, como debe ser.</p>
-      <div class="whero-feats">
-        <div class="wf"><span class="wf-i">🔧</span><span class="wf-t">Mecánica general</span></div>
-        <div class="wf"><span class="wf-i">🔩</span><span class="wf-t">Repuestos originales</span></div>
-        <div class="wf"><span class="wf-i">🛡️</span><span class="wf-t">Garantía en el servicio</span></div>
-        <div class="wf"><span class="wf-i">⚡</span><span class="wf-t">Atención rápida y confiable</span></div>
+    <div class="nx-hero-shade"></div>
+    <div class="nx-hero-in">
+      <span class="nx-kick"><i></i> Taller de motos · Santiago, Chile</span>
+      <h1 class="nx-h1"><span class="ln">Tu moto</span><span class="ln">en manos</span><span class="ln"><span class="g">expertas</span></span></h1>
+      <p class="nx-lead">Mantención, repuestos y vulcanización con garantía. Cotiza en línea, agenda tu hora y sigue el estado de tu moto desde el celular.</p>
+      <div class="nx-cta">
+        <button class="nx-btn nx-btn-red nx-btn-lg" data-go="cotiza">Cotiza tu mantención <b>→</b></button>
+        <button class="nx-btn nx-btn-glass nx-btn-lg" data-go="tienda">Ver la tienda</button>
+        <a class="nx-btn nx-btn-wa nx-btn-lg" href="https://wa.me/56959278450" target="_blank" rel="noopener">WhatsApp</a>
       </div>
-      <div class="whero-btns">
-        <button class="wbtn wbtn-red" data-go="cotiza">🧮 Cotiza tu mantención</button>
-        <button class="wbtn wbtn-line" data-go="tienda">🛒 Ver la tienda</button>
-        <a class="wbtn wbtn-wa" href="https://wa.me/56959278450" target="_blank" rel="noopener">🟢 WhatsApp</a>
+      <div class="nx-stats">
+        <div><b>2023</b><span>Trabajando desde</span></div>
+        <div><b>100%</b><span>Trabajos con garantía</span></div>
+        <div><b>Lun–Sáb</b><span>Atención en taller</span></div>
+        <div><b>Online</b><span>Cotiza y agenda tu hora</span></div>
       </div>
     </div>
-  </section>
-
-  <!-- BENEFICIOS -->
-  <div class="wbenefits">
-    <div class="inner">
-      <div class="wb"><span class="wb-i">🛡️</span><span class="wb-t">Garantía en todos<br>nuestros trabajos</span></div>
-      <div class="wb"><span class="wb-i">✅</span><span class="wb-t">Repuestos originales<br>y alternativos</span></div>
-      <div class="wb"><span class="wb-i">🏆</span><span class="wb-t">Los mejores precios<br>del mercado</span></div>
-      <div class="wb"><span class="wb-i">💬</span><span class="wb-t">Soporte personalizado<br>por WhatsApp</span></div>
-    </div>
-  </div>
-
-  <!-- PRODUCTOS EN LA TIENDA (carrusel en movimiento) -->
-  <div class="wprod-marquee hidden" id="wProdMarquee">
-    <div class="wpm-head">
-      <span class="wpm-kick">Disponibles ahora</span>
-      <h2>Lo que tenemos en la tienda</h2>
-    </div>
-    <div class="wpm-wrap">
-      <div class="wpm-track" id="wProdMarqueeTrack"></div>
-    </div>
-  </div>
-
-  <!-- CTA LAVADO PREMIUM -->
-  <section class="wsec">
-    <div class="wlavado-cta" id="goLavado">
-      <div class="wlavado-txt">
-        <span class="wlavado-badge">✨ Nuevo servicio</span>
-        <h2>Lavado Premium</h2>
-        <p>Deja tu moto impecable con nuestro lavado y detallado profesional.</p>
-        <div class="wlavado-feats">
-          <div class="wf"><span class="wf-i">🧴</span><span class="wf-t">Lavado profundo</span></div>
-          <div class="wf"><span class="wf-i">✨</span><span class="wf-t">Detalle completo</span></div>
-          <div class="wf"><span class="wf-i">💧</span><span class="wf-t">Brillo y protección</span></div>
-        </div>
-      </div>
-      <span class="wlavado-go">Visitar Lavado Premium ›</span>
-    </div>
-  </section>
-
-  <!-- CTA VULCANIZACIÓN -->
-  <section class="wsec">
-    <div class="wlavado-cta wvulc-cta" id="goVulc">
-      <div class="wlavado-txt">
-        <span class="wlavado-badge wvulc-badge">🛞 Servicio express</span>
-        <h2>Vulcanización</h2>
-        <p>Pinchazos y daños en el neumático, reparados al toque. Sin cita previa.</p>
-        <div class="wlavado-feats">
-          <div class="wf"><span class="wf-i">⚡</span><span class="wf-t">Reparación al toque</span></div>
-          <div class="wf"><span class="wf-i">🛡️</span><span class="wf-t">Trabajo garantizado</span></div>
-          <div class="wf"><span class="wf-i">📅</span><span class="wf-t">Sin cita previa</span></div>
-        </div>
-      </div>
-      <span class="wlavado-go wvulc-go">Ir a Vulcanización ›</span>
-    </div>
+    <div class="nx-hero-bars" id="nxHeroBars"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+    <button class="nx-scroll" data-scroll="nxServicios" aria-label="Bajar"><span></span></button>
   </section>
 
   <!-- MARCAS -->
-  <div class="marquee brands wstatic" aria-hidden="true"><div class="marquee-track">
-    <span>Yamaha</span><span>Honda</span><span>Suzuki</span><span>Kawasaki</span><span>KTM</span><span>Bajaj</span><span>BMW</span><span>Haojue</span><span>Voge</span><span>Benelli</span><span>Royal Enfield</span>
-    <span>Yamaha</span><span>Honda</span><span>Suzuki</span><span>Kawasaki</span><span>KTM</span><span>Bajaj</span><span>BMW</span><span>Haojue</span><span>Voge</span><span>Benelli</span><span>Royal Enfield</span>
-  </div></div>
-
-  <!-- CATEGORÍAS -->
-  <section class="wsec wsec-dark">
-    <h2 class="wsec-t">Nuestra tienda</h2>
-    <p class="wsec-s">Todo para tu moto, en un solo lugar.</p>
-    <div class="wcircles">
-      <button class="wcirc" data-cat="neumaticos"><span class="wcirc-i">🛞</span><b>Neumáticos</b></button>
-      <button class="wcirc" data-cat="camaras"><span class="wcirc-i">⭕</span><b>Cámaras</b></button>
-      <button class="wcirc" data-cat="aceites"><span class="wcirc-i">🛢️</span><b>Aceites</b></button>
-      <button class="wcirc" data-cat="repuestos"><span class="wcirc-i">🔧</span><b>Repuestos</b></button>
+  <div class="nx-ticker" aria-hidden="true">
+    <div class="nx-tk-track">
+      <span>Yamaha</span><i>✦</i><span>Honda</span><i>✦</i><span>Suzuki</span><i>✦</i><span>Kawasaki</span><i>✦</i><span>KTM</span><i>✦</i><span>Bajaj</span><i>✦</i><span>BMW</span><i>✦</i><span>Haojue</span><i>✦</i><span>Voge</span><i>✦</i><span>Benelli</span><i>✦</i><span>Royal Enfield</span><i>✦</i>
+      <span>Yamaha</span><i>✦</i><span>Honda</span><i>✦</i><span>Suzuki</span><i>✦</i><span>Kawasaki</span><i>✦</i><span>KTM</span><i>✦</i><span>Bajaj</span><i>✦</i><span>BMW</span><i>✦</i><span>Haojue</span><i>✦</i><span>Voge</span><i>✦</i><span>Benelli</span><i>✦</i><span>Royal Enfield</span><i>✦</i>
     </div>
-    <div style="text-align:center"><button class="wbtn wbtn-red" data-go="tienda" style="margin-top:6px">Ver tienda completa</button></div>
+  </div>
+
+  <!-- SERVICIOS -->
+  <section class="nx-sec" id="nxServicios">
+    <div class="nx-in">
+      <div class="nx-head rv">
+        <span class="nx-eyebrow">Servicios</span>
+        <h2 class="nx-h2">Todo lo que tu moto necesita</h2>
+        <p class="nx-sub">Del cambio de aceite a la mantención completa, con repuestos originales y la misma atención de siempre.</p>
+      </div>
+      <div class="nx-serv">
+        <button class="nx-scard rv" data-go="cotiza">
+          <span class="nx-num">01</span><span class="nx-sico">🔧</span>
+          <h3>Mantención</h3>
+          <p>Planes Preventivo, Semi Full y Full. Cotiza en línea y agenda tu hora en minutos.</p>
+          <span class="nx-go">Cotizar ahora →</span>
+        </button>
+        <button class="nx-scard rv" id="goLavado">
+          <span class="nx-tag">Nuevo</span>
+          <span class="nx-num">02</span><span class="nx-sico">✨</span>
+          <h3>Lavado Premium</h3>
+          <p>Lavado profundo, detallado completo y protección para que tu moto brille.</p>
+          <span class="nx-go">Conocer el servicio →</span>
+        </button>
+        <button class="nx-scard rv" id="goVulc">
+          <span class="nx-tag">Express</span>
+          <span class="nx-num">03</span><span class="nx-sico">🛞</span>
+          <h3>Vulcanización</h3>
+          <p>Pinchazos y daños en el neumático, reparados al toque. Sin cita previa.</p>
+          <span class="nx-go">Ver vulcanización →</span>
+        </button>
+        <button class="nx-scard rv" data-go="tienda">
+          <span class="nx-num">04</span><span class="nx-sico">🛒</span>
+          <h3>Tienda</h3>
+          <p>Neumáticos, cámaras, aceites y repuestos para tu moto, con instalación en el taller.</p>
+          <span class="nx-go">Ir a la tienda →</span>
+        </button>
+      </div>
+    </div>
   </section>
 
-  <!-- SOBRE NOSOTROS -->
-  <section class="wsec">
-    <div class="wabout">
-      <div class="wabout-img" style="background-image:url('./fotos/taller5.jpg')"></div>
-      <div class="wabout-txt">
-        <span class="wabout-badge">👤 Sobre nosotros</span>
-        <h2 class="wsec-t">Somos <span>MecaMotor</span></h2>
-        <p>Somos <b>MecaMotor</b>, un taller de motos en Santiago que funciona desde <b>2023</b>. Nos dedicamos a la mantención y reparación de motos con un trabajo prolijo, repuestos originales y precios justos.</p>
-        <div class="wpills">
-          <div class="wf"><span class="wf-i">🛡️</span><span class="wf-t">Garantía en nuestros<br>trabajos</span></div>
-          <div class="wf"><span class="wf-i">🏆</span><span class="wf-t">Repuestos<br>originales</span></div>
-          <div class="wf"><span class="wf-i">💬</span><span class="wf-t">Atención por<br>WhatsApp</span></div>
-          <div class="wf"><span class="wf-i">🏍️</span><span class="wf-t">Técnicos<br>especializados</span></div>
+  <!-- TIENDA: CATEGORÍAS -->
+  <section class="nx-sec nx-alt" id="nxTienda">
+    <div class="nx-in">
+      <div class="nx-head nx-head-row rv">
+        <div>
+          <span class="nx-eyebrow">Tienda MecaMotor</span>
+          <h2 class="nx-h2">Compra por categoría</h2>
+        </div>
+        <button class="nx-btn nx-btn-ghost" data-go="tienda">Ver tienda completa →</button>
+      </div>
+      <div class="nx-cats">
+        <button class="nx-cat rv" data-cat="neumaticos"><span class="nx-cat-img" data-fallback="🛞"></span><span class="nx-cat-lbl"><span><b>Neumáticos</b><small>Montaje y balanceo</small></span></span></button>
+        <button class="nx-cat rv" data-cat="aceites"><span class="nx-cat-img" data-fallback="🛢️"></span><span class="nx-cat-lbl"><span><b>Lubricantes</b><small>Aceites de marca</small></span></span></button>
+        <button class="nx-cat rv" data-cat="repuestos"><span class="nx-cat-img" data-fallback="🔧"></span><span class="nx-cat-lbl"><span><b>Repuestos</b><small>Originales y alternativos</small></span></span></button>
+        <button class="nx-cat rv" data-cat="camaras"><span class="nx-cat-img" data-fallback="⭕"></span><span class="nx-cat-lbl"><span><b>Cámaras</b><small>Para tu neumático</small></span></span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESTACADOS (carrusel) -->
+  <section class="nx-sec nx-tight" id="nxDestacados">
+    <div class="nx-in">
+      <div class="nx-promo rv" id="wPromo">
+        <div class="nx-promo-slides" id="wPromoSlides"></div>
+        <div class="nx-promo-ctrl">
+          <button class="nx-ico" id="wPromoPrev" aria-label="Anterior">‹</button>
+          <div class="nx-promo-dots" id="wPromoDots"></div>
+          <button class="nx-ico" id="wPromoNext" aria-label="Siguiente">›</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFERTAS / DESTACADOS (grilla) -->
+  <section class="nx-sec nx-tight hidden" id="nxOfertas">
+    <div class="nx-in">
+      <div class="nx-head nx-head-row rv">
+        <div>
+          <span class="nx-eyebrow" id="nxOfertasEye">Ofertas</span>
+          <h2 class="nx-h2" id="nxOfertasTit">Productos destacados</h2>
+        </div>
+        <button class="nx-btn nx-btn-ghost" data-go="tienda">Ver todos →</button>
+      </div>
+      <div class="nx-pgrid" id="nxOfertasGrid"></div>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS EN MOVIMIENTO -->
+  <section class="nx-sec nx-flush hidden" id="wProdMarquee">
+    <div class="nx-in">
+      <div class="nx-head nx-center rv">
+        <span class="nx-eyebrow"><i class="nx-live"></i> Disponible hoy</span>
+        <h2 class="nx-h2">En la tienda ahora</h2>
+      </div>
+    </div>
+    <div class="nx-pm">
+      <div class="nx-pm-row" id="wProdMarqueeTrack"></div>
+      <div class="nx-pm-row rev" id="wProdMarqueeTrack2"></div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="nx-sec nx-alt" id="nxProceso">
+    <div class="nx-in">
+      <div class="nx-head nx-center rv">
+        <span class="nx-eyebrow">Cómo funciona</span>
+        <h2 class="nx-h2">Simple, rápido y sin sorpresas</h2>
+      </div>
+      <div class="nx-steps">
+        <div class="nx-step rv"><span>01</span><h4>Cotiza en línea</h4><p>Elige tu moto, el plan y los insumos. Ves el precio al instante.</p></div>
+        <div class="nx-step rv"><span>02</span><h4>Agenda tu hora</h4><p>Reserva el día y la hora que te acomode, con un abono de $10.000.</p></div>
+        <div class="nx-step rv"><span>03</span><h4>Trabajamos tu moto</h4><p>Sigue el estado de tu servicio en línea con la patente de tu moto.</p></div>
+        <div class="nx-step rv"><span>04</span><h4>Retiras con garantía</h4><p>Te avisamos cuando está lista. Todos nuestros trabajos tienen garantía.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOSOTROS -->
+  <section class="nx-sec" id="nxNosotros">
+    <div class="nx-in nx-about">
+      <div class="nx-collage rv">
+        <div class="ph ph1" style="background-image:url('./fotos/taller5.jpg')"></div>
+        <div class="ph ph2" style="background-image:url('./fotos/taller2.jpg')"></div>
+        <div class="ph ph3" style="background-image:url('./fotos/taller3.jpg')"></div>
+        <div class="nx-since"><span>Desde</span><b>2023</b></div>
+      </div>
+      <div class="nx-about-txt rv">
+        <span class="nx-eyebrow">Sobre nosotros</span>
+        <h2 class="nx-h2">Somos <span class="nx-gtxt">MecaMotor</span></h2>
+        <p class="nx-sub">Un taller de motos en Santiago que funciona desde 2023. Nos dedicamos a la mantención y reparación de motos con un trabajo prolijo, repuestos originales y precios justos.</p>
+        <blockquote class="nx-quote">“Cada moto que entra la tratamos como si fuera nuestra: revisión honesta, te explicamos qué necesita y te mantenemos al tanto de tu servicio en todo momento.”</blockquote>
+        <div class="nx-feats">
+          <div class="nx-feat"><i>🛡️</i><b>Garantía en nuestros trabajos</b></div>
+          <div class="nx-feat"><i>🏆</i><b>Repuestos originales</b></div>
+          <div class="nx-feat"><i>💬</i><b>Atención por WhatsApp</b></div>
+          <div class="nx-feat"><i>🏍️</i><b>Técnicos especializados</b></div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- PLANES -->
-  <section class="wsec wsec-dark">
-    <h2 class="wsec-t">Planes de mantención</h2>
-    <p class="wsec-s">Elige el plan según tu moto. Valores referenciales.</p>
-    <div class="wplanes" id="wPlanes"></div>
+  <section class="nx-sec nx-alt" id="nxPlanes">
+    <div class="nx-in">
+      <div class="nx-head nx-center rv">
+        <span class="nx-eyebrow">Planes de mantención</span>
+        <h2 class="nx-h2">Elige el plan para tu moto</h2>
+        <p class="nx-sub">Valores referenciales según la cilindrada. Los planes no incluyen insumos.</p>
+      </div>
+      <div class="nx-tier" id="nxTier"></div>
+      <div class="nx-plans" id="wPlanes"></div>
+    </div>
+  </section>
+
+  <!-- GALERÍA -->
+  <section class="nx-sec" id="nxGaleria">
+    <div class="nx-in">
+      <div class="nx-head nx-head-row rv">
+        <div>
+          <span class="nx-eyebrow">El taller</span>
+          <h2 class="nx-h2">Así trabajamos</h2>
+        </div>
+        <a class="nx-btn nx-btn-ghost" href="https://www.instagram.com/mecamotor_chile" target="_blank" rel="noopener">Más en Instagram →</a>
+      </div>
+      <div class="nx-gal">
+        <button class="g g1 rv" data-img="./fotos/taller1.jpg" style="background-image:url('./fotos/taller1.jpg')" aria-label="Foto del taller"></button>
+        <button class="g rv" data-img="./fotos/taller4.jpg" style="background-image:url('./fotos/taller4.jpg')" aria-label="Foto del taller"></button>
+        <button class="g rv" data-img="./fotos/taller3.jpg" style="background-image:url('./fotos/taller3.jpg')" aria-label="Foto del taller"></button>
+        <button class="g rv" data-img="./fotos/moto_bg.jpg" style="background-image:url('./fotos/moto_bg.jpg')" aria-label="Foto del taller"></button>
+        <button class="g rv" data-img="./fotos/taller2.jpg" style="background-image:url('./fotos/taller2.jpg')" aria-label="Foto del taller"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="nx-final">
+    <div class="nx-in">
+      <div class="nx-final-in rv">
+        <h2>¿Tu moto necesita <span>mantención</span>?</h2>
+        <p>Cotiza en un minuto y agenda tu hora en línea. Nosotros nos encargamos del resto.</p>
+        <div class="nx-cta nx-cta-c">
+          <button class="nx-btn nx-btn-red nx-btn-lg" data-go="cotiza">Cotizar ahora <b>→</b></button>
+          <a class="nx-btn nx-btn-dark nx-btn-lg" href="https://wa.me/56959278450" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- CONTACTO -->
-  <section class="wsec wsec-dark wcontacto">
-    <h2 class="wsec-t">Visítanos</h2>
-    <div class="wcont-grid">
-      <a class="wcont-item" href="https://maps.google.com/?q=Fray+Camilo+Henriquez+1080+Santiago" target="_blank" rel="noopener"><span>📍</span><div><b>Dirección</b><small>Fray Camilo Henríquez 1080, Santiago</small></div></a>
-      <a class="wcont-item" href="https://wa.me/56959278450" target="_blank" rel="noopener"><span>📱</span><div><b>Teléfono / WhatsApp</b><small>+56 9 5927 8450</small></div></a>
-      <div class="wcont-item"><span>🕘</span><div><b>Horario</b><small>Lun a Vie 9:00–18:30 · Sáb 9:00–15:00</small></div></div>
-      <a class="wcont-item" href="https://www.instagram.com/mecamotor_chile" target="_blank" rel="noopener"><span>📸</span><div><b>Instagram</b><small>@mecamotor_chile</small></div></a>
+  <section class="nx-sec nx-alt" id="nxContacto">
+    <div class="nx-in nx-contact">
+      <div class="nx-contact-info rv">
+        <span class="nx-eyebrow">Visítanos</span>
+        <h2 class="nx-h2">Te esperamos en el taller</h2>
+        <a class="nx-ci" href="https://maps.google.com/?q=Fray+Camilo+Henriquez+1080+Santiago" target="_blank" rel="noopener"><span class="nx-ci-i">📍</span><div><b>Dirección</b><small>Fray Camilo Henríquez 1080, Santiago</small></div></a>
+        <a class="nx-ci" href="https://wa.me/56959278450" target="_blank" rel="noopener"><span class="nx-ci-i">📱</span><div><b>Teléfono / WhatsApp</b><small>+56 9 5927 8450</small></div></a>
+        <div class="nx-ci"><span class="nx-ci-i">🕘</span><div><b>Horario</b><small>Lun a Vie 9:00–18:30 · Sáb 9:00–15:00</small></div></div>
+        <a class="nx-ci" href="https://www.instagram.com/mecamotor_chile" target="_blank" rel="noopener"><span class="nx-ci-i">📸</span><div><b>Instagram</b><small>@mecamotor_chile</small></div></a>
+      </div>
+      <div class="nx-map rv"><iframe title="Mapa MecaMotor" loading="lazy" src="https://maps.google.com/maps?q=Fray%20Camilo%20Henriquez%201080%20Santiago&output=embed"></iframe></div>
     </div>
-    <div class="wmap"><iframe title="Mapa MecaMotor" loading="lazy" src="https://maps.google.com/maps?q=Fray%20Camilo%20Henriquez%201080%20Santiago&output=embed"></iframe></div>
   </section>
 
-  <footer class="wfoot">
-    <div class="wfoot-word">Meca<span>Motor</span></div>
-    <p>MecaMotor · Taller de Motos · Santiago, Chile</p>
-    <p class="wfoot-cred">Página realizada por <a href="https://spotgo.cl" target="_blank" rel="noopener">Spotgo Tecnología SpA</a></p>
+  <footer class="nx-foot">
+    <div class="nx-in nx-foot-in">
+      <div>
+        <div class="nx-logo nx-logo-lg"><b>MECA<span>MOTOR</span></b></div>
+        <p>Taller de motos en Santiago, Chile. Mantención, repuestos y vulcanización con garantía.</p>
+      </div>
+      <div class="nx-foot-links">
+        <b>Navegar</b>
+        <button data-scroll="nxServicios">Servicios</button>
+        <button data-scroll="nxPlanes">Planes</button>
+        <button data-go="tienda">Tienda</button>
+        <button data-go="cotiza">Cotizar</button>
+      </div>
+      <div class="nx-foot-links">
+        <b>Contacto</b>
+        <a href="https://wa.me/56959278450" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://www.instagram.com/mecamotor_chile" target="_blank" rel="noopener">Instagram</a>
+        <span>Lun–Vie 9:00–18:30</span>
+        <span>Sáb 9:00–15:00</span>
+      </div>
+    </div>
+    <div class="nx-foot-bot">
+      <span>© <span id="nxYear">2026</span> MecaMotor · Taller de Motos</span>
+      <span>Página realizada por <a href="https://spotgo.cl" target="_blank" rel="noopener">Spotgo Tecnología SpA</a></span>
+    </div>
   </footer>
 </div>
 
@@ -4192,119 +4609,189 @@ window.addEventListener('appinstalled',()=>$('#installBar').classList.remove('sh
 /* ===== Página / Landing ===== */
 (function(){
   const web=$('#web'); if(!web) return;
-  let wi=0, wtimer=null, pi=0, ptimer=null;
-  const slides=()=>web.querySelectorAll('.wslide');
-  function rotar(){ const s=slides(); if(s.length<2) return; s[wi].classList.remove('on'); wi=(wi+1)%s.length; s[wi].classList.add('on'); }
-  const WPLAN_RESUMEN = {
-    preventivo: ['Cambio de aceite (opcional)','Ajuste y lubricación','Lavado general de la moto'],
-    semifull: ['Cambio de aceite y filtro','Revisión de frenos y neumáticos','Ajustes avanzados'],
-    full: ['Todo lo del Semi Full','Rodamiento de dirección','Cambio líquido de suspensión'],
+  const nav=$('#nxNav');
+  let wi=0, wtimer=null, pi=0, ptimer=null, planTier='100_300';
+  const slides=()=>web.querySelectorAll('.nx-slide');
+  function rotar(){
+    const s=slides(); if(s.length<2) return;
+    s[wi].classList.remove('on'); wi=(wi+1)%s.length; s[wi].classList.add('on');
+    web.querySelectorAll('#nxHeroBars i').forEach((b,i)=>b.classList.toggle('on',i===wi));
+  }
+
+  /* --- planes --- */
+  const WPLAN_META = {
+    preventivo:{ n:'Preventivo', i:'🔧', d:'Lo esencial para mantener tu moto al día.' },
+    semifull:{ n:'Semi Full', i:'⚙️', d:'La mantención más completa en precio–calidad.' },
+    full:{ n:'Full', i:'🏁', d:'Mantención total: todo lo del Semi Full y más.' },
   };
+  const TIERS=[['100_300','100 – 300 cc'],['250','250 cc'],['300_mas','300 cc +']];
   function renderWebPlanes(){
-    const P=$('#wPlanes'); if(!P) return;
-    const pr=CONFIG.precios||{}, p13=pr['100_300']||{}, p3=pr['300_mas']||{};
+    const P=$('#wPlanes'), T=$('#nxTier'); if(!P) return;
+    if (T){
+      T.innerHTML = `<div class="nx-tier-in">${TIERS.map(([k,l])=>`<button data-tier="${k}" class="${k===planTier?'on':''}">${l}</button>`).join('')}</div>`;
+      T.querySelectorAll('[data-tier]').forEach(b=>b.onclick=()=>{ planTier=b.dataset.tier; renderWebPlanes(); });
+    }
     const tel=(CONFIG.taller.telefonoWa||'').replace(/\D/g,'');
-    const card=(key,nom,icono,a,b,dest)=>{
-      const items=(WPLAN_RESUMEN[key]||[]).map(i=>`<li>${esc(i)}</li>`).join('');
-      const wa=`https://wa.me/${tel}?text=${encodeURIComponent(`Hola! Quiero cotizar el plan ${nom} para mi moto.`)}`;
-      return `<div class="wplan ${dest?'destacado':''}">
-        ${dest?'<span class="wplan-badge">★ Más solicitado</span>':''}
-        <span class="wplan-i">${icono}</span>
-        <h3>${nom}</h3>
-        <div class="wprecio">${money(a)}</div><small>Motos 100–300cc</small>
-        <div class="wprecio" style="font-size:19px;margin-top:8px">${money(b)}</div><small>Motos sobre 300cc</small>
-        <div class="wplan-div"></div>
-        <ul class="wplan-list">${items}</ul>
-        <a class="wplan-wa" href="${wa}" target="_blank" rel="noopener">🟢 Cotizar por WhatsApp</a>
+    const tierLbl=(TIERS.find(t=>t[0]===planTier)||TIERS[0])[1];
+    P.innerHTML = ['preventivo','semifull','full'].map(k=>{
+      const m=WPLAN_META[k], feat=k==='semifull';
+      const items=PLAN_ITEMS[k]||[];
+      const top=items.slice(0,5).map(i=>`<li>${esc(i)}</li>`).join('');
+      const rest=items.slice(5);
+      const wa=`https://wa.me/${tel}?text=${encodeURIComponent(`Hola! Quiero cotizar el plan ${m.n} para mi moto (${tierLbl}).`)}`;
+      return `<div class="nx-plan ${feat?'feat':''}">
+        ${feat?'<span class="nx-plan-badge">★ Más solicitado</span>':''}
+        <div class="nx-plan-top"><i>${m.i}</i><div><h3>${m.n}</h3><small>${esc(m.d)}</small></div></div>
+        <div class="nx-price">${money(precioPlanCat(planTier,k))}</div>
+        <div class="nx-price-n">Motos ${esc(tierLbl)} · no incluye insumos</div>
+        <ul>${top}</ul>
+        ${rest.length?`<details class="nx-more"><summary>+ Ver ${rest.length} puntos más</summary><ul>${rest.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></details>`:''}
+        <div class="nx-plan-btns">
+          <button class="nx-btn ${feat?'nx-btn-red':'nx-btn-glass'}" data-plan-go="1">Cotizar este plan <b>→</b></button>
+          <a class="nx-btn nx-btn-ghost" href="${wa}" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+        </div>
       </div>`;
-    };
-    P.innerHTML = card('preventivo','Preventivo','🔧',p13.preventivo||0,p3.preventivo||0,false)
-      + card('semifull','Semi Full','⚙️',p13.semifull||0,p3.semifull||0,true)
-      + card('full','Full','🔩',p13.full||0,p3.full||0,false);
+    }).join('');
+    P.querySelectorAll('[data-plan-go]').forEach(b=>b.onclick=()=>{ cerrarWeb(); abrirCotizador(); });
   }
   async function irCat(cat){ cerrarWeb(); await abrirTienda(); catActual=cat; $$('#tCats .tcat').forEach(x=>x.classList.toggle('on',x.dataset.c===cat)); try{tTipo=null;}catch(e){} tPagina=1; $('#tBuscar').value=''; renderProductos(); const g=$('#tGrid'); if(g) g.scrollIntoView({behavior:'smooth',block:'start'}); }
 
+  /* --- carrusel de destacados --- */
   const PROMO=[
-    {c:'neumaticos', t:'Neumáticos para tu moto', s:'Las mejores marcas, con montaje y balanceo.', feats:[['🛡️','Garantía'],['⚙️','Montaje incluido'],['🏆','Mejor precio']]},
-    {c:'aceites', t:'Lubricantes de marca', s:'Aceites premium para cuidar tu motor.', feats:[['🛡️','Mayor protección'],['⚙️','Mejor rendimiento'],['⏱️','Mayor vida útil']]},
-    {c:'repuestos', t:'Repuestos originales', s:'Todo lo que tu moto necesita, en un solo lugar.', feats:[['✅','Originales'],['🔧','Instalación'],['🏆','Mejor precio']]},
+    {c:'neumaticos', i:'🛞', t:'Neumáticos para tu moto', s:'Las mejores marcas, con montaje y balanceo en el taller.', feats:[['🛡️','Garantía'],['⚙️','Montaje incluido'],['🏆','Mejor precio']]},
+    {c:'aceites', i:'🛢️', t:'Lubricantes de marca', s:'Aceites premium para cuidar el corazón de tu moto.', feats:[['🛡️','Mayor protección'],['⚙️','Mejor rendimiento'],['⏱️','Mayor vida útil']]},
+    {c:'repuestos', i:'🔧', t:'Repuestos originales', s:'Todo lo que tu moto necesita, en un solo lugar.', feats:[['✅','Originales'],['🔧','Instalación'],['🏆','Mejor precio']]},
   ];
   function renderPromo(){
     const cont=$('#wPromoSlides'), dots=$('#wPromoDots'); if(!cont) return;
     cont.innerHTML = PROMO.map((b,idx)=>{
-      const im=(productos||[]).filter(p=>p.categoria===b.c && p.imagen_url).slice(0,3)
-                .map(p=>`<img src="${p.imagen_url}" alt="" loading="lazy">`).join('');
+      const imgs=(productos||[]).filter(p=>p.categoria===b.c && p.imagen_url).slice(0,3);
+      const im = imgs.length ? imgs.map(p=>`<img src="${p.imagen_url}" alt="${esc(p.nombre)}">`).join('') : `<div class="nx-pph">${b.i}</div>`;
       const [primera,...resto]=b.t.split(' ');
-      return `<div class="wpromo-slide ${idx===0?'on':''}">
-        <div class="wpromo-txt">
-          <span class="wpromo-badge">Ya disponible en MecaMotor</span>
-          <h2><span>${esc(primera)}</span> ${esc(resto.join(' '))}</h2><p>${b.s}</p>
-          <div class="wpromo-feats">${b.feats.map(([i,t])=>`<div class="wf"><span class="wf-i">${i}</span><span class="wf-t">${esc(t)}</span></div>`).join('')}</div>
-          <button class="wbtn wbtn-red" data-promocat="${b.c}">Ver ${b.t.toLowerCase()}</button>
+      return `<div class="nx-pslide ${idx===0?'on':''}">
+        <div>
+          <span class="nx-pbadge">Destacado · Ya disponible</span>
+          <h3><span>${esc(primera)}</span> ${esc(resto.join(' '))}</h3>
+          <p>${esc(b.s)}</p>
+          <div class="nx-pfeats">${b.feats.map(([i,t])=>`<span>${i} ${esc(t)}</span>`).join('')}</div>
+          <button class="nx-btn nx-btn-red nx-btn-lg" data-promocat="${b.c}">Ver ${esc(b.t.toLowerCase())} <b>→</b></button>
         </div>
-        <div class="wpromo-imgs">${im}</div>
+        <div class="nx-pimgs">${im}</div>
       </div>`;
     }).join('');
     dots.innerHTML = PROMO.map((_,i)=>`<i class="${i===0?'on':''}" data-i="${i}"></i>`).join('');
     pi=0;
     cont.querySelectorAll('[data-promocat]').forEach(btn=>btn.onclick=()=>irCat(btn.dataset.promocat));
-    dots.querySelectorAll('i').forEach(d=>d.onclick=()=>goPromo(+d.dataset.i));
+    dots.querySelectorAll('i').forEach(d=>d.onclick=()=>{ goPromo(+d.dataset.i); reiniciarPromo(); });
   }
   function goPromo(n){
-    const sl=web.querySelectorAll('.wpromo-slide'), dt=web.querySelectorAll('.wpromo-dots i');
+    const sl=web.querySelectorAll('.nx-pslide'), dt=web.querySelectorAll('#wPromoDots i');
     if(!sl.length) return; sl[pi].classList.remove('on'); dt[pi]&&dt[pi].classList.remove('on');
     pi=(n+sl.length)%sl.length; sl[pi].classList.add('on'); dt[pi]&&dt[pi].classList.add('on');
   }
-  $('#wPromoPrev') && ($('#wPromoPrev').onclick=()=>goPromo(pi-1));
-  $('#wPromoNext') && ($('#wPromoNext').onclick=()=>goPromo(pi+1));
+  function reiniciarPromo(){ if(ptimer) clearInterval(ptimer); ptimer=setInterval(()=>goPromo(pi+1),6000); }
+  $('#wPromoPrev') && ($('#wPromoPrev').onclick=()=>{ goPromo(pi-1); reiniciarPromo(); });
+  $('#wPromoNext') && ($('#wPromoNext').onclick=()=>{ goPromo(pi+1); reiniciarPromo(); });
 
-  // el contenido varía según el ancho (columna en mobile) y según cuántas fotos de
-  // producto haya por categoría, así que la altura del carrusel se mide en vez de
-  // dejarla fija — si no, el contenido más alto se corta (overflow:hidden)
-  function ajustarAlturaPromo(){
-    const wrap=$('#wPromoSlides'), prom=$('#wPromo'); if(!wrap) return;
-    const slides=[...wrap.querySelectorAll('.wpromo-slide')];
-    if(!slides.length) return;
-    let max=0;
-    slides.forEach(s=>{
-      const pos=s.style.position; s.style.position='static';
-      max=Math.max(max, s.offsetHeight);
-      s.style.position=pos;
+  /* --- categorías con foto real de un producto de cada una --- */
+  function renderCatImgs(){
+    web.querySelectorAll('.nx-cat[data-cat]').forEach(btn=>{
+      const box=btn.querySelector('.nx-cat-img'); if(!box) return;
+      const p=(productos||[]).find(x=>x.categoria===btn.dataset.cat && x.imagen_url && x.activo!==false);
+      if (p){ box.classList.remove('nx-emoji'); box.innerHTML=`<img src="${p.imagen_url}" alt="${esc(p.nombre)}">`; }
+      else { box.classList.add('nx-emoji'); box.textContent=box.dataset.fallback||'🛒'; }
     });
-    if(max>0){ const h=max+'px'; wrap.style.minHeight=h; if(prom) prom.style.minHeight=h; }
   }
-  let promoResizeT=null;
-  window.addEventListener('resize', ()=>{ clearTimeout(promoResizeT); promoResizeT=setTimeout(ajustarAlturaPromo,150); });
+
+  /* --- grilla de ofertas / destacados --- */
+  function precioCard(p){
+    const d=Number(p.descuento)||0, base=Number(p.precio)||0, fin=precioFinal(p);
+    return d>0 ? `<b>${money(fin)}</b><s>${money(base)}</s>` : `<b>${money(fin)}</b>`;
+  }
+  function renderOfertas(){
+    const sec=$('#nxOfertas'), grid=$('#nxOfertasGrid'); if(!sec||!grid) return;
+    const act=(productos||[]).filter(p=>p.activo!==false && p.imagen_url);
+    const ofertas=act.filter(p=>(Number(p.descuento)||0)>0).sort((a,b)=>(Number(b.descuento)||0)-(Number(a.descuento)||0));
+    const fijados=act.filter(p=>p.fijado && !ofertas.includes(p));
+    const resto=act.filter(p=>!ofertas.includes(p) && !fijados.includes(p));
+    const list=ofertas.concat(fijados, resto).slice(0,8);
+    if (!list.length){ sec.classList.add('hidden'); return; }
+    sec.classList.remove('hidden');
+    $('#nxOfertasEye').textContent = ofertas.length ? 'Ofertas y destacados' : 'Destacados';
+    $('#nxOfertasTit').textContent = ofertas.length>=4 ? 'Productos con descuento' : 'Lo más buscado';
+    grid.innerHTML = list.map(p=>{
+      const d=Number(p.descuento)||0;
+      return `<button class="nx-prod" data-cat="${esc(p.categoria||'')}">
+        ${d>0?`<span class="nx-off">-${d}%</span>`:''}
+        <span class="nx-prod-img"><img src="${p.imagen_url}" alt="${esc(p.nombre)}" loading="lazy"></span>
+        <span class="nx-prod-tx">${p.marca?`<span class="m">${esc(p.marca)}</span>`:''}<span class="t">${esc(p.nombre)}</span><span class="pr">${precioCard(p)}</span></span>
+      </button>`;
+    }).join('');
+    grid.querySelectorAll('.nx-prod').forEach(el=> el.onclick=()=>irCat(el.dataset.cat));
+  }
+
+  /* --- productos en movimiento (dos filas en sentido contrario) --- */
+  function renderProdMarquee(){
+    const sec=$('#wProdMarquee'), r1=$('#wProdMarqueeTrack'), r2=$('#wProdMarqueeTrack2'); if(!sec||!r1) return;
+    const list=(productos||[]).filter(p=>p.activo!==false && p.imagen_url).slice(0,24);
+    if (!list.length){ sec.classList.add('hidden'); return; }
+    sec.classList.remove('hidden');
+    const card = p=>`<button class="nx-pc" data-cat="${esc(p.categoria||'')}">
+        <span class="im"><img src="${p.imagen_url}" alt="${esc(p.nombre)}"></span>
+        <span class="tx">${p.marca?`<span class="m">${esc(p.marca)}</span>`:''}<span class="t">${esc(p.nombre)}</span><span class="p">${money(precioFinal(p))}</span></span>
+      </button>`;
+    const llenar = arr=>{ let b=arr.slice(); while(b.length<10) b=b.concat(arr); return b; };
+    const mitad=Math.ceil(list.length/2);
+    const a=llenar(list.length>=8 ? list.slice(0,mitad) : list);
+    const b=llenar(list.length>=8 ? list.slice(mitad) : list.slice().reverse());
+    const h1=a.map(card).join(''), h2=b.map(card).join('');
+    r1.innerHTML = h1+h1;
+    if (r2) r2.innerHTML = h2+h2;
+    sec.querySelectorAll('.nx-pc').forEach(el=> el.onclick=()=>irCat(el.dataset.cat));
+  }
+
+  /* --- aparición suave al hacer scroll --- */
+  const io = ('IntersectionObserver' in window) ? new IntersectionObserver(ents=>{
+    ents.forEach(en=>{
+      if(!en.isIntersecting) return;
+      const el=en.target; io.unobserve(el);
+      const hermanos=el.parentNode ? [...el.parentNode.children].filter(x=>x.classList.contains('rv')) : [];
+      const k=Math.min(Math.max(0,hermanos.indexOf(el)),5);
+      el.style.transitionDelay=(k*90)+'ms';
+      el.classList.add('in');
+      // se quita la clase al terminar para no pisar los efectos hover de cada tarjeta
+      setTimeout(()=>{ el.classList.remove('rv','in'); el.style.transitionDelay=''; }, 1000+k*90);
+    });
+  },{threshold:.12, rootMargin:'0px 0px -40px 0px'}) : null;
+  if (io) web.classList.add('nx-anim');
+  function observarReveal(){ if(io) web.querySelectorAll('.rv:not(.in)').forEach(el=>io.observe(el)); }
+
+  window.addEventListener('scroll', ()=>{ if(nav && web.classList.contains('open')) nav.classList.toggle('solid', window.scrollY>30); }, {passive:true});
 
   async function abrirWeb(){
     $('#login').style.display='none'; web.classList.add('open'); window.scrollTo(0,0);
+    if (nav) nav.classList.remove('solid');
+    const y=$('#nxYear'); if(y) y.textContent=new Date().getFullYear();
     renderWebPlanes();
+    observarReveal();
     if(!(productos&&productos.length)){ try{ const {data}=await db.from('mecamotor_productos').select('*').eq('activo',true).order('orden'); productos=data||[]; }catch(e){} }
+    try{ const { data:cfg } = await db.from('mecamotor_config').select('value').eq('key','precios').maybeSingle(); if (cfg && cfg.value){ CONFIG.precios=cfg.value; renderWebPlanes(); } }catch(e){}
     renderPromo();
-    ajustarAlturaPromo();
+    renderCatImgs();
+    renderOfertas();
     renderProdMarquee();
-    wi=0; if(wtimer) clearInterval(wtimer); wtimer=setInterval(rotar,2800);
-    if(ptimer) clearInterval(ptimer); ptimer=setInterval(()=>goPromo(pi+1),3800);
-  }
-  function renderProdMarquee(){
-    const sec=$('#wProdMarquee'), track=$('#wProdMarqueeTrack'); if(!sec||!track) return;
-    const list=(productos||[]).filter(p=>p.activo!==false && p.imagen_url).slice(0,16);
-    if (!list.length){ sec.classList.add('hidden'); return; }
-    sec.classList.remove('hidden');
-    const card = p=>`<div class="wpm-card" data-cat="${esc(p.categoria||'')}">
-        <div class="wpm-img"><img src="${p.imagen_url}" alt="${esc(p.nombre)}" loading="lazy"></div>
-        <div class="wpm-nom">${esc(p.nombre)}</div>
-        <div class="wpm-precio">${money(precioFinal(p))}</div>
-      </div>`;
-    const html = list.map(card).join('');
-    track.innerHTML = html + html;
-    track.querySelectorAll('.wpm-card').forEach(el=> el.onclick = ()=> irCat(el.dataset.cat));
+    observarReveal();
+    wi=0; slides().forEach((s,i)=>s.classList.toggle('on',i===0)); web.querySelectorAll('#nxHeroBars i').forEach((b,i)=>b.classList.toggle('on',i===0));
+    if(wtimer) clearInterval(wtimer); wtimer=setInterval(rotar,5000);
+    reiniciarPromo();
   }
   function cerrarWeb(){ web.classList.remove('open'); $('#login').style.display=''; if(wtimer){clearInterval(wtimer);wtimer=null;} if(ptimer){clearInterval(ptimer);ptimer=null;} }
   $('#chooseWeb') && ($('#chooseWeb').onclick=abrirWeb);
   $('#webBack') && ($('#webBack').onclick=cerrarWeb);
   web.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ const d=b.dataset.go; cerrarWeb(); if(d==='cotiza') abrirCotizador(); else if(d==='tienda') abrirTienda(); });
-  web.querySelectorAll('.wcirc[data-cat]').forEach(b=>b.onclick=()=>irCat(b.dataset.cat));
+  web.querySelectorAll('.nx-cat[data-cat]').forEach(b=>b.onclick=()=>irCat(b.dataset.cat));
+  web.querySelectorAll('[data-scroll]').forEach(b=>b.onclick=()=>{ const t=document.getElementById(b.dataset.scroll); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); });
+  web.querySelectorAll('.nx-gal [data-img]').forEach(g=>g.onclick=()=>openLightbox(g.dataset.img));
 
   const lavado=$('#lavado'), lvVideo=lavado?lavado.querySelector('.lvvideo'):null;
   $('#goLavado') && ($('#goLavado').onclick=()=>{ web.classList.remove('open'); lavado.classList.add('open'); window.scrollTo(0,0); if(lvVideo){ lvVideo.play&&lvVideo.play().catch(()=>{}); } });
