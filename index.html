@@ -3527,6 +3527,7 @@ async function abrirCotizador(admin){
   if (cotAdmin) $('#app').classList.add('hidden'); else $('#login').style.display='none';
   $('#cotiza').classList.add('open');
   $('#cAdminDatos').classList.toggle('hidden', !cotAdmin);
+  $('#cIrAgendar').classList.toggle('hidden', cotAdmin);
   if (cotAdmin){
     ['caRut','caNombre','caCorreo','caTelefono'].forEach(id=> $('#'+id).value='');
     $('#caIva').checked = false;
