@@ -358,6 +358,7 @@
   .plan .pt{font-size:11px;color:var(--gris5);margin-top:2px}
   .plan.on{border-color:currentColor}
   .plan.prev.on{color:var(--verde)} .plan.semi.on{color:var(--ambar)} .plan.full.on{color:var(--morado)}
+  .plan.plan-manual{border-style:dashed} .plan.plan-manual.on{color:var(--rojo)}
   .plan.on .pn,.plan.on .pp{color:inherit}
   .plan .pn,.plan .pp,.plan .pt{color:var(--tinta)}
   .plan.on .pt{color:var(--gris5)}
@@ -4022,7 +4023,7 @@ $('#pEliminar').onclick=async()=>{
 let motosCat = [], cot = null, cPaso = 1, cCatIns = 'aceites', cotAdmin = false;
 
 function cotNueva(){
-  return { marca:null, modelo:null, cc:null, categoria:null, plan:null, insumos:{}, extras:[] };
+  return { marca:null, modelo:null, cc:null, categoria:null, plan:null, sinPlan:false, insumos:{}, extras:[] };
 }
 
 $('#chooseCotiza').onclick = ()=> abrirCotizador(false);
@@ -4210,9 +4211,15 @@ function renderPlanesCot(){
       ${m.tag?`<span class="tag">${m.tag}</span>`:''}
       <div class="pn">${m.nombre}</div><div class="pp">${money(precioPlanCat(cot.categoria,k))}</div>
       <div class="pt">${CAT_LABEL[cot.categoria]} · no incluye insumos</div></button>`;
-  }).join('');
+  }).join('') + (cotAdmin ? `<button class="plan plan-manual ${cot.sinPlan?'on':''}" data-p="__manual">
+      <div class="pn">Cotización manual</div><div class="pp">Sin plan</div>
+      <div class="pt">Agrega a mano trabajos, repuestos e insumos</div></button>` : '');
   $$('#cPlanes .plan').forEach(b=>b.onclick=()=>{
-    cot.plan = b.dataset.p; renderPlanesCot(); actualizarTotalCot();
+    if (b.dataset.p==='__manual'){
+      cot.plan = null; cot.sinPlan = true;
+      renderPlanesCot(); actualizarTotalCot(); irPaso(3); return;
+    }
+    cot.plan = b.dataset.p; cot.sinPlan = false; renderPlanesCot(); actualizarTotalCot();
   });
   if (cot.plan){
     $('#cPlanCheck').classList.remove('hidden');
@@ -4311,7 +4318,7 @@ $$('#cPasos .paso').forEach(p=>p.onclick=()=>{
   if (t < cPaso){ irPaso(t); return; }
   const marca = cot.marca || $('#cMarcaManual').value.trim();
   if (t>=2 && (!marca || !cot.categoria)){ toast('Completa los datos de tu moto','bad'); return; }
-  if (t>=3 && !cot.plan){ toast('Elige un plan primero','bad'); return; }
+  if (t>=3 && !cot.plan && !(cotAdmin && cot.sinPlan)){ toast('Elige un plan primero','bad'); return; }
   if (cPaso===1 && t>=2) renderPlanesCot();
   irPaso(t);
 });
@@ -4324,7 +4331,7 @@ $('#cSiguiente').onclick = ()=>{
     renderPlanesCot(); irPaso(2); return;
   }
   if (cPaso===2){
-    if (!cot.plan){ toast('Elige un plan de mantención','bad'); return; }
+    if (!cot.plan && !(cotAdmin && cot.sinPlan)){ toast(cotAdmin?'Elige un plan o "Cotización manual"':'Elige un plan de mantención','bad'); return; }
     irPaso(3); return;
   }
   if (cPaso===3){ irPaso(4); return; }
