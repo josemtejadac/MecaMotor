@@ -1376,7 +1376,9 @@
         <label style="margin:0">Descuento en el total (%)</label>
         <input id="f_descuento" type="number" inputmode="numeric" min="0" max="100" value="0" placeholder="0" />
       </div>
+      <label class="chkline"><input type="checkbox" id="f_iva"> Sumar IVA (19%) al total</label>
       <div id="descLine" class="descline" style="display:none"></div>
+      <div id="ivaLine" class="descline" style="display:none;color:var(--gris9)"></div>
       <div class="totalbar"><span>Total a pagar</span><strong id="totalTxt">$0</strong></div>
     </div>
 
@@ -2711,6 +2713,7 @@ async function openEditor(s){
   $('#f_obs').value=current.observaciones||'';
   $('#f_nota_insumos').checked = current.mostrar_nota_insumos !== false;
   $('#f_descuento').value = Number(current.descuento)||0;
+  $('#f_iva').checked = !!current.iva;
 
   setEstadoUI(current.estado);
   setCatUI(current.categoria);
@@ -2960,20 +2963,34 @@ function renderItems(){
 }
 $('#addItemBtn').onclick=()=>{ current.items.push({descripcion:'',cantidad:1,precio:0}); renderItems();
   const last=$('#itemsBody').querySelector('tr:last-child input'); if(last) last.focus(); };
+// desglose del total de un servicio: subtotal de ítems, descuento %, neto e IVA 19%.
+// "total" guardado = neto + IVA (lo que paga el cliente)
+function desgloseTotal(s){
+  const sub = subtotalItems(s);
+  const d = Math.max(0, Math.min(100, Number(s.descuento)||0));
+  const neto = d>0 ? Math.round(sub*(1-d/100)) : sub;
+  const iva = s.iva ? Math.round(neto*0.19) : 0;
+  return { sub, d, neto, iva, total: neto+iva };
+}
 function computeTotal(){
-  const sub = current.items.reduce((a,b)=>a+itemNeto(b),0);
-  const d = Math.max(0, Math.min(100, Number(current.descuento)||0));
-  current.subtotal = sub;
-  current.total = d>0 ? Math.round(sub*(1-d/100)) : sub;
-  const T=$('#totalTxt'), L=$('#descLine');
-  if(d>0){
-    T.innerHTML = `<s style="color:var(--gris5);font-weight:400;font-size:.55em;margin-right:8px">${money(sub)}</s>${money(current.total)}`;
-    if(L){ L.style.display=''; L.textContent = `Descuento ${d}% · ahorro ${money(sub-current.total)}`; }
+  current.iva = !!current.iva;
+  const g = desgloseTotal(current);
+  current.subtotal = g.sub;
+  current.total = g.total;
+  const T=$('#totalTxt'), L=$('#descLine'), V=$('#ivaLine');
+  if(g.d>0){
+    T.innerHTML = `<s style="color:var(--gris5);font-weight:400;font-size:.55em;margin-right:8px">${money(g.sub+g.iva)}</s>${money(g.total)}`;
+    if(L){ L.style.display=''; L.textContent = `Descuento ${g.d}% · ahorro ${money(g.sub-g.neto)}`; }
   } else {
-    T.textContent = money(current.total);
+    T.textContent = money(g.total);
     if(L) L.style.display='none';
   }
+  if(V){
+    if(current.iva){ V.style.display=''; V.textContent = `Neto ${money(g.neto)} + IVA 19% ${money(g.iva)}`; }
+    else V.style.display='none';
+  }
 }
+$('#f_iva').onchange=()=>{ if(current){ current.iva = $('#f_iva').checked; computeTotal(); } };
 $('#f_descuento').oninput=()=>{ if(current){ current.descuento = Math.max(0, Math.min(100, parseInt($('#f_descuento').value)||0)); computeTotal(); } };
 
 /* fotos */
@@ -3056,7 +3073,7 @@ async function guardar(silent){
     cliente_nombre:current.cliente_nombre||null, cliente_rut:current.cliente_rut||null, cliente_telefono:current.cliente_telefono||null,
     moto_patente:current.moto_patente||null, moto_marca:current.moto_marca||null, moto_modelo:current.moto_modelo||null,
     kilometraje:current.kilometraje||null,
-    items:current.items, checklist:current.checklist, total:current.total, descuento:Math.max(0,Math.min(100,Number(current.descuento)||0)), observaciones:current.observaciones||null,
+    items:current.items, checklist:current.checklist, total:current.total, descuento:Math.max(0,Math.min(100,Number(current.descuento)||0)), iva:!!current.iva, observaciones:current.observaciones||null,
     fotos_ingreso:current.fotos_ingreso, fotos_salida:current.fotos_salida,
     mostrar_nota_insumos: current.mostrar_nota_insumos !== false,
     fecha_entregado: current.fecha_entregado || null,
@@ -3468,18 +3485,24 @@ async function generarPDF(s){
   });
   // total
   doc.setDrawColor(200); doc.line(M,y,W-M,y); y+=2;
-  const _desc = Number(s.descuento)||0;
-  if (_desc>0){
-    const _sub = subtotalItems(s);
+  const _g = desgloseTotal(s);
+  if (_g.d>0 || _g.iva>0){
     doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(90);
-    doc.text('Subtotal',W-M-70,y+5); doc.text(money(_sub),W-M-3,y+5,{align:'right'});
-    doc.setTextColor(224,26,34);
-    doc.text('Descuento '+_desc+'%',W-M-70,y+10); doc.text('- '+money(_sub-(Number(s.total)||0)),W-M-3,y+10,{align:'right'});
-    y+=12;
+    doc.text('Subtotal',W-M-70,y+5); doc.text(money(_g.sub),W-M-3,y+5,{align:'right'}); y+=5;
+    if (_g.d>0){
+      doc.setTextColor(224,26,34);
+      doc.text('Descuento '+_g.d+'%',W-M-70,y+5); doc.text('- '+money(_g.sub-_g.neto),W-M-3,y+5,{align:'right'}); y+=5;
+    }
+    if (_g.iva>0){
+      doc.setTextColor(90);
+      doc.text('Neto',W-M-70,y+5); doc.text(money(_g.neto),W-M-3,y+5,{align:'right'}); y+=5;
+      doc.text('IVA (19%)',W-M-70,y+5); doc.text(money(_g.iva),W-M-3,y+5,{align:'right'}); y+=5;
+    }
+    y+=2;
   }
   doc.setFillColor(224,26,34); doc.roundedRect(W-M-70,y,70,11,2,2,'F');
   doc.setTextColor(255); doc.setFont('helvetica','bold'); doc.setFontSize(11);
-  doc.text('TOTAL',W-M-66,y+7.3); doc.text(money(s.total),W-M-3,y+7.3,{align:'right'});
+  doc.text(_g.iva>0?'TOTAL + IVA':'TOTAL',W-M-66,y+7.3); doc.text(money(s.total),W-M-3,y+7.3,{align:'right'});
   if (s.plan_nombre && s.mostrar_nota_insumos !== false){ doc.setTextColor(120); doc.setFont('helvetica','italic'); doc.setFontSize(8);
     doc.text('* Los planes no incluyen insumos.', M, y+7.3); }
   y+=16;
@@ -3664,9 +3687,12 @@ function renderPublicService(s, todos){
     <div class="block">
       <h3>Detalle del servicio</h3>
       <table style="width:100%;border-collapse:collapse"><tbody>${items||'<tr><td style="padding:8px;color:var(--gris5)">Sin ítems</td></tr>'}</tbody></table>
-      ${(Number(s.descuento)||0)>0?`<div style="display:flex;justify-content:space-between;font-size:13.5px;color:var(--gris5);margin-top:6px"><span>Subtotal</span><span>${money(subtotalItems(s))}</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13.5px;color:var(--rojo);font-weight:600;margin-top:3px"><span>Descuento ${s.descuento}%</span><span>- ${money(subtotalItems(s)-(Number(s.total)||0))}</span></div>`:''}
-      <div class="totalbar"><span>Total</span><strong>${money(s.total)}</strong></div>
+      ${(()=>{ const g=desgloseTotal(s); if(!(g.d>0||g.iva>0)) return '';
+        const row=(a,b,st)=>`<div style="display:flex;justify-content:space-between;font-size:13.5px;margin-top:3px;${st||'color:var(--gris5)'}"><span>${a}</span><span>${b}</span></div>`;
+        return row('Subtotal',money(g.sub),'color:var(--gris5);margin-top:6px')
+          + (g.d>0?row('Descuento '+g.d+'%','- '+money(g.sub-g.neto),'color:var(--rojo);font-weight:600'):'')
+          + (g.iva>0?row('Neto',money(g.neto))+row('IVA (19%)',money(g.iva)):''); })()}
+      <div class="totalbar"><span>Total${s.iva?' + IVA':''}</span><strong>${money(s.total)}</strong></div>
       ${(s.plan_nombre && s.mostrar_nota_insumos!==false)?`<p style="font-size:12px;color:var(--gris5);margin:8px 0 0">* Los planes no incluyen insumos.</p>`:''}
     </div>
 
