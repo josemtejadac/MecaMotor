@@ -4502,6 +4502,33 @@ async function cotizaPDF(){
   doc.text(conIva?'TOTAL + IVA':'TOTAL ESTIMADO',W-M-78,y+7.3); doc.text(money(totalFinal),W-M-3,y+7.3,{align:'right'});
   y+=18;
 
+  // qué incluye el plan elegido (en dos columnas, con salto de página si hace falta)
+  if (cot.plan && (PLAN_ITEMS[cot.plan]||[]).length){
+    const inc = PLAN_ITEMS[cot.plan];
+    if (y>245){ doc.addPage(); y=20; }
+    doc.setTextColor(224,26,34); doc.setFont('helvetica','bold'); doc.setFontSize(9);
+    doc.text('SERVICIOS INCLUIDOS EN EL PLAN',M,y); y+=5;
+    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(60);
+    const colW=(W-M*2-6)/2, mitad=Math.ceil(inc.length/2);
+    const colLines = arr=>arr.map(t=>doc.splitTextToSize(t, colW-5));
+    const cols=[colLines(inc.slice(0,mitad)), colLines(inc.slice(mitad))];
+    const idx=[0,0]; let yy=y;
+    while (idx[0]<cols[0].length || idx[1]<cols[1].length){
+      if (yy>275){ doc.addPage(); yy=20; }
+      const h=Math.max(...[0,1].map(c=> idx[c]<cols[c].length ? cols[c][idx[c]].length*3.6+1.6 : 0));
+      [0,1].forEach(c=>{
+        if (idx[c]>=cols[c].length) return;
+        const lines=cols[c][idx[c]], x=M+c*(colW+6);
+        doc.setTextColor(224,26,34); doc.text('•',x+0.5,yy+3);
+        doc.setTextColor(60); doc.text(lines,x+5,yy+3);
+        idx[c]++;
+      });
+      yy+=h;
+    }
+    y=yy+6;
+  }
+
+  if (y>268){ doc.addPage(); y=20; }
   doc.setTextColor(120); doc.setFont('helvetica','italic'); doc.setFontSize(8);
   const nota=doc.splitTextToSize('Valor referencial. El precio final puede variar si la moto requiere trabajos o repuestos adicionales, lo que se informará antes de realizarlos. Cotización válida por 15 días.',W-M*2);
   doc.text(nota,M,y); y+= nota.length*4+3;
